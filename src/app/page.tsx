@@ -1,7 +1,13 @@
-import React from "react";
+import { caller } from "@/trpc/server"
 
-const page = () => {
-  return <div>hello world</div>;
-};
 
-export default page;
+const Page = async() => {
+    const data = await caller.createAI({text: "MADARI"})
+  return (
+    <div>
+      {JSON.stringify(data)}
+    </div>
+  )
+}
+
+export default Page
