@@ -10,10 +10,10 @@ import { toast } from "sonner";
 const Page = () => {
   const [value, setValue] = useState("");
   const trpc = useTRPC();
-  const invoke = useMutation(
-    trpc.invoke.mutationOptions({
+  const createMessage = useMutation(
+    trpc.messages.create.mutationOptions({
       onSuccess: () => {
-        toast.success("Background job started");
+        toast.success("Massage Created");
       },
     })
   );
@@ -21,8 +21,8 @@ const Page = () => {
     <div>
       <Input value={value} onChange={(e) => setValue(e.target.value)}></Input>
       <Button
-        disabled={invoke.isPending}
-        onClick={() => invoke.mutate({ value: value })}
+        disabled={createMessage.isPending}
+        onClick={() => createMessage.mutate({ value: value })}
       >
         Invoke Backround task
       </Button>
