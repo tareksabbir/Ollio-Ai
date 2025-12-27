@@ -1,17 +1,17 @@
 # This is a config for E2B sandbox template.
-# You can use template ID (4z8jbaslzhn93l75m46m) or template name (ollio-ai-sandbox) to create a sandbox:
+# You can use template ID (n49xvvuifybtoivgbsoy) or template name (ollio-ai) to create a sandbox:
 
 # Python SDK
 # from e2b import Sandbox, AsyncSandbox
-# sandbox = Sandbox.create("ollio-ai-sandbox") # Sync sandbox
-# sandbox = await AsyncSandbox.create("ollio-ai-sandbox") # Async sandbox
+# sandbox = Sandbox.create("ollio-ai") # Sync sandbox
+# sandbox = await AsyncSandbox.create("ollio-ai") # Async sandbox
 
 # JS SDK
 # import { Sandbox } from 'e2b'
-# const sandbox = await Sandbox.create('ollio-ai-sandbox')
+# const sandbox = await Sandbox.create('ollio-ai')
 
 team_id = "aa6e04a7-f891-467e-a1bd-32a0b32e3bde"
 start_cmd = "/compile_page.sh"
 dockerfile = "e2b.Dockerfile"
-template_name = "ollio-ai-sandbox"
-template_id = "4z8jbaslzhn93l75m46m"
+template_name = "ollio-ai"
+template_id = "n49xvvuifybtoivgbsoy"
