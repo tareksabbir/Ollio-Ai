@@ -1,12 +1,16 @@
 import { z } from "zod";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TextareaAutosize from "react-textarea-autosize";
 import { Form, FormField } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowUpIcon } from "lucide-react";
+import { ArrowUpIcon, Loader2Icon } from "lucide-react";
+import { useTRPC } from "@/trpc/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 
 interface Props {
   projectId: string;
@@ -20,8 +24,8 @@ const formSchema = z.object({
 });
 
 const MessageForm = ({ projectId }: Props) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const showUsage = false;
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -30,9 +34,34 @@ const MessageForm = ({ projectId }: Props) => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const createMessage = useMutation(
+    trpc.messages.create.mutationOptions({
+      onSuccess: () => {
+        form.reset();
+        queryClient.invalidateQueries(
+          trpc.messages.getMany.queryOptions({
+            projectId,
+          })
+        );
+        //todo invalidate usage status
+      },
+      onError: (error) => {
+        //todo redirect to pricing page
+        toast.error(error.message);
+      },
+    })
+  );
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    await createMessage.mutateAsync({
+      projectId,
+      value: values.value,
+    });
   };
+  const [isFocused, setIsFocused] = useState(false);
+  const isPending = createMessage.isPending;
+  const isButtonDisabled = isPending || !form.formState.isValid;
+  const showUsage = false;
 
   return (
     <Form {...form}>
@@ -50,6 +79,7 @@ const MessageForm = ({ projectId }: Props) => {
           render={({ field }) => (
             <TextareaAutosize
               {...field}
+              disabled={isPending}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               minRows={2}
@@ -72,8 +102,18 @@ const MessageForm = ({ projectId }: Props) => {
             </kbd>
             &nbsp;to submit
           </div>
-          <Button className={cn("size-8 rounded-full")}>
-            <ArrowUpIcon />
+          <Button
+            disabled={isButtonDisabled}
+            className={cn(
+              "size-8 rounded-full",
+              isButtonDisabled && "bg-muted-foreground"
+            )}
+          >
+            {isPending ? (
+              <Loader2Icon className="size-4 animate-spin" />
+            ) : (
+              <ArrowUpIcon />
+            )}
           </Button>
         </div>
       </form>
