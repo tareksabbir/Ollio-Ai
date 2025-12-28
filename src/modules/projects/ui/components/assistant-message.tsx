@@ -32,8 +32,8 @@ const AssistantMessage = ({
         <Image
           src="/logo.svg"
           alt="ollio"
-          width={22}
-          height={22}
+          width={20}
+          height={20}
           className="shirink-0"
         />
         <span className="text-sm font-medium">Ollio</span>
