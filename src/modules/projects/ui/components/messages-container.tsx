@@ -1,6 +1,7 @@
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import MessageCard from "./message-card";
+import MessageForm from "./massage-form";
 
 interface Props {
   projectId: string;
@@ -26,12 +27,15 @@ const MessageContainer = ({ projectId }: Props) => {
                 fragment={message.fragment}
                 createdAt={message.createdAt}
                 isActiveFragment={false}
-                onFragmentClick={()=>{}}
+                onFragmentClick={() => {}}
                 type={message.type}
               />
             );
           })}
         </div>
+      </div>
+      <div className="relative p-3 pt-1">
+        <MessageForm projectId={projectId} />
       </div>
     </section>
   );

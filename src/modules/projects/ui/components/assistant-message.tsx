@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Fragment, MessageType } from "@/generated/prisma/browser";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import Image from "next/image";
+import FragmentCard from "./fragment-card";
 
 interface AssistantMessageProps {
   content: string;
@@ -43,6 +43,13 @@ const AssistantMessage = ({
       </div>
       <div className="pl-8.5 flex flex-col gap-y-4">
         <span>{content}</span>
+        {fragment && type === "RESULT" && (
+          <FragmentCard
+            fragment={fragment}
+            isActiveFragment={isActiveFragment}
+            onFragmentClick={onFragmentClick}
+          />
+        )}
       </div>
     </div>
   );
