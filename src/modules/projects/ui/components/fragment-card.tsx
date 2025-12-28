@@ -16,7 +16,7 @@ const FragmentCard = ({
   return (
     <button
       className={cn(
-        "group relative flex items-center text-start gap-3 border rounded-xl w-fit p-4 transition-all duration-200 ease-in-out",
+        "group relative flex items-center text-start gap-3 border rounded-xl w-fit py-2 px-4 transition-all duration-200 ease-in-out",
         "shadow-sm hover:shadow-md",
         isActiveFragment
           ? "bg-primary text-primary-foreground border-primary/50 shadow-md scale-[1.02]"
