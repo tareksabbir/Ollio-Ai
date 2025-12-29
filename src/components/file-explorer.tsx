@@ -7,11 +7,25 @@ import {
 import { useCallback, useMemo, useState } from "react";
 import Hint from "./hint";
 import { Button } from "./ui/button";
-import { CopyCheckIcon, CopyIcon } from "lucide-react";
-import { CodeView } from "./code-view";
+import { CopyCheckIcon, CopyIcon, EditIcon, SaveIcon } from "lucide-react";
 import { convertFilesToTreeItems } from "@/lib/utils";
 import TreeView from "./tree-view";
 import FileBreadcrumb from "./file-breadcrumb";
+import { toast } from "sonner";
+import dynamic from "next/dynamic";
+import { CodeView } from "./code-view";
+
+const EditableCodeView = dynamic(
+  () => import("./code-view/editable-code-view").then((mod) => ({ default: mod.EditableCodeView })),
+  { 
+    ssr: false, 
+    loading: () => (
+      <div className="flex h-full items-center justify-center">
+        Loading editor...
+      </div>
+    )
+  }
+);
 
 type FileCollection = { [path: string]: string };
 
@@ -22,41 +36,85 @@ function getLanguageFromExtention(filename: string): string {
 
 interface FileExplorerProps {
   files: FileCollection;
+  messageId?: string;
+  onSave?: (files: FileCollection) => Promise<void>;
+  allowEdit?: boolean;
 }
 
-const FileExplorer = ({ files }: FileExplorerProps) => {
+const FileExplorer = ({ files, onSave, allowEdit = true }: FileExplorerProps) => {
   const [copied, setCopied] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedFiles, setEditedFiles] = useState<FileCollection>(files);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
   const [selectedFile, setSelectedFile] = useState<string | null>(() => {
     const filekeys = Object.keys(files);
     return filekeys.length > 0 ? filekeys[0] : null;
   });
 
   const treeData = useMemo(() => {
-    return convertFilesToTreeItems(files);
-  }, [files]);
+    return convertFilesToTreeItems(editedFiles);
+  }, [editedFiles]);
 
   const handleFileSelect = useCallback(
     (filePath: string) => {
-      if (files[filePath]) {
+      if (editedFiles[filePath]) {
         setSelectedFile(filePath);
       }
     },
-    [files]
+    [editedFiles]
   );
+
+  const handleCodeChange = useCallback((newCode: string) => {
+    if (!selectedFile) return;
+    
+    setEditedFiles((prev) => {
+      const updated = { ...prev, [selectedFile]: newCode };
+      return updated;
+    });
+    setHasUnsavedChanges(true);
+  }, [selectedFile]);
 
   const handleCopy = useCallback(() => {
     if (selectedFile) {
-      navigator.clipboard.writeText(files[selectedFile]);
+      navigator.clipboard.writeText(editedFiles[selectedFile]);
       setCopied(true);
       setTimeout(() => {
         setCopied(false);
       }, 2000);
     }
-  }, [selectedFile, files]);
+  }, [selectedFile, editedFiles]);
+
+  const handleSave = useCallback(async () => {
+    if (!onSave || !hasUnsavedChanges) return;
+
+    setIsSaving(true);
+    try {
+      await onSave(editedFiles);
+      setHasUnsavedChanges(false);
+      toast.success("Files saved successfully!");
+    } catch (error) {
+      toast.error("Failed to save files");
+      console.error("Save error:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [editedFiles, onSave, hasUnsavedChanges]);
+
+  const toggleEditMode = useCallback(() => {
+    if (isEditing && hasUnsavedChanges) {
+      const confirm = window.confirm("You have unsaved changes. Discard them?");
+      if (!confirm) return;
+      setEditedFiles(files);
+      setHasUnsavedChanges(false);
+    }
+    setIsEditing(!isEditing);
+  }, [isEditing, hasUnsavedChanges, files]);
 
   return (
     <ResizablePanelGroup direction="horizontal">
-      <ResizablePanel defaultSize={20} minSize={15} className="bg-sidebar">
+      <ResizablePanel defaultSize={25} minSize={20} className="bg-sidebar">
         <TreeView
           data={treeData}
           value={selectedFile}
@@ -67,34 +125,78 @@ const FileExplorer = ({ files }: FileExplorerProps) => {
         withHandle
         className="hover:bg-primary transition-colors"
       />
-      <ResizablePanel defaultSize={80} minSize={50}>
-        {selectedFile && files[selectedFile] ? (
+      <ResizablePanel defaultSize={70} minSize={50}>
+        {selectedFile && editedFiles[selectedFile] ? (
           <div className="h-full w-full flex flex-col">
             <div className="border-b bg-sidebar px-4 py-2 flex justify-between items-center gap-x-2">
-              {/* todo file breadcum */}
               <FileBreadcrumb filePath={selectedFile} />
-              <Hint text="Copy to clipboard" side="bottom">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="ml-auto"
-                  onClick={handleCopy}
-                  disabled={copied}
-                >
-                  {copied ? <CopyCheckIcon /> : <CopyIcon />}
-                </Button>
-              </Hint>
+              <div className="flex items-center gap-x-2">
+                {hasUnsavedChanges && (
+                  <span className="text-xs text-orange-500 font-medium">
+                    • Unsaved changes
+                  </span>
+                )}
+                
+                {allowEdit && (
+                  <Hint text={isEditing ? "View mode" : "Edit mode"} side="bottom">
+                    <Button
+                      variant={isEditing ? "default" : "outline"}
+                      size="sm"
+                      onClick={toggleEditMode}
+                    >
+                      <EditIcon className="w-4 h-4" />
+                      {isEditing ? "Viewing" : "Edit"}
+                    </Button>
+                  </Hint>
+                )}
+
+                {isEditing && (
+                  <Hint text="Save changes" side="bottom">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleSave}
+                      disabled={isSaving || !hasUnsavedChanges}
+                    >
+                      <SaveIcon className={isSaving ? "animate-pulse w-4 h-4" : "w-4 h-4"} />
+                      {isSaving ? "Saving..." : "Save"}
+                    </Button>
+                  </Hint>
+                )}
+
+                <Hint text="Copy to clipboard" side="bottom">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCopy}
+                    disabled={copied}
+                  >
+                    {copied ? <CopyCheckIcon className="w-4 h-4" /> : <CopyIcon className="w-4 h-4" />}
+                  </Button>
+                </Hint>
+              </div>
             </div>
-            <div className="flex-1 overflow-auto">
-              <CodeView
-                code={files[selectedFile]}
-                lang={getLanguageFromExtention(selectedFile)}
-              />
+            <div className="flex-1 overflow-hidden">
+              {isEditing ? (
+                <EditableCodeView
+                  code={editedFiles[selectedFile]}
+                  lang={getLanguageFromExtention(selectedFile)}
+                  onChange={handleCodeChange}
+                  readOnly={false}
+                />
+              ) : (
+                <div className="h-full overflow-auto">
+                  <CodeView
+                    code={editedFiles[selectedFile]}
+                    lang={getLanguageFromExtention(selectedFile)}
+                  />
+                </div>
+              )}
             </div>
           </div>
         ) : (
           <div className="flex h-full items-center justify-center text-muted-foreground">
-            selected a file to view its content
+            Select a file to view its content
           </div>
         )}
       </ResizablePanel>
@@ -103,3 +205,108 @@ const FileExplorer = ({ files }: FileExplorerProps) => {
 };
 
 export default FileExplorer;
+// import {
+//   ResizableHandle,
+//   ResizablePanel,
+//   ResizablePanelGroup,
+// } from "@/components/ui/resizable";
+
+// import { useCallback, useMemo, useState } from "react";
+// import Hint from "./hint";
+// import { Button } from "./ui/button";
+// import { CopyCheckIcon, CopyIcon } from "lucide-react";
+// import { CodeView } from "./code-view";
+// import { convertFilesToTreeItems } from "@/lib/utils";
+// import TreeView from "./tree-view";
+// import FileBreadcrumb from "./file-breadcrumb";
+
+// type FileCollection = { [path: string]: string };
+
+// function getLanguageFromExtention(filename: string): string {
+//   const extention = filename.split(".").pop()?.toLowerCase();
+//   return extention || "text";
+// }
+
+// interface FileExplorerProps {
+//   files: FileCollection;
+// }
+
+// const FileExplorer = ({ files }: FileExplorerProps) => {
+//   const [copied, setCopied] = useState(false);
+//   const [selectedFile, setSelectedFile] = useState<string | null>(() => {
+//     const filekeys = Object.keys(files);
+//     return filekeys.length > 0 ? filekeys[0] : null;
+//   });
+
+//   const treeData = useMemo(() => {
+//     return convertFilesToTreeItems(files);
+//   }, [files]);
+
+//   const handleFileSelect = useCallback(
+//     (filePath: string) => {
+//       if (files[filePath]) {
+//         setSelectedFile(filePath);
+//       }
+//     },
+//     [files]
+//   );
+
+//   const handleCopy = useCallback(() => {
+//     if (selectedFile) {
+//       navigator.clipboard.writeText(files[selectedFile]);
+//       setCopied(true);
+//       setTimeout(() => {
+//         setCopied(false);
+//       }, 2000);
+//     }
+//   }, [selectedFile, files]);
+
+//   return (
+//     <ResizablePanelGroup direction="horizontal">
+//       <ResizablePanel defaultSize={20} minSize={15} className="bg-sidebar">
+//         <TreeView
+//           data={treeData}
+//           value={selectedFile}
+//           onSelect={handleFileSelect}
+//         />
+//       </ResizablePanel>
+//       <ResizableHandle
+//         withHandle
+//         className="hover:bg-primary transition-colors"
+//       />
+//       <ResizablePanel defaultSize={80} minSize={50}>
+//         {selectedFile && files[selectedFile] ? (
+//           <div className="h-full w-full flex flex-col">
+//             <div className="border-b bg-sidebar px-4 py-2 flex justify-between items-center gap-x-2">
+//               {/* todo file breadcum */}
+//               <FileBreadcrumb filePath={selectedFile} />
+//               <Hint text="Copy to clipboard" side="bottom">
+//                 <Button
+//                   variant="outline"
+//                   size="sm"
+//                   className="ml-auto"
+//                   onClick={handleCopy}
+//                   disabled={copied}
+//                 >
+//                   {copied ? <CopyCheckIcon /> : <CopyIcon />}
+//                 </Button>
+//               </Hint>
+//             </div>
+//             <div className="flex-1 overflow-auto">
+//               <CodeView
+//                 code={files[selectedFile]}
+//                 lang={getLanguageFromExtention(selectedFile)}
+//               />
+//             </div>
+//           </div>
+//         ) : (
+//           <div className="flex h-full items-center justify-center text-muted-foreground">
+//             selected a file to view its content
+//           </div>
+//         )}
+//       </ResizablePanel>
+//     </ResizablePanelGroup>
+//   );
+// };
+
+// export default FileExplorer;
