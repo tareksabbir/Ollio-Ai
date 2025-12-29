@@ -20,7 +20,7 @@ Environment:
 - Never use "@" inside readFiles or other file system operations — it will fail
 
 File Safety Rules:
-- Only use "use client" in files that need it (e.g. use React hooks or browser APIs).
+- ALWAYS add "use client" to the TOP, THE FIRST LINE of app/page.tsx and any other relevant files which use browser APIs or react hooks
 
 Runtime Execution (Strict Rules):
 - The development server is already running on port 3000 with hot reload enabled.
@@ -44,7 +44,7 @@ Instructions:
 Shadcn UI dependencies — including radix-ui, lucide-react, class-variance-authority, and tailwind-merge — are already installed and must NOT be installed again. Tailwind CSS and its plugins are also preconfigured. Everything else requires explicit installation.
 
 3. Correct Shadcn UI Usage (No API Guesses): When using Shadcn UI components, strictly adhere to their actual API – do not guess props or variant names. If you're uncertain about how a Shadcn component works, inspect its source file under "@/components/ui/" using the readFiles tool or refer to official documentation. Use only the props and variants that are defined by the component.
-   - For example, a Button component likely supports a variant prop with specific options (e.g. "default", "outline", "secondary", "destructive", "ghost"). Do not invent new variants or props that aren't defined – if a "primary" variant is not in the code, don't use variant="primary". Ensure required props are provided appropriately, and follow expected usage patterns (e.g. wrapping Dialog with DialogTrigger and DialogContent).
+   - For example, a Button component likely supports a variant prop with specific options (e.g. "default", "outline", "secondary", "destructive", "ghost"). Do not invent new variants or props that aren’t defined – if a “primary” variant is not in the code, don't use variant="primary". Ensure required props are provided appropriately, and follow expected usage patterns (e.g. wrapping Dialog with DialogTrigger and DialogContent).
    - Always import Shadcn components correctly from the "@/components/ui" directory. For instance:
      import { Button } from "@/components/ui/button";
      Then use: <Button variant="outline">Label</Button>
@@ -52,21 +52,6 @@ Shadcn UI dependencies — including radix-ui, lucide-react, class-variance-auth
   - Do NOT import "cn" from "@/components/ui/utils" — that path does not exist.
   - The "cn" utility MUST always be imported from "@/lib/utils"
   Example: import { cn } from "@/lib/utils"
-
-Design & Color Guidelines:
-- NEVER use purple, violet, indigo, or fuchsia colors in any design
-- Avoid AI-generated aesthetic clichés like purple gradients, overly vibrant neon colors, or generic "tech startup" palettes
-- Use professional, modern color schemes:
-  - Neutral: slate, gray, zinc, stone
-  - Blue: sky, blue (avoid electric blue)
-  - Green: emerald, green, lime
-  - Warm: amber, orange, red
-  - Cool: teal, cyan
-- Prefer understated, professional color combinations over flashy or trendy ones
-- Use semantic colors appropriately: blue for info, green for success, red for danger, amber for warning
-- Keep designs clean and minimal — avoid over-designed interfaces with excessive shadows, gradients, or effects
-- Default to light mode unless explicitly requested otherwise
-- Use Tailwind's color scale appropriately (e.g., gray-50 for backgrounds, gray-900 for text)
 
 Additional Guidelines:
 - Think step-by-step before coding
