@@ -2,55 +2,65 @@
 
 import FileExplorer from "@/components/file-explorer";
 import { useTRPC } from "@/trpc/client";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-export default function ProjectPage() {
-  const params = useParams();
-  const projectId = params.id as string;
+interface Message {
+  id: string;
+  content: string;
+  fragment?: {
+    id: string;
+    files: Record<string, string>;
+    sandboxUrl: string;
+  } | null;
+}
+
+interface ProjectPageProps {
+  messages: Message[];
+  projectId: string;
+}
+
+const ProjectPage = ({ messages }: ProjectPageProps) => {
   const trpc = useTRPC();
 
-  const { data: messages, isLoading } = useQuery(
-    trpc.messages.getMany.queryOptions({
-      projectId,
+  // ✅ Fragment update mutation
+  const updateFragment = useMutation(
+    trpc.fragments.update.mutationOptions({
+      onSuccess: () => {
+        toast.success("Fragment updated successfully!");
+      },
+      onError: (error) => {
+        toast.error("Failed to update fragment: " + error.message);
+      },
     })
   );
 
-  const updateFragment = useMutation(
-    trpc.fragments.update.mutationOptions()
-  );
-
-  const latestFragmentMessage = messages?.find(
-    (msg) => msg.fragment && msg.type === "RESULT"
-  );
-
-  const handleSaveFiles = async (files: Record<string, string>) => {
-    if (!latestFragmentMessage?.fragment) {
-      throw new Error("No fragment found");
-    }
-
+  // ✅ onSave handler with correct signature
+  const handleSaveFiles = async (fragmentId: string, files: Record<string, string>) => {
     await updateFragment.mutateAsync({
-      fragmentId: latestFragmentMessage.fragment.id,
+      fragmentId,
       files,
     });
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!latestFragmentMessage?.fragment) {
-    return <div>No fragment available</div>;
-  }
-
   return (
-    <div className="h-screen w-full">
-      <FileExplorer
-        files={latestFragmentMessage.fragment.files as Record<string, string>}
-        messageId={latestFragmentMessage.id}
-        onSave={handleSaveFiles}
-        allowEdit={true}
-      />
+    <div>
+      {messages.map((message) => (
+        <div key={message.id}>
+          {message.fragment && (
+            <div className="h-150">
+              <FileExplorer
+                files={message.fragment.files as Record<string, string>}
+                fragmentId={message.fragment.id} // ✅ fragmentId pass korchi
+                onSave={handleSaveFiles} // ✅ handler pass korchi
+                allowEdit={true}
+              />
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
-}
+};
+
+export default ProjectPage;
