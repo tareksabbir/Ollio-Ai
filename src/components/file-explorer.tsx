@@ -1,24 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import {
-  Breadcrumb,
-  BreadcrumbEllipsis,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+
 import { useCallback, useMemo, useState } from "react";
 import Hint from "./hint";
 import { Button } from "./ui/button";
-import { CopyIcon } from "lucide-react";
+import { CopyCheckIcon, CopyIcon } from "lucide-react";
 import { CodeView } from "./code-view";
 import { convertFilesToTreeItems } from "@/lib/utils";
 import TreeView from "./tree-view";
+import FileBreadcrumb from "./file-breadcrumb";
 
 type FileCollection = { [path: string]: string };
 
@@ -32,6 +25,7 @@ interface FileExplorerProps {
 }
 
 const FileExplorer = ({ files }: FileExplorerProps) => {
+  const [copied, setCopied] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(() => {
     const filekeys = Object.keys(files);
     return filekeys.length > 0 ? filekeys[0] : null;
@@ -50,6 +44,16 @@ const FileExplorer = ({ files }: FileExplorerProps) => {
     [files]
   );
 
+  const handleCopy = useCallback(() => {
+    if (selectedFile) {
+      navigator.clipboard.writeText(files[selectedFile]);
+      setCopied(true);
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    }
+  }, [selectedFile, files]);
+
   return (
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel defaultSize={20} minSize={15} className="bg-sidebar">
@@ -66,17 +70,18 @@ const FileExplorer = ({ files }: FileExplorerProps) => {
       <ResizablePanel defaultSize={80} minSize={50}>
         {selectedFile && files[selectedFile] ? (
           <div className="h-full w-full flex flex-col">
-            <div className="border-b bg-sidebar px-4 py-2 flex justify-between item-center gap-x-2">
+            <div className="border-b bg-sidebar px-4 py-2 flex justify-between items-center gap-x-2">
               {/* todo file breadcum */}
+              <FileBreadcrumb filePath={selectedFile} />
               <Hint text="Copy to clipboard" side="bottom">
                 <Button
                   variant="outline"
-                  size="icon"
+                  size="sm"
                   className="ml-auto"
-                  onClick={() => {}}
-                  disabled={false}
+                  onClick={handleCopy}
+                  disabled={copied}
                 >
-                  <CopyIcon />
+                  {copied ? <CopyCheckIcon /> : <CopyIcon />}
                 </Button>
               </Hint>
             </div>
