@@ -20,6 +20,7 @@ const Layout = ({ children }: Props) => {
             backgroundSize: "20px 20px",
           }}
         ></div>
+
       </div>
       <div className="flex-1 flex flex-col px-4 pb-4">{children}</div>
     </main>
