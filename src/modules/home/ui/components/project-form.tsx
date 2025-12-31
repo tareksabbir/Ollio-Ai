@@ -78,100 +78,102 @@ const ProjectForm = () => {
   const hasMoreTemplates = PROJECT_TEMPLATES.length > INITIAL_LIMIT;
 
   return (
-    <Form {...form}>
-      <section className="space-y-6">
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className={cn(
-            "relative border p-4 pt-1 rounded-xl bg-sidebar dark:bg-sidebar transition-all",
-            isFocused && "shadow-xs"
-          )}
-        >
-          <FormField
-            control={form.control}
-            name="value"
-            render={({ field }) => (
-              <TextareaAutosize
-                {...field}
-                disabled={isPending}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                minRows={2}
-                maxRows={8}
-                className="pt-4 resize-none border-none w-full outline-none bg-transparent"
-                placeholder="What would you like to build"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-                    e.preventDefault();
-                    form.handleSubmit(onSubmit)(e);
-                  }
-                }}
-              />
+    
+      <Form {...form}>
+        <section className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className={cn(
+              "relative border p-4 pt-1 rounded-xl bg-sidebar dark:bg-sidebar transition-all",
+              isFocused && "shadow-xs"
             )}
-          />
-          <div className="flex gap-x-2 items-end justify-between pt-2">
-            <div className="text-[10px] text-muted-foreground font-mono">
-              <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">
-                <span>&#8984;</span> Enter
-              </kbd>
-              &nbsp;to submit
-            </div>
-            <Button
-              disabled={isButtonDisabled}
-              className={cn(
-                "size-8 rounded-full",
-                isButtonDisabled && "bg-muted-foreground"
+          >
+            <FormField
+              control={form.control}
+              name="value"
+              render={({ field }) => (
+                <TextareaAutosize
+                  {...field}
+                  disabled={isPending}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  minRows={2}
+                  maxRows={8}
+                  className="pt-4 resize-none border-none w-full outline-none bg-transparent"
+                  placeholder="What would you like to build"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                      e.preventDefault();
+                      form.handleSubmit(onSubmit)(e);
+                    }
+                  }}
+                />
               )}
-            >
-              {isPending ? (
-                <Loader2Icon className="size-4 animate-spin" />
-              ) : (
-                <ArrowUpIcon />
-              )}
-            </Button>
-          </div>
-        </form>
-
-        {/* Templates Section */}
-        <div className=" flex-wrap justify-center gap-2 hidden md:flex max-w-3xl items-center">
-          {visibleTemplates.map((template) => {
-            return (
+            />
+            <div className="flex gap-x-2 items-end justify-between pt-2">
+              <div className="text-[10px] text-muted-foreground font-mono">
+                <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">
+                  <span>&#8984;</span> Enter
+                </kbd>
+                &nbsp;to submit
+              </div>
               <Button
-                key={template.title}
+                disabled={isButtonDisabled}
+                className={cn(
+                  "size-8 rounded-full",
+                  isButtonDisabled && "bg-muted-foreground"
+                )}
+              >
+                {isPending ? (
+                  <Loader2Icon className="size-4 animate-spin" />
+                ) : (
+                  <ArrowUpIcon />
+                )}
+              </Button>
+            </div>
+          </form>
+
+          {/* Templates Section */}
+          <div className=" flex-wrap justify-center gap-2 hidden md:flex max-w-3xl items-center">
+            {visibleTemplates.map((template) => {
+              return (
+                <Button
+                  key={template.title}
+                  variant="outline"
+                  size="sm"
+                  className="bg-white dark:bg-sidebar"
+                  onClick={() => onSelect(template.prompt)}
+                >
+                  {template.emoji} {template.title}
+                </Button>
+              );
+            })}
+
+            {/* Show More / Show Less Button */}
+            {hasMoreTemplates && (
+              <Button
                 variant="outline"
                 size="sm"
+                onClick={() => setShowAll(!showAll)}
                 className="bg-white dark:bg-sidebar"
-                onClick={() => onSelect(template.prompt)}
               >
-                {template.emoji} {template.title}
+                {showAll ? (
+                  <>
+                    <ChevronUp className="size-4 mr-1 bg-accent" />
+                    Show less
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="size-4 mr-1 bg-accent" />
+                    See more templates
+                  </>
+                )}
               </Button>
-            );
-          })}
-
-          {/* Show More / Show Less Button */}
-          {hasMoreTemplates && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowAll(!showAll)}
-              className="bg-white dark:bg-sidebar"
-            >
-              {showAll ? (
-                <>
-                  <ChevronUp className="size-4 mr-1 bg-accent" />
-                  Show less
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="size-4 mr-1 bg-accent" />
-                  See more templates
-                </>
-              )}
-            </Button>
-          )}
-        </div>
-      </section>
-    </Form>
+            )}
+          </div>
+        </section>
+      </Form>
+      
   );
 };
 

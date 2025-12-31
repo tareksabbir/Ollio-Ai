@@ -1,7 +1,4 @@
-"use client";
-
 import { ThemeProvider } from "next-themes";
-import { Toaster } from "sonner";
 import { TRPCReactProvider } from "@/trpc/client";
 import { ReactNode } from "react";
 
@@ -17,14 +14,7 @@ export function Providers({ children }: ProvidersProps) {
       enableSystem
       disableTransitionOnChange
     >
-      <TRPCReactProvider>
-        {children}
-        <Toaster 
-          expand={true}
-          richColors
-          closeButton
-        />
-      </TRPCReactProvider>
+      <TRPCReactProvider>{children}</TRPCReactProvider>
     </ThemeProvider>
   );
 }

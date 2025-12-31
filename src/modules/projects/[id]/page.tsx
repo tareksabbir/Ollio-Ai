@@ -1,6 +1,6 @@
 "use client";
 
-import FileExplorer from "@/components/file-explorer";
+import FileExplorer from "@/components/code-view/file-explorer";
 import { useTRPC } from "@/trpc/client";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -36,7 +36,10 @@ const ProjectPage = ({ messages }: ProjectPageProps) => {
   );
 
   // ✅ onSave handler with correct signature
-  const handleSaveFiles = async (fragmentId: string, files: Record<string, string>) => {
+  const handleSaveFiles = async (
+    fragmentId: string,
+    files: Record<string, string>
+  ) => {
     await updateFragment.mutateAsync({
       fragmentId,
       files,
