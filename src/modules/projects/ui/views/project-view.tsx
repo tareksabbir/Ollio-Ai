@@ -26,40 +26,67 @@ interface Props {
 const ProjectView = ({ projectId }: Props) => {
   const [activeFragment, setActiveFragment] = useState<Fragment | null>(null);
   const [tabState, setTabState] = useState<"preview" | "code">("code");
+  const [currentSandboxId, setCurrentSandboxId] = useState<string | null>(null);
 
   const trpc = useTRPC();
 
-  // ✅ Fragment update mutation
-  const updateFragment = useMutation(
-    trpc.fragments.update.mutationOptions({
-      onSuccess: () => {
-        toast.success("Files saved successfully!");
+  // ✅ tRPC Mutation: Restore (mutationOptions প্যাটার্ন ব্যবহার করা হলো)
+  const restoreMutation = useMutation(
+    trpc.sandbox.restore.mutationOptions({
+      onSuccess: (data: { url: string; sandboxId: string }) => { // ✅ Explicitly type 'data'
+        if (activeFragment) {
+          setActiveFragment((prev) => 
+            prev ? { ...prev, sandboxUrl: data.url } : null
+          );
+          setCurrentSandboxId(data.sandboxId);
+          toast.success("Preview restored successfully!");
+        }
       },
-      onError: (error) => {
-        toast.error("Failed to save files: " + error.message);
-      },
+      onError: (err) => {
+        toast.error("Failed to restore preview: " + err.message);
+      }
     })
   );
 
-  // ✅ onSave handler
-  const handleSaveFiles = async (
-    fragmentId: string,
-    files: Record<string, string>
-  ) => {
-    await updateFragment.mutateAsync({
-      fragmentId,
-      files,
-    });
+  // ✅ tRPC Mutation: Ping (mutationOptions প্যাটার্ন ব্যবহার করা হলো)
+  const pingMutation = useMutation(
+    trpc.sandbox.ping.mutationOptions()
+  );
+
+  // ✅ tRPC Mutation: Update Fragment (আগের মতোই)
+  const updateFragment = useMutation(
+    trpc.fragments.update.mutationOptions({
+      onSuccess: () => toast.success("Files saved successfully!"),
+      onError: (error) => toast.error("Failed to save files: " + error.message),
+    })
+  );
+
+  const handleSaveFiles = async (fragmentId: string, files: Record<string, string>) => {
+    await updateFragment.mutateAsync({ fragmentId, files });
+  };
+
+  // Restore Handler
+  const restoreSandbox = async (fragment: Fragment) => {
+    toast.loading("Restoring sandbox...", { id: "restore" });
+    await restoreMutation.mutateAsync({ fragmentId: fragment.id });
+    toast.dismiss("restore");
+  };
+
+  // Ping Handler (FragmentWeb এর জন্য)
+  const handlePing = (sandboxId: string) => {
+    pingMutation.mutate({ sandboxId });
+  };
+
+  const handleFragmentChange = (fragment: Fragment | null) => {
+    setActiveFragment(fragment);
+    setCurrentSandboxId(null);
   };
 
   return (
     <div className="h-screen">
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel
-          defaultSize={25}
-          minSize={20}
-          className="flex flex-col min-h-0"
-        >
+        {/* ... (বাম পাশের প্যানেল কোড আগের মতোই) ... */}
+        <ResizablePanel defaultSize={25} minSize={20} className="flex flex-col min-h-0">
           <Suspense fallback={<div>Loading...</div>}>
             <ProjectHeader projectId={projectId} />
           </Suspense>
@@ -67,19 +94,14 @@ const ProjectView = ({ projectId }: Props) => {
             <MessageContainer
               projectId={projectId}
               activeFragment={activeFragment}
-              setActiveFragment={setActiveFragment}
+              setActiveFragment={handleFragmentChange}
             />
           </Suspense>
         </ResizablePanel>
-        <ResizableHandle
-          withHandle
-          className="z-50" // ← Add this
-        />
-        <ResizablePanel
-          defaultSize={75}
-          minSize={50}
-          className="flex flex-col min-h-0"
-        >
+
+        <ResizableHandle withHandle className="z-50" />
+
+        <ResizablePanel defaultSize={75} minSize={50} className="flex flex-col min-h-0">
           <Tabs
             value={tabState}
             className="h-full gap-y-0"
@@ -103,15 +125,24 @@ const ProjectView = ({ projectId }: Props) => {
                 </Button>
               </div>
             </div>
+            
             <TabsContent value="preview">
-              {!!activeFragment && <FragmentWeb data={activeFragment} />}
+              {!!activeFragment && (
+                <FragmentWeb
+                  data={activeFragment}
+                  sandboxId={currentSandboxId}
+                  onRefresh={() => restoreSandbox(activeFragment)}
+                  onPing={handlePing}
+                />
+              )}
             </TabsContent>
+
             <TabsContent value="code" className="min-h-0">
               {!!activeFragment?.files && (
                 <FileExplorer
                   files={activeFragment.files as { [path: string]: string }}
-                  fragmentId={activeFragment.id} // ✅ fragmentId pass korchi
-                  onSave={handleSaveFiles} // ✅ onSave handler pass korchi
+                  fragmentId={activeFragment.id}
+                  onSave={handleSaveFiles}
                   allowEdit={true}
                 />
               )}

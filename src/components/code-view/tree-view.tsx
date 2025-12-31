@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { TreeItem } from "@/lib/utils";
 import {
   Sidebar,
@@ -6,9 +5,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
   SidebarProvider,
   SidebarRail,
 } from "@/components/ui/sidebar";

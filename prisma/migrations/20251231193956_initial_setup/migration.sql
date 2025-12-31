@@ -20,7 +20,7 @@ CREATE TABLE "Message" (
     "content" TEXT NOT NULL,
     "role" "MessageRole" NOT NULL,
     "type" "MessageType" NOT NULL,
-    "projectId" TEXT NOT NULL,
+    "projectId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
