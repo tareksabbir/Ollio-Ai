@@ -9,7 +9,7 @@ import { inngest } from "./client";
 import { Sandbox } from "@e2b/code-interpreter";
 import { getSandBox, lastAssistantTextMessageContent } from "./utils";
 import { z } from "zod";
-import { PROMPT } from "@/ui-prompt";
+import { PROMPT } from "@/prompt/ui-prompt";
 import prisma from "@/lib/db";
 
 interface AgentState {
