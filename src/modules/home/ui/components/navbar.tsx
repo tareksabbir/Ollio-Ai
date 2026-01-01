@@ -1,4 +1,5 @@
 "use client";
+import UserControl from "@/components/clerk/user-controler";
 import { Button } from "@/components/ui/button";
 import { SignInButton, SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { Moon, Sun, Github } from "lucide-react";
@@ -31,12 +32,7 @@ const Navbar = () => {
           </Button>
 
           {/* GitHub Link */}
-          <Button
-            variant="ghost"
-            size="icon"
-            asChild
-            className="w-9 h-9"
-          >
+          <Button variant="ghost" size="icon" asChild className="w-9 h-9">
             <Link
               href="https://github.com/yourusername/yourrepo"
               target="_blank"
@@ -61,7 +57,7 @@ const Navbar = () => {
           </SignedOut>
 
           <SignedIn>
-            <p>todo user control</p>
+            <UserControl showName />
           </SignedIn>
         </div>
       </div>

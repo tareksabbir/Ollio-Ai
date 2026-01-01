@@ -144,7 +144,7 @@ const ProjectForm = () => {
                   className="bg-white dark:bg-sidebar"
                   onClick={() => onSelect(template.prompt)}
                 >
-                  {template.emoji} {template.title}
+                  {<template.emoji className="w-6 h-6" />} {template.title}
                 </Button>
               );
             })}
