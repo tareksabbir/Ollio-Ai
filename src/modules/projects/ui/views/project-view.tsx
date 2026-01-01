@@ -35,7 +35,7 @@
 //     trpc.sandbox.restore.mutationOptions({
 //       onSuccess: (data: { url: string; sandboxId: string }) => { // ✅ Explicitly type 'data'
 //         if (activeFragment) {
-//           setActiveFragment((prev) =>
+//           setActiveFragment((prev) => 
 //             prev ? { ...prev, sandboxUrl: data.url } : null
 //           );
 //           setCurrentSandboxId(data.sandboxId);
@@ -124,7 +124,7 @@
 //                 </Button>
 //               </div>
 //             </div>
-
+            
 //             <TabsContent value="preview">
 //               {!!activeFragment && (
 //                 <FragmentWeb
@@ -172,7 +172,7 @@ import { Fragment } from "@/generated/prisma/browser";
 import ProjectHeader from "../components/project-header";
 import FragmentWeb from "../components/fragment-web";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CodeIcon, CrownIcon, EyeIcon } from "lucide-react";
+import { CodeIcon, CrownIcon, EyeIcon} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ProjectHeaderSkeleton from "../skeletons/project-header-skeleton";
@@ -196,7 +196,7 @@ const ProjectView = ({ projectId }: Props) => {
     trpc.sandbox.restore.mutationOptions({
       onSuccess: (data: { url: string; sandboxId: string }) => {
         if (activeFragment) {
-          setActiveFragment((prev) =>
+          setActiveFragment((prev) => 
             prev ? { ...prev, sandboxUrl: data.url } : null
           );
           setCurrentSandboxId(data.sandboxId);
@@ -205,11 +205,13 @@ const ProjectView = ({ projectId }: Props) => {
       },
       onError: (err) => {
         toast.error("Failed to restore preview: " + err.message);
-      },
+      }
     })
   );
 
-  const pingMutation = useMutation(trpc.sandbox.ping.mutationOptions());
+  const pingMutation = useMutation(
+    trpc.sandbox.ping.mutationOptions()
+  );
 
   const updateFragment = useMutation(
     trpc.fragments.update.mutationOptions({
@@ -218,10 +220,7 @@ const ProjectView = ({ projectId }: Props) => {
     })
   );
 
-  const handleSaveFiles = async (
-    fragmentId: string,
-    files: Record<string, string>
-  ) => {
+  const handleSaveFiles = async (fragmentId: string, files: Record<string, string>) => {
     await updateFragment.mutateAsync({ fragmentId, files });
   };
 
@@ -244,16 +243,12 @@ const ProjectView = ({ projectId }: Props) => {
     <div className="h-screen">
       <ResizablePanelGroup direction="horizontal">
         {/* Left Panel */}
-        <ResizablePanel
-          defaultSize={25}
-          minSize={20}
-          className="flex flex-col min-h-0"
-        >
+        <ResizablePanel defaultSize={25} minSize={20} className="flex flex-col min-h-0">
           {/* ✅ Suspense with Skeleton for Header */}
           <Suspense fallback={<ProjectHeaderSkeleton />}>
             <ProjectHeader projectId={projectId} />
           </Suspense>
-
+          
           {/* ✅ Suspense with Skeleton for Messages */}
           <Suspense fallback={<MessageContainerSkeleton />}>
             <MessageContainer
@@ -267,11 +262,7 @@ const ProjectView = ({ projectId }: Props) => {
         <ResizableHandle withHandle className="z-50" />
 
         {/* Right Panel */}
-        <ResizablePanel
-          defaultSize={75}
-          minSize={50}
-          className="flex flex-col min-h-0"
-        >
+        <ResizablePanel defaultSize={75} minSize={50} className="flex flex-col min-h-0">
           <Tabs
             value={tabState}
             className="h-full gap-y-0"
@@ -295,11 +286,8 @@ const ProjectView = ({ projectId }: Props) => {
                 </Button>
               </div>
             </div>
-
-            <TabsContent
-              value="preview"
-              className="h-full min-h-0 bg-background"
-            >
+            
+            <TabsContent value="preview" className="h-full min-h-0 bg-background">
               {!activeFragment ? (
                 <PreviewLoadingSkeleton />
               ) : (

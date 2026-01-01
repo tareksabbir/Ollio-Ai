@@ -37,8 +37,8 @@ model Message {
   role MessageRole
   type MessageType
 
-  projectId String?  // Optional
-  projet Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)  // Also optional with ?
+  projectId String?  
+  projet Project? @relation(fields: [projectId], references: [id], onDelete: Cascade) 
 
   fragment Fragment?
   createdAt DateTime @default(now())
@@ -46,12 +46,13 @@ model Message {
 }
 
 model Fragment {
-    id String @id @default(uuid())
-    messageId String @unique
-    message Message @relation(fields: [messageId], references: [id],onDelete: Cascade)
-    sandboxUrl String
-    title String
-    files Json
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id          String   @id @default(uuid())
+    messageId   String   @unique
+    message     Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+    sandboxUrl  String?  
+    sandboxId   String?  
+    title       String
+    files       Json
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
 }
