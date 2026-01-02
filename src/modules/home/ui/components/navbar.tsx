@@ -57,7 +57,7 @@ const Navbar = () => {
           </SignedOut>
 
           <SignedIn>
-            <UserControl showName />
+            <UserControl />
           </SignedIn>
         </div>
       </div>

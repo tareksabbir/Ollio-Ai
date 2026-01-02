@@ -231,7 +231,7 @@ const FragmentWeb = ({ data, sandboxId, onReset, onPing }: Props) => {
           >
             <RotateCcw
               className={`h-4 w-4 ${isCooldown ? "animate-spin" : ""}`}
-            /> Reset Sandbox
+            />Restart 
           </Button>
         </Hint>
 
