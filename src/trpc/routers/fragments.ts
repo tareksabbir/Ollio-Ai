@@ -1,10 +1,10 @@
 import prisma from "@/lib/db";
-import { baseProcedure, createTRPCRouter } from "@/trpc/init";
+import { protectedProcedure, createTRPCRouter } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import z from "zod";
 
 export const fragmentsRouter = createTRPCRouter({
-  update: baseProcedure
+  update: protectedProcedure
     .input(
       z.object({
         fragmentId: z.string().min(1, {
@@ -40,7 +40,7 @@ export const fragmentsRouter = createTRPCRouter({
       return updatedFragment;
     }),
 
-  getOne: baseProcedure
+  getOne: protectedProcedure
     .input(
       z.object({
         fragmentId: z.string().min(1, {

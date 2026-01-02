@@ -1,12 +1,12 @@
 // sandbox.ts
 import z from "zod";
-import { baseProcedure, createTRPCRouter } from "@/trpc/init";
+import { protectedProcedure, createTRPCRouter } from "@/trpc/init";
 import { Sandbox } from "@e2b/code-interpreter";
 import prisma from "@/lib/db";
 
 export const sandboxRouter = createTRPCRouter({
   // Restore Sandbox Mutation
-  restore: baseProcedure
+  restore: protectedProcedure
     .input(
       z.object({
         fragmentId: z.string().min(1, { message: "Fragment ID is required" }),
@@ -60,7 +60,7 @@ export const sandboxRouter = createTRPCRouter({
     }),
 
   // Ping Sandbox Mutation (Keep Alive)
-  ping: baseProcedure
+  ping: protectedProcedure
     .input(
       z.object({
         sandboxId: z.string().min(1, { message: "Sandbox ID is required" }),

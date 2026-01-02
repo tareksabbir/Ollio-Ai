@@ -1,12 +1,12 @@
 import z from "zod";
 import { inngest } from "@/inngest/client";
 import prisma from "@/lib/db";
-import { baseProcedure, createTRPCRouter } from "@/trpc/init";
+import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { generateSlug } from "random-word-slugs";
 import { TRPCError } from "@trpc/server";
 
 export const projectsRouter = createTRPCRouter({
-  getOne: baseProcedure
+  getOne: protectedProcedure
     .input(
       z.object({
         id: z.string().min(1, {
@@ -29,7 +29,7 @@ export const projectsRouter = createTRPCRouter({
       return existingProjects;
     }),
 
-  getMany: baseProcedure.query(async () => {
+  getMany: protectedProcedure.query(async () => {
     const projects = await prisma.project.findMany({
       orderBy: {
         createdAt: "desc",
@@ -37,7 +37,7 @@ export const projectsRouter = createTRPCRouter({
     });
     return projects;
   }),
-  create: baseProcedure
+  create: protectedProcedure
     .input(
       z.object({
         value: z
