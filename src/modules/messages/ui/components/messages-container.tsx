@@ -1,10 +1,10 @@
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import MessageCard from "./message-card";
-import MessageForm from "./massage-form";
+import MessageCard from "../../ui/components/message-card";
+import MessageForm from "../../ui/components/massage-form";
 import { useEffect, useRef, useCallback, useMemo } from "react";
 import { Fragment } from "@/generated/prisma/browser";
-import MessageLoading from "./massage-loading";
+import MessageLoading from "../../ui/components/massage-loading";
 
 interface Props {
   projectId: string;
@@ -23,18 +23,12 @@ const MessageContainer = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const { data: messages = [] } = useSuspenseQuery(
-    trpc.messages.getMany.queryOptions(
-      { projectId },
-      { refetchInterval: 5000 }
-    )
+    trpc.messages.getMany.queryOptions({ projectId }, { refetchInterval: 5000 })
   );
 
   // Memoize derived values
-  const lastMessage = useMemo(
-    () => messages[messages.length - 1],
-    [messages]
-  );
-  
+  const lastMessage = useMemo(() => messages[messages.length - 1], [messages]);
+
   const isLastMessageUser = useMemo(
     () => lastMessage?.role === "USER",
     [lastMessage]
@@ -71,10 +65,7 @@ const MessageContainer = ({
   return (
     <section className="flex flex-col flex-1 min-h-0">
       {/* Messages scrollable area */}
-      <div 
-        ref={scrollContainerRef}
-        className="flex-1 min-h-0 overflow-y-auto"
-      >
+      <div ref={scrollContainerRef} className="flex-1 min-h-0 overflow-y-auto">
         <div className="pt-2 pr-1 space-y-2">
           {messages.length === 0 ? (
             <div className="flex items-center justify-center h-full text-muted-foreground">
@@ -94,7 +85,7 @@ const MessageContainer = ({
               />
             ))
           )}
-          
+
           {isLastMessageUser && <MessageLoading />}
           <div ref={bottomRef} aria-hidden="true" />
         </div>
@@ -102,8 +93,8 @@ const MessageContainer = ({
 
       {/* Message input area with gradient overlay */}
       <div className="relative p-3 pt-1">
-        <div 
-          className="absolute -top-6 left-0 right-0 h-6 bg-linear-to-b from-transparent to-background pointer-events-none" 
+        <div
+          className="absolute -top-6 left-0 right-0 h-6 bg-linear-to-b from-transparent to-background pointer-events-none"
           aria-hidden="true"
         />
         <MessageForm projectId={projectId} />

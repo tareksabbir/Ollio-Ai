@@ -9,11 +9,11 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import MessageContainer from "../components/messages-container";
+
 import { Suspense, useState } from "react";
 import { Fragment } from "@/generated/prisma/browser";
 import ProjectHeader from "../components/project-header";
-import FragmentWeb from "../components/fragment-web";
+import FragmentWeb from "../../../fragments/ui/components/fragment-web";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CodeIcon, CrownIcon, EyeIcon, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ import CodeLoadingSkeleton from "../skeletons/code-loading-skeleton";
 import PreviewLoadingSkeleton from "../skeletons/preview-loading-skeleton";
 import UserControl from "@/components/clerk/user-controler";
 import { useTheme } from "next-themes";
+import MessageContainer from "@/modules/messages/ui/components/messages-container";
 
 interface Props {
   projectId: string;

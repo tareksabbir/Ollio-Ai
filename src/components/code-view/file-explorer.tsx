@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/resizable";
 
 import { useCallback, useMemo, useState } from "react";
-import Hint from "../hint";
+
 import { Button } from "../ui/button";
 import { CopyCheckIcon, CopyIcon, EditIcon, SaveIcon } from "lucide-react";
 import { convertFilesToTreeItems } from "@/lib/utils";
@@ -14,6 +14,7 @@ import FileBreadcrumb from "./file-breadcrumb";
 import { toast } from "sonner";
 import dynamic from "next/dynamic";
 import { CodeView } from ".";
+import Hint from "../custom/hint";
 
 const EditableCodeView = dynamic<{
   code: string;
