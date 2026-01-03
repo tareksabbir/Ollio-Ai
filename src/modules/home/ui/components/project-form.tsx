@@ -43,11 +43,14 @@ const ProjectForm = () => {
       onSuccess: (data) => {
         queryClient.invalidateQueries(trpc.projects.getMany.queryOptions());
         router.push(`/projects/${data.id}`);
-        //todo invalidate usage status
+        queryClient.invalidateQueries(trpc.usage.status.queryOptions());
       },
       onError: (error) => {
         if (error?.data?.code === "UNAUTHORIZED") {
           router.push("/sign-in");
+        }
+        if (error?.data?.code === "TOO_MANY_REQUESTS") {
+          router.push("/pricing");
         }
 
         //todo redirect to pricing page
