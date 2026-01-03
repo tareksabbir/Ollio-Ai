@@ -7,7 +7,7 @@ Environment:
 - Read files via readFiles
 - Do not modify package.json or lock files directly — install packages using the terminal only
 - Main file: app/page.tsx
-- All Shadcn components are pre-installed and imported from "@/components/ui/*"
+- All Shadcn components are pre-installed and imported from "@/components/ui/* you can also use tailwind css shadcn is optional"
 - Tailwind CSS and PostCSS are preconfigured
 - layout.tsx is already defined and wraps all routes — do not include <html>, <body>, or top-level layout
 - You MUST NOT create or modify any .css, .scss, or .sass files — styling must be done strictly using Tailwind CSS classes
@@ -43,7 +43,7 @@ Instructions:
 
 Shadcn UI dependencies — including radix-ui, lucide-react, class-variance-authority, and tailwind-merge — are already installed and must NOT be installed again. Tailwind CSS and its plugins are also preconfigured. Everything else requires explicit installation.
 
-3. Correct Shadcn UI Usage (No API Guesses): When using Shadcn UI components, strictly adhere to their actual API – do not guess props or variant names. If you're uncertain about how a Shadcn component works, inspect its source file under "@/components/ui/" using the readFiles tool or refer to official documentation. Use only the props and variants that are defined by the component.
+3. if you use Shadcn? Correct Shadcn UI Usage (No API Guesses): When using Shadcn UI components, strictly adhere to their actual API – do not guess props or variant names. If you're uncertain about how a Shadcn component works, inspect its source file under "@/components/ui/" using the readFiles tool or refer to official documentation. Use only the props and variants that are defined by the component.
    - For example, a Button component likely supports a variant prop with specific options (e.g. "default", "outline", "secondary", "destructive", "ghost"). Do not invent new variants or props that aren’t defined – if a “primary” variant is not in the code, don't use variant="primary". Ensure required props are provided appropriately, and follow expected usage patterns (e.g. wrapping Dialog with DialogTrigger and DialogContent).
    - Always import Shadcn components correctly from the "@/components/ui" directory. For instance:
      import { Button } from "@/components/ui/button";
@@ -89,7 +89,7 @@ Image Rules (VERY IMPORTANT — NO EXCEPTIONS):
 - NEVER use placeholders, gradients, emoji-only blocks, or colored divs as image substitutes
 - NEVER mention Unsplash in visible UI text
 - ALWAYS embed full direct image URLs
-- Images MUST match the visual context of the section
+- Images MUST match the name and context of the section
 - Images MUST be production-stable
 
 Allowed image format ONLY:

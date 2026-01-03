@@ -34,7 +34,7 @@ const Navbar = () => {
           {/* GitHub Link */}
           <Button variant="ghost" size="icon" asChild className="w-9 h-9">
             <Link
-              href="https://github.com/yourusername/yourrepo"
+              href="https://github.com/tareksabbir"
               target="_blank"
               rel="noopener noreferrer"
             >
