@@ -58,21 +58,53 @@ const ProjectView = ({ projectId }: Props) => {
 
   const pingMutation = useMutation(trpc.sandbox.ping.mutationOptions());
 
+  // ✅ FIX 1: Update mutation with proper state management
   const updateFragment = useMutation(
     trpc.fragments.update.mutationOptions({
-      onSuccess: () => toast.success("Files saved successfully!"),
-      onError: (error) => toast.error("Failed to save files: " + error.message),
+      onSuccess: (updatedFragment, variables) => {
+        toast.success("Files saved successfully!");
+        
+        // ✅ FIX 2: Update activeFragment state with new files
+        // This ensures FileExplorer receives updated data
+        setActiveFragment((prev) => {
+          if (prev && prev.id === variables.fragmentId) {
+            return {
+              ...prev,
+              files: variables.files, // Update files with saved data
+            };
+          }
+          return prev;
+        });
+      },
+      onError: (error) => {
+        toast.error("Failed to save files: " + error.message);
+      },
     })
   );
 
+  // ✅ FIX 3: Improved save handler with validation
   const handleSaveFiles = async (
     fragmentId: string,
     files: Record<string, string>
   ) => {
-    await updateFragment.mutateAsync({ fragmentId, files });
+    // Validate fragmentId matches activeFragment
+    if (activeFragment?.id !== fragmentId) {
+      toast.error("Fragment mismatch error");
+      console.error("Attempting to save wrong fragment", {
+        activeFragmentId: activeFragment?.id,
+        saveFragmentId: fragmentId,
+      });
+      return;
+    }
+
+    try {
+      await updateFragment.mutateAsync({ fragmentId, files });
+    } catch (error) {
+      // Error already handled in mutation onError
+      console.error("Save failed:", error);
+    }
   };
 
-  // ✅ এই ফাংশনটি নতুন স্যান্ডবক্স তৈরি করে
   const restoreSandbox = async (fragment: Fragment) => {
     toast.loading("Restoring sandbox...", { id: "restore" });
     await restoreMutation.mutateAsync({ fragmentId: fragment.id });
@@ -83,7 +115,18 @@ const ProjectView = ({ projectId }: Props) => {
     pingMutation.mutate({ sandboxId });
   };
 
+  // ✅ FIX 4: Improved fragment change handler
   const handleFragmentChange = (fragment: Fragment | null) => {
+    // Warn if there are unsaved changes (optional)
+    if (
+      activeFragment && 
+      fragment && 
+      activeFragment.id !== fragment.id &&
+      updateFragment.isPending
+    ) {
+      console.warn("Switching fragments while save is in progress");
+    }
+
     setActiveFragment(fragment);
     setCurrentSandboxId(null);
   };
@@ -164,7 +207,6 @@ const ProjectView = ({ projectId }: Props) => {
                 <FragmentWeb
                   data={activeFragment}
                   sandboxId={currentSandboxId}
-                  // ✅ onReset হিসেবে পাঠানো হচ্ছে, যা নতুন স্যান্ডবক্স তৈরি করবে
                   onReset={() => restoreSandbox(activeFragment)}
                   onPing={handlePing}
                 />
@@ -177,6 +219,9 @@ const ProjectView = ({ projectId }: Props) => {
               ) : (
                 !!activeFragment?.files && (
                   <FileExplorer
+                    // ✅ FIX 5: Use key prop to force remount on fragment change
+                    // This prevents stale state when switching between fragments
+                    key={activeFragment.id}
                     files={activeFragment.files as { [path: string]: string }}
                     fragmentId={activeFragment.id}
                     onSave={handleSaveFiles}

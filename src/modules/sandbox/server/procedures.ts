@@ -20,7 +20,7 @@ export const sandboxRouter = createTRPCRouter({
         include: {
           message: {
             include: {
-              projet: true,
+              project: true,
             },
           },
         },
@@ -34,7 +34,7 @@ export const sandboxRouter = createTRPCRouter({
       }
 
       // Check করো fragment টা এই user এর কিনা
-      if (fragment.message?.projet?.userId !== ctx.auth.userId) {
+      if (fragment.message?.project?.userId !== ctx.auth.userId) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You don't have permission to restore this sandbox",
@@ -70,9 +70,9 @@ export const sandboxRouter = createTRPCRouter({
 
       await prisma.fragment.update({
         where: { id: fragmentId },
-        data: { 
+        data: {
           sandboxUrl: newUrl,
-          sandboxId: newSandboxId 
+          sandboxId: newSandboxId,
         },
       });
 

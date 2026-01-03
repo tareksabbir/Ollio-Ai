@@ -22,7 +22,7 @@ export const fragmentsRouter = createTRPCRouter({
         include: {
           message: {
             include: {
-              projet: true, // project এর মাধ্যমে userId চেক করবো
+              project: true, // project এর মাধ্যমে userId চেক করবো
             },
           },
         },
@@ -36,7 +36,7 @@ export const fragmentsRouter = createTRPCRouter({
       }
 
       // Check করো fragment টা এই user এর কিনা
-      if (existingFragment.message?.projet?.userId !== ctx.auth.userId) {
+      if (existingFragment.message?.project?.userId !== ctx.auth.userId) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You don't have permission to update this fragment",
@@ -72,7 +72,7 @@ export const fragmentsRouter = createTRPCRouter({
         include: {
           message: {
             include: {
-              projet: true,
+              project: true,
             },
           },
         },
@@ -86,7 +86,7 @@ export const fragmentsRouter = createTRPCRouter({
       }
 
       // Check করো fragment টা এই user এর কিনা
-      if (fragment.message?.projet?.userId !== ctx.auth.userId) {
+      if (fragment.message?.project?.userId !== ctx.auth.userId) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You don't have permission to access this fragment",

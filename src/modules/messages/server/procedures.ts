@@ -18,7 +18,7 @@ export const messagesRouter = createTRPCRouter({
       const messages = await prisma.message.findMany({
         where: {
           projectId: input.projectId,
-          projet: {
+          project: {
             userId: ctx.auth.userId,
           },
         },
@@ -65,8 +65,8 @@ export const messagesRouter = createTRPCRouter({
             code: "BAD_REQUEST",
             message: "Something went wrong!",
           });
-        } else{
-           throw new TRPCError({
+        } else {
+          throw new TRPCError({
             code: "TOO_MANY_REQUESTS",
             message: "You have run out of credits!",
           });
