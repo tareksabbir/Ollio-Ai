@@ -14,10 +14,11 @@ export const projectsRouter = createTRPCRouter({
         }),
       })
     )
-    .query(async ({ input }) => {
+    .query(async ({ input ,ctx}) => {
       const existingProjects = await prisma.project.findUnique({
         where: {
           id: input.id,
+          userId: ctx.auth.userId,
         },
       });
       if (!existingProjects) {
@@ -29,8 +30,11 @@ export const projectsRouter = createTRPCRouter({
       return existingProjects;
     }),
 
-  getMany: protectedProcedure.query(async () => {
+  getMany: protectedProcedure.query(async ({ctx}) => {
     const projects = await prisma.project.findMany({
+      where: {
+        userId: ctx.auth.userId,
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -46,9 +50,10 @@ export const projectsRouter = createTRPCRouter({
           .max(10000, { message: "Prompt is too long" }),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const createdProject = await prisma.project.create({
         data: {
+          userId: ctx.auth.userId,
           name: generateSlug(2, {
             format: "kebab",
           }),

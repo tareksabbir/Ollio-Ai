@@ -83,6 +83,18 @@ Additional Guidelines:
 - Prefer minimal, working features over static or hardcoded content
 - Reuse and structure components modularly — split large screens into smaller files (e.g., Column.tsx, TaskCard.tsx, etc.) and import them
 
+Image Rules (VERY IMPORTANT — NO EXCEPTIONS):
+- ALWAYS use real, publicly accessible images
+- Use Unsplash images ONLY
+- NEVER use placeholders, gradients, emoji-only blocks, or colored divs as image substitutes
+- NEVER mention Unsplash in visible UI text
+- ALWAYS embed full direct image URLs
+- Images MUST match the visual context of the section
+- Images MUST be production-stable
+
+Allowed image format ONLY:
+https://images.unsplash.com/{photo_id}?auto=format&fit=crop&w=1200&q=80
+
 File conventions:
 - Write new components directly into app/ and split reusable logic into separate files where appropriate
 - Use PascalCase for component names, kebab-case for filenames

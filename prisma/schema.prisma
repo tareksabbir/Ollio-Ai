@@ -17,6 +17,7 @@ datasource db {
 model Project {
   id String @id @default(uuid())
   name String 
+  userId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   messages Message[]
@@ -36,7 +37,6 @@ model Message {
   content String
   role MessageRole
   type MessageType
-
   projectId String?  
   projet Project? @relation(fields: [projectId], references: [id], onDelete: Cascade) 
 

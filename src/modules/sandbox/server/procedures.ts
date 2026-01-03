@@ -1,40 +1,57 @@
-// sandbox.ts
 import z from "zod";
 import { protectedProcedure, createTRPCRouter } from "@/trpc/init";
 import { Sandbox } from "@e2b/code-interpreter";
 import prisma from "@/lib/db";
+import { TRPCError } from "@trpc/server";
 
 export const sandboxRouter = createTRPCRouter({
-  // Restore Sandbox Mutation
   restore: protectedProcedure
     .input(
       z.object({
         fragmentId: z.string().min(1, { message: "Fragment ID is required" }),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const { fragmentId } = input;
 
-      // 1. Database থেকে Fragment খুঁজে বের করা
+      // Fragment খুঁজে বের করো এবং verify করো
       const fragment = await prisma.fragment.findUnique({
         where: { id: fragmentId },
+        include: {
+          message: {
+            include: {
+              projet: true,
+            },
+          },
+        },
       });
 
       if (!fragment || !fragment.files) {
-        throw new Error("Fragment not found or has no files");
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Fragment not found or has no files",
+        });
+      }
+
+      // Check করো fragment টা এই user এর কিনা
+      if (fragment.message?.projet?.userId !== ctx.auth.userId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have permission to restore this sandbox",
+        });
       }
 
       const files = fragment.files as Record<string, string>;
 
-      // 2. নতুন Sandbox তৈরি করা
+      // নতুন Sandbox তৈরি করা
       const sandbox = await Sandbox.create("ollio-ai");
 
-      // 3. ফাইলগুলো Sandbox এ লেখা
+      // ফাইলগুলো Sandbox এ লেখা
       for (const [path, content] of Object.entries(files)) {
         await sandbox.files.write(path, content);
       }
 
-      // 4. Dependencies ইনস্টল করা (যদি থাকে)
+      // Dependencies ইনস্টল করা
       if (files["package.json"]) {
         try {
           await sandbox.commands.run("npm install");
@@ -43,23 +60,25 @@ export const sandboxRouter = createTRPCRouter({
         }
       }
 
-      // 5. Dev Server চালু করা
+      // Dev Server চালু করা
       await sandbox.commands.run("npm run dev", { background: true });
 
-      // 6. URL জেনারেট ও ডাটাবেস আপডেট
+      // URL জেনারেট ও ডাটাবেস আপডেট
       const host = sandbox.getHost(3000);
       const newUrl = `https://${host}`;
       const newSandboxId = sandbox.sandboxId;
 
       await prisma.fragment.update({
         where: { id: fragmentId },
-        data: { sandboxUrl: newUrl },
+        data: { 
+          sandboxUrl: newUrl,
+          sandboxId: newSandboxId 
+        },
       });
 
       return { url: newUrl, sandboxId: newSandboxId };
     }),
 
-  // Ping Sandbox Mutation (Keep Alive)
   ping: protectedProcedure
     .input(
       z.object({
@@ -74,7 +93,6 @@ export const sandboxRouter = createTRPCRouter({
         await sandbox.commands.run("echo 'ping'");
         return { success: true };
       } catch (error) {
-        // পিং ফেইল করলেও আমরা এরর থ্রো করব না, যাতে ফ্রন্টএন্ড ক্র্যাশ না করে
         console.error("Ping failed:", error);
         return { success: false };
       }

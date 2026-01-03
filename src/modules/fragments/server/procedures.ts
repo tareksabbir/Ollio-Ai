@@ -13,10 +13,18 @@ export const fragmentsRouter = createTRPCRouter({
         files: z.record(z.string(), z.string()),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      // Fragment খুঁজে বের করো এবং verify করো যে এটা এই user এর
       const existingFragment = await prisma.fragment.findUnique({
         where: {
           id: input.fragmentId,
+        },
+        include: {
+          message: {
+            include: {
+              projet: true, // project এর মাধ্যমে userId চেক করবো
+            },
+          },
         },
       });
 
@@ -24,6 +32,14 @@ export const fragmentsRouter = createTRPCRouter({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Fragment not found",
+        });
+      }
+
+      // Check করো fragment টা এই user এর কিনা
+      if (existingFragment.message?.projet?.userId !== ctx.auth.userId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have permission to update this fragment",
         });
       }
 
@@ -48,13 +64,17 @@ export const fragmentsRouter = createTRPCRouter({
         }),
       })
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       const fragment = await prisma.fragment.findUnique({
         where: {
           id: input.fragmentId,
         },
         include: {
-          message: true,
+          message: {
+            include: {
+              projet: true,
+            },
+          },
         },
       });
 
@@ -62,6 +82,14 @@ export const fragmentsRouter = createTRPCRouter({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Fragment not found",
+        });
+      }
+
+      // Check করো fragment টা এই user এর কিনা
+      if (fragment.message?.projet?.userId !== ctx.auth.userId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have permission to access this fragment",
         });
       }
 

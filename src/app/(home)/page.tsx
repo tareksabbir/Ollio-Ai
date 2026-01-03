@@ -1,5 +1,6 @@
 import ProjectForm from "@/modules/home/ui/components/project-form";
 import ProjectsList from "@/modules/home/ui/components/project-list";
+import { SignedIn } from "@clerk/nextjs";
 import Image from "next/image";
 
 const Page = () => {
@@ -25,7 +26,9 @@ const Page = () => {
           <ProjectForm />
         </div>
       </div>
-      <ProjectsList />
+      <SignedIn>
+        <ProjectsList />
+      </SignedIn>
     </section>
   );
 };
