@@ -1,17 +1,29 @@
 "use client";
 import UserControl from "@/components/clerk/user-controler";
 import { Button } from "@/components/ui/button";
+import { useScroll } from "@/hooks/use-scroll";
 import { SignInButton, SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs";
-import { Moon, Sun, Github } from "lucide-react";
+import { Moon, Sun, Github, CreditCard } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
+  const isScrolled = useScroll();
 
   return (
-    <nav className="p-4 bg-transparent fixed top-0 right-0 left-0 z-50 transition-all duration-200 border-b border-transparent">
+    <nav
+      className={cn(
+        "p-4 fixed top-0 right-0 left-0 z-50 transition-all duration-200 border-b",
+        isScrolled
+          ? "bg-background/80 backdrop-blur-md border-border"
+          : "bg-transparent border-transparent"
+      )}
+    >
       <div className="max-w-5xl mx-auto w-full flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2">
           <Image src="/logo.svg" alt="ollio" width={32} height={32} />
@@ -29,6 +41,17 @@ const Navbar = () => {
             <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             <span className="sr-only">Toggle theme</span>
+          </Button>
+
+          {/* Pricing Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push("/pricing")}
+            className="w-9 h-9"
+          >
+            <CreditCard className="h-4 w-4" />
+            <span className="sr-only">Pricing</span>
           </Button>
 
           {/* GitHub Link */}
