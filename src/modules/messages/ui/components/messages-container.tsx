@@ -1,3 +1,4 @@
+// modules/messages/ui/components/messages-container.tsx
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import MessageCard from "../../ui/components/message-card";
@@ -5,6 +6,7 @@ import MessageForm from "../../ui/components/massage-form";
 import { useEffect, useRef, useCallback, useMemo } from "react";
 import { Fragment } from "@/generated/prisma/browser";
 import MessageLoading from "../../ui/components/massage-loading";
+import { ComponentErrorBoundary } from "@/components/error-boundary/component-error-boundary";
 
 interface Props {
   projectId: string;
@@ -26,20 +28,16 @@ const MessageContainer = ({
     trpc.messages.getMany.queryOptions({ projectId }, { refetchInterval: 5000 })
   );
 
-  // Memoize derived values
   const lastMessage = useMemo(() => messages[messages.length - 1], [messages]);
-
   const isLastMessageUser = useMemo(
     () => lastMessage?.role === "USER",
     [lastMessage]
   );
 
-  // Auto-scroll to bottom on new messages
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
 
-  // Handle active fragment updates
   useEffect(() => {
     const lastAssistantMessage = messages.findLast(
       (message) => message.role === "ASSISTANT"
@@ -54,7 +52,6 @@ const MessageContainer = ({
     }
   }, [messages, setActiveFragment]);
 
-  // Memoize fragment click handler
   const handleFragmentClick = useCallback(
     (fragment: Fragment | null) => {
       setActiveFragment(fragment);
@@ -64,7 +61,7 @@ const MessageContainer = ({
 
   return (
     <section className="flex flex-col flex-1 min-h-0">
-      {/* Messages scrollable area */}
+      {/* Messages with individual error boundaries */}
       <div ref={scrollContainerRef} className="flex-1 min-h-0 overflow-y-auto">
         <div className="pt-2 pr-1 space-y-2">
           {messages.length === 0 ? (
@@ -73,16 +70,20 @@ const MessageContainer = ({
             </div>
           ) : (
             messages.map((message) => (
-              <MessageCard
+              <ComponentErrorBoundary 
                 key={message.id}
-                content={message.content}
-                role={message.role}
-                fragment={message.fragment}
-                createdAt={message.createdAt}
-                isActiveFragment={activeFragment?.id === message.fragment?.id}
-                onFragmentClick={() => handleFragmentClick(message.fragment)}
-                type={message.type}
-              />
+                componentName="MessageCard"
+              >
+                <MessageCard
+                  content={message.content}
+                  role={message.role}
+                  fragment={message.fragment}
+                  createdAt={message.createdAt}
+                  isActiveFragment={activeFragment?.id === message.fragment?.id}
+                  onFragmentClick={() => handleFragmentClick(message.fragment)}
+                  type={message.type}
+                />
+              </ComponentErrorBoundary>
             ))
           )}
 
@@ -91,13 +92,15 @@ const MessageContainer = ({
         </div>
       </div>
 
-      {/* Message input area with gradient overlay */}
+      {/* Message form with error boundary */}
       <div className="relative p-3 pt-1">
         <div
           className="absolute -top-6 left-0 right-0 h-6 bg-linear-to-b from-transparent to-background pointer-events-none"
           aria-hidden="true"
         />
-        <MessageForm projectId={projectId} />
+        <ComponentErrorBoundary componentName="MessageForm">
+          <MessageForm projectId={projectId} />
+        </ComponentErrorBoundary>
       </div>
     </section>
   );

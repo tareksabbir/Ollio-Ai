@@ -1,3 +1,4 @@
+// modules/projects/ui/views/project-view.tsx
 "use client";
 
 import FileExplorer from "@/components/code-view/file-explorer";
@@ -18,13 +19,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CodeIcon, CrownIcon, EyeIcon, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import ProjectHeaderSkeleton from "../skeletons/project-header-skeleton";
-import MessageContainerSkeleton from "../skeletons/message-container-skeleton";
-import CodeLoadingSkeleton from "../skeletons/code-loading-skeleton";
-import PreviewLoadingSkeleton from "../skeletons/preview-loading-skeleton";
+import ProjectHeaderSkeleton from "../../../../components/skeletons/project-header-skeleton";
+import MessageContainerSkeleton from "../../../../components/skeletons/message-container-skeleton";
+import CodeLoadingSkeleton from "../../../../components/skeletons/code-loading-skeleton";
+import PreviewLoadingSkeleton from "../../../../components/skeletons/preview-loading-skeleton";
 import UserControl from "@/components/clerk/user-controler";
 import { useTheme } from "next-themes";
 import MessageContainer from "@/modules/messages/ui/components/messages-container";
+import { ComponentErrorBoundary } from "@/components/error-boundary/component-error-boundary";
 
 interface Props {
   projectId: string;
@@ -58,19 +60,15 @@ const ProjectView = ({ projectId }: Props) => {
 
   const pingMutation = useMutation(trpc.sandbox.ping.mutationOptions());
 
-  // ✅ FIX 1: Update mutation with proper state management
   const updateFragment = useMutation(
     trpc.fragments.update.mutationOptions({
       onSuccess: (updatedFragment, variables) => {
         toast.success("Files saved successfully!");
-
-        // ✅ FIX 2: Update activeFragment state with new files
-        // This ensures FileExplorer receives updated data
         setActiveFragment((prev) => {
           if (prev && prev.id === variables.fragmentId) {
             return {
               ...prev,
-              files: variables.files, // Update files with saved data
+              files: variables.files,
             };
           }
           return prev;
@@ -82,12 +80,10 @@ const ProjectView = ({ projectId }: Props) => {
     })
   );
 
-  // ✅ FIX 3: Improved save handler with validation
   const handleSaveFiles = async (
     fragmentId: string,
     files: Record<string, string>
   ) => {
-    // Validate fragmentId matches activeFragment
     if (activeFragment?.id !== fragmentId) {
       toast.error("Fragment mismatch error");
       console.error("Attempting to save wrong fragment", {
@@ -100,7 +96,6 @@ const ProjectView = ({ projectId }: Props) => {
     try {
       await updateFragment.mutateAsync({ fragmentId, files });
     } catch (error) {
-      // Error already handled in mutation onError
       console.error("Save failed:", error);
     }
   };
@@ -115,9 +110,7 @@ const ProjectView = ({ projectId }: Props) => {
     pingMutation.mutate({ sandboxId });
   };
 
-  // ✅ FIX 4: Improved fragment change handler
   const handleFragmentChange = (fragment: Fragment | null) => {
-    // Warn if there are unsaved changes (optional)
     if (
       activeFragment &&
       fragment &&
@@ -134,28 +127,32 @@ const ProjectView = ({ projectId }: Props) => {
   return (
     <div className="h-screen">
       <ResizablePanelGroup direction="horizontal">
-        {/* Left Panel */}
+        {/* Left Panel with Error Boundary */}
         <ResizablePanel
           defaultSize={25}
           minSize={20}
           className="flex flex-col min-h-0"
         >
-          <Suspense fallback={<ProjectHeaderSkeleton />}>
-            <ProjectHeader title={activeFragment?.title ?? "Untitled"} />
-          </Suspense>
+          <ComponentErrorBoundary componentName="ProjectHeader">
+            <Suspense fallback={<ProjectHeaderSkeleton />}>
+              <ProjectHeader title={activeFragment?.title ?? "Untitled"} />
+            </Suspense>
+          </ComponentErrorBoundary>
 
-          <Suspense fallback={<MessageContainerSkeleton />}>
-            <MessageContainer
-              projectId={projectId}
-              activeFragment={activeFragment}
-              setActiveFragment={handleFragmentChange}
-            />
-          </Suspense>
+          <ComponentErrorBoundary componentName="MessageContainer">
+            <Suspense fallback={<MessageContainerSkeleton />}>
+              <MessageContainer
+                projectId={projectId}
+                activeFragment={activeFragment}
+                setActiveFragment={handleFragmentChange}
+              />
+            </Suspense>
+          </ComponentErrorBoundary>
         </ResizablePanel>
 
         <ResizableHandle withHandle className="z-50" />
 
-        {/* Right Panel */}
+        {/* Right Panel with Error Boundaries */}
         <ResizablePanel
           defaultSize={75}
           minSize={50}
@@ -201,34 +198,36 @@ const ProjectView = ({ projectId }: Props) => {
               value="preview"
               className="h-full min-h-0 bg-background"
             >
-              {!activeFragment ? (
-                <PreviewLoadingSkeleton />
-              ) : (
-                <FragmentWeb
-                  data={activeFragment}
-                  sandboxId={currentSandboxId}
-                  onReset={() => restoreSandbox(activeFragment)}
-                  onPing={handlePing}
-                />
-              )}
+              <ComponentErrorBoundary componentName="FragmentPreview">
+                {!activeFragment ? (
+                  <PreviewLoadingSkeleton />
+                ) : (
+                  <FragmentWeb
+                    data={activeFragment}
+                    sandboxId={currentSandboxId}
+                    onReset={() => restoreSandbox(activeFragment)}
+                    onPing={handlePing}
+                  />
+                )}
+              </ComponentErrorBoundary>
             </TabsContent>
 
             <TabsContent value="code" className="h-full min-h-0 bg-background">
-              {!activeFragment ? (
-                <CodeLoadingSkeleton />
-              ) : (
-                !!activeFragment?.files && (
-                  <FileExplorer
-                    // ✅ FIX 5: Use key prop to force remount on fragment change
-                    // This prevents stale state when switching between fragments
-                    key={activeFragment.id}
-                    files={activeFragment.files as { [path: string]: string }}
-                    fragmentId={activeFragment.id}
-                    onSave={handleSaveFiles}
-                    allowEdit={true}
-                  />
-                )
-              )}
+              <ComponentErrorBoundary componentName="FileExplorer">
+                {!activeFragment ? (
+                  <CodeLoadingSkeleton />
+                ) : (
+                  !!activeFragment?.files && (
+                    <FileExplorer
+                      key={activeFragment.id}
+                      files={activeFragment.files as { [path: string]: string }}
+                      fragmentId={activeFragment.id}
+                      onSave={handleSaveFiles}
+                      allowEdit={true}
+                    />
+                  )
+                )}
+              </ComponentErrorBoundary>
             </TabsContent>
           </Tabs>
         </ResizablePanel>

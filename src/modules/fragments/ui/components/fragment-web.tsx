@@ -1,24 +1,73 @@
+// modules/fragments/ui/components/fragment-web.tsx
 "use client";
-
 
 import Hint from "@/components/custom/hint";
 import { Button } from "@/components/ui/button";
 import { Fragment } from "@/generated/prisma/browser";
-import { ExternalLinkIcon, RefreshCcw, RotateCcw } from "lucide-react"; // ✅ RotateCcw added
+import { ExternalLinkIcon, RefreshCcw, RotateCcw, AlertTriangle } from "lucide-react";
 import { useState, useEffect } from "react";
+import { ComponentErrorBoundary } from "@/components/error-boundary/component-error-boundary";
 
 interface Props {
   data: Fragment;
   sandboxId: string | null;
-  onReset: () => void; // ✅ Renamed from onRefresh to onReset
+  onReset: () => void;
   onPing: (sandboxId: string) => void;
+}
+
+// Separate iframe component for better error isolation
+function SandboxIframe({ 
+  url, 
+  fragmentKey 
+}: { 
+  url: string; 
+  fragmentKey: number 
+}) {
+  return (
+    <iframe
+      key={fragmentKey}
+      className="h-full w-full"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+      loading="lazy"
+      src={url}
+      title="Preview"
+    />
+  );
+}
+
+// Custom fallback for iframe errors
+function IframeErrorFallback({ 
+  resetErrorBoundary 
+}: { 
+  error: Error; 
+  resetErrorBoundary: () => void;
+}) {
+  return (
+    <div className="flex h-full items-center justify-center bg-muted/20">
+      <div className="max-w-md space-y-4 p-6 text-center">
+        <div className="flex justify-center">
+          <div className="rounded-full bg-destructive/10 p-3">
+            <AlertTriangle className="h-8 w-8 text-destructive" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <h3 className="font-semibold text-destructive">Preview Error</h3>
+          <p className="text-sm text-muted-foreground">
+            Unable to load the preview. The sandbox may have crashed or the URL is invalid.
+          </p>
+        </div>
+        <Button onClick={resetErrorBoundary} size="sm" variant="outline">
+          <RefreshCcw className="h-3.5 w-3.5 mr-2" />
+          Retry
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 const FragmentWeb = ({ data, sandboxId, onReset, onPing }: Props) => {
   const [fragmentKey, setFragmentKey] = useState(0);
   const [copied, setCopied] = useState(false);
-
-  // ✅ Cooldown শুধুমাত্র Reset (New Sandbox) এর জন্য
   const [isCooldown, setIsCooldown] = useState(false);
 
   const triggerCooldown = () => {
@@ -28,12 +77,10 @@ const FragmentWeb = ({ data, sandboxId, onReset, onPing }: Props) => {
     }, 30000);
   };
 
-  // ✅ Refresh: শুধু Iframe রিলোড করবে (URL একই থাকবে)
   const handleRefresh = () => {
     setFragmentKey((prev) => prev + 1);
   };
 
-  // ✅ Reset: নতুন Sandbox তৈরি করবে
   const handleReset = () => {
     if (onReset) onReset();
     triggerCooldown();
@@ -51,7 +98,6 @@ const FragmentWeb = ({ data, sandboxId, onReset, onPing }: Props) => {
     window.open(data.sandboxUrl, "_blank");
   };
 
-  // Keep Alive Logic
   useEffect(() => {
     if (!sandboxId || !data.sandboxUrl) return;
 
@@ -66,7 +112,6 @@ const FragmentWeb = ({ data, sandboxId, onReset, onPing }: Props) => {
   return (
     <section className="flex flex-col w-full h-full">
       <div className="p-2 border-b bg-sidebar flex items-center gap-x-2">
-        {/* ✅ Refresh Button (URL Reload) */}
         <Hint text="Reload Preview" side="bottom" align="start">
           <Button size="sm" variant="outline" onClick={handleRefresh}>
             <RefreshCcw className="h-4 w-4" />
@@ -92,7 +137,7 @@ const FragmentWeb = ({ data, sandboxId, onReset, onPing }: Props) => {
             </span>
           </Button>
         </Hint>
-        {/* ✅ Reset Button (New Sandbox) */}
+
         <Hint text="Reset / Create New Sandbox" side="bottom" align="start">
           <Button
             size="sm"
@@ -102,7 +147,8 @@ const FragmentWeb = ({ data, sandboxId, onReset, onPing }: Props) => {
           >
             <RotateCcw
               className={`h-4 w-4 ${isCooldown ? "animate-spin" : ""}`}
-            />Restart 
+            />
+            Restart
           </Button>
         </Hint>
 
@@ -118,14 +164,19 @@ const FragmentWeb = ({ data, sandboxId, onReset, onPing }: Props) => {
         </Hint>
       </div>
 
-      {/* Iframe key change triggers reload */}
-      <iframe
-        key={fragmentKey}
-        className="h-full w-full"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-        loading="lazy"
-        src={data.sandboxUrl ?? ""}
-      ></iframe>
+      {/* Iframe with error boundary */}
+      <ComponentErrorBoundary 
+        componentName="SandboxIframe"
+        fallback={<IframeErrorFallback error={new Error("Iframe failed to load")} resetErrorBoundary={handleRefresh} />}
+      >
+        {data.sandboxUrl ? (
+          <SandboxIframe url={data.sandboxUrl} fragmentKey={fragmentKey} />
+        ) : (
+          <div className="flex h-full items-center justify-center text-muted-foreground">
+            <p>No preview available</p>
+          </div>
+        )}
+      </ComponentErrorBoundary>
     </section>
   );
 };

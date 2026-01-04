@@ -9,7 +9,11 @@ import {
 } from "@inngest/agent-kit";
 import { inngest } from "./client";
 import { Sandbox } from "@e2b/code-interpreter";
-import { getSandBox, lastAssistantTextMessageContent, parseAgentOutput } from "./utils";
+import {
+  getSandBox,
+  lastAssistantTextMessageContent,
+  parseAgentOutput,
+} from "./utils";
 import { z } from "zod";
 import {
   FRAGMENT_TITLE_PROMPT,
@@ -22,8 +26,6 @@ interface AgentState {
   summary: string;
   files: { [path: string]: string };
 }
-
-
 
 export const uiGenerationAgent = inngest.createFunction(
   { id: "ui-Generation-Agent" },
@@ -45,6 +47,7 @@ export const uiGenerationAgent = inngest.createFunction(
           orderBy: {
             createdAt: "desc",
           },
+          take: 5,
         });
 
         for (const message of messages) {
@@ -54,7 +57,7 @@ export const uiGenerationAgent = inngest.createFunction(
             content: message.content,
           });
         }
-        return formattedMessages;
+        return formattedMessages.reverse();
       }
     );
 
