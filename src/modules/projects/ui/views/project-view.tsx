@@ -63,7 +63,7 @@ const ProjectView = ({ projectId }: Props) => {
     trpc.fragments.update.mutationOptions({
       onSuccess: (updatedFragment, variables) => {
         toast.success("Files saved successfully!");
-        
+
         // ✅ FIX 2: Update activeFragment state with new files
         // This ensures FileExplorer receives updated data
         setActiveFragment((prev) => {
@@ -119,8 +119,8 @@ const ProjectView = ({ projectId }: Props) => {
   const handleFragmentChange = (fragment: Fragment | null) => {
     // Warn if there are unsaved changes (optional)
     if (
-      activeFragment && 
-      fragment && 
+      activeFragment &&
+      fragment &&
       activeFragment.id !== fragment.id &&
       updateFragment.isPending
     ) {
@@ -141,7 +141,7 @@ const ProjectView = ({ projectId }: Props) => {
           className="flex flex-col min-h-0"
         >
           <Suspense fallback={<ProjectHeaderSkeleton />}>
-            <ProjectHeader projectId={projectId} />
+            <ProjectHeader title={activeFragment?.title ?? "Untitled"} />
           </Suspense>
 
           <Suspense fallback={<MessageContainerSkeleton />}>

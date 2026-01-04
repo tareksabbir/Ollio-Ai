@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
+// import { useTRPC } from "@/trpc/client";
+// import { useSuspenseQuery } from "@tanstack/react-query";
 import { ChevronDownIcon, SunMoonIcon } from "lucide-react";
 import {
   DropdownMenu,
@@ -20,16 +20,10 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 
 interface Props {
-  projectId: string;
+  title: string;
 }
 
-const ProjectHeader = ({ projectId }: Props) => {
-  const trpc = useTRPC();
-  const { data: project } = useSuspenseQuery(
-    trpc.projects.getOne.queryOptions({
-      id: projectId,
-    })
-  );
+const ProjectHeader = ({ title }: Props) => {
   const { setTheme, theme } = useTheme();
   return (
     <header className="p-2 flex justify-between items-center border-b">
@@ -41,7 +35,7 @@ const ProjectHeader = ({ projectId }: Props) => {
             className="focus-visible:ring-0 hover:bg-transparent hover:opacity-75 transition-opacity pl-2!"
           >
             <Image src="/logo.svg" alt="ollio" width={26} height={26} />
-            <span className="text-normal font-semibold ">{project?.name}</span>
+            <span className="text-normal font-semibold ">{title}</span>
             <ChevronDownIcon />
           </Button>
         </DropdownMenuTrigger>

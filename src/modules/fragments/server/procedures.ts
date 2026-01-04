@@ -14,7 +14,6 @@ export const fragmentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      // Fragment খুঁজে বের করো এবং verify করো যে এটা এই user এর
       const existingFragment = await prisma.fragment.findUnique({
         where: {
           id: input.fragmentId,
@@ -22,7 +21,7 @@ export const fragmentsRouter = createTRPCRouter({
         include: {
           message: {
             include: {
-              project: true, // project এর মাধ্যমে userId চেক করবো
+              project: true, 
             },
           },
         },
