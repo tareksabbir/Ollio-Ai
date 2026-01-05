@@ -19,27 +19,27 @@ interface TreeProps {
 }
 
 const Tree = ({ item, selectedValue, onSelect, parentPath }: TreeProps) => {
-  const [name, ...items] = Array.isArray(item) ? item : [item];
+  const isFolder = Array.isArray(item);
+  const name = isFolder ? item[0] : (item as string);
+  const items = isFolder ? item.slice(1) : [];
+
   const currentPath = parentPath ? `${parentPath}/${name}` : name;
+  const isSelected = selectedValue === currentPath;
 
-  // for the file
-  if (!items.length) {
-    const isSelected = selectedValue === currentPath;
-
+  if (!isFolder) {
     return (
       <SidebarMenuButton
         isActive={isSelected}
         className="data-[active=true]:bg-transparent"
         onClick={() => onSelect?.(currentPath)}
       >
-        <FileIcon />
+        <FileIcon className="w-4 h-4"/>
         <span className="truncate">{name}</span>
       </SidebarMenuButton>
     );
   }
-  // for the folder
-
-  // It's a folder
+  
+  // এটি ফোল্ডার ([string, ...TreeItem[]])
   return (
     <SidebarMenuItem>
       <Collapsible
@@ -48,8 +48,8 @@ const Tree = ({ item, selectedValue, onSelect, parentPath }: TreeProps) => {
       >
         <CollapsibleTrigger asChild>
           <SidebarMenuButton>
-            <ChevronRightIcon className="transition-transform" />
-            <FolderIcon />
+            <ChevronRightIcon className="transition-transform w-4 h-4" />
+            <FolderIcon className="w-4 h-4" />
             <span className="truncate">{name}</span>
           </SidebarMenuButton>
         </CollapsibleTrigger>

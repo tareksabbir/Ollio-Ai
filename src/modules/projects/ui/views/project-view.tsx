@@ -1,4 +1,3 @@
-// modules/projects/ui/views/project-view.tsx
 "use client";
 
 import FileExplorer from "@/components/code-view/file-explorer";
@@ -125,13 +124,13 @@ const ProjectView = ({ projectId }: Props) => {
   };
 
   return (
-    <div className="h-screen">
+    <div className="h-screen overflow-hidden">
       <ResizablePanelGroup direction="horizontal">
         {/* Left Panel with Error Boundary */}
         <ResizablePanel
           defaultSize={25}
           minSize={20}
-          className="flex flex-col min-h-0"
+          className="flex flex-col h-full overflow-hidden"
         >
           <ComponentErrorBoundary componentName="ProjectHeader">
             <Suspense fallback={<ProjectHeaderSkeleton />}>
@@ -154,17 +153,17 @@ const ProjectView = ({ projectId }: Props) => {
 
         {/* Right Panel with Error Boundaries */}
         <ResizablePanel
-          defaultSize={75}
+          defaultSize={80}
           minSize={50}
-          className="flex flex-col min-h-0"
+          className="flex flex-col h-full overflow-hidden"
         >
           <Tabs
             value={tabState}
-            className="h-full gap-y-0"
+            className="h-full flex flex-col overflow-hidden"
             defaultValue="code"
             onValueChange={(value) => setTabState(value as "preview" | "code")}
           >
-            <div className="w-full flex items-center p-2 border-b border-border gap-x-2">
+            <div className="w-full flex items-center p-2 border-b border-border gap-x-2 shrink-0">
               <TabsList className="h-8 p-0 border rounded-md">
                 <TabsTrigger value="code" className="rounded-md">
                   <CodeIcon /> <span>Code</span>
@@ -196,7 +195,7 @@ const ProjectView = ({ projectId }: Props) => {
 
             <TabsContent
               value="preview"
-              className="h-full min-h-0 bg-background"
+              className="flex-1 overflow-hidden m-0 bg-background"
             >
               <ComponentErrorBoundary componentName="FragmentPreview">
                 {!activeFragment ? (
@@ -212,7 +211,10 @@ const ProjectView = ({ projectId }: Props) => {
               </ComponentErrorBoundary>
             </TabsContent>
 
-            <TabsContent value="code" className="h-full min-h-0 bg-background">
+            <TabsContent 
+              value="code" 
+              className="flex-1 overflow-hidden m-0 bg-background"
+            >
               <ComponentErrorBoundary componentName="FileExplorer">
                 {!activeFragment ? (
                   <CodeLoadingSkeleton />

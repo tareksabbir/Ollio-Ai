@@ -1,15 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import Editor, { OnMount } from "@monaco-editor/react";
 import { useTheme } from "next-themes";
-import { useEffect, useRef } from "react";
-import type { editor } from "monaco-editor";
+import { useMemo } from "react";
+import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
+import { html } from "@codemirror/lang-html";
+import { css } from "@codemirror/lang-css";
+import { json } from "@codemirror/lang-json";
+import { markdown } from "@codemirror/lang-markdown";
+import { python } from "@codemirror/lang-python";
+import { EditorView } from "@codemirror/view";
+import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
+import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
+import { tokyoNight } from "@uiw/codemirror-theme-tokyo-night";
+import { dracula } from "@uiw/codemirror-theme-dracula";
+import { CodeTheme } from "./code-theme-selector";
 
 interface Props {
   code: string;
   lang: string;
   onChange?: (value: string) => void;
   readOnly?: boolean;
+  theme?: CodeTheme;
 }
 
 export const EditableCodeView = ({
@@ -17,138 +30,105 @@ export const EditableCodeView = ({
   lang,
   onChange,
   readOnly = false,
+  theme: propTheme,
 }: Props) => {
   const { theme, resolvedTheme } = useTheme();
-  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+  const isDark = (resolvedTheme || theme) === "dark";
 
-  const getLanguage = (ext: string): string => {
-    const map: Record<string, string> = {
-      js: "javascript",
-      jsx: "javascript",
-      ts: "typescript",
-      tsx: "typescript",
-      html: "html",
-      css: "css",
-      json: "json",
-      md: "markdown",
-      py: "python",
-      yml: "yaml",
-      yaml: "yaml",
-      sh: "shell",
-      bash: "bash",
+  // থিম অবজেক্ট ম্যাপ করা হচ্ছে
+  const getTheme = () => {
+    if (propTheme === "tokyoNight") return tokyoNight;
+    if (propTheme === "dracula") return dracula;
+    if (propTheme === "githubDark") return githubDark;
+    if (propTheme === "githubLight") return githubLight;
+    if (propTheme === "vscodeDark") return vscodeDark;
+    if (propTheme === "vscodeLight") return vscodeLight;
+    
+    // ডিফল্ট ফলব্যাক
+    return isDark ? tokyoNight : githubLight;
+  };
+
+  const getLanguageExtension = (input: string) => {
+    const key = input.toLowerCase();
+    const extensions: Record<string, any> = {
+      js: javascript({ jsx: true }),
+      jsx: javascript({ jsx: true }),
+      javascript: javascript({ jsx: true }),
+      ts: javascript({ jsx: true, typescript: true }),
+      tsx: javascript({ jsx: true, typescript: true }),
+      typescript: javascript({ jsx: true, typescript: true }),
+      html: html(),
+      css: css(),
+      json: json(),
+      md: markdown(),
+      markdown: markdown(),
+      py: python(),
+      python: python(),
     };
-    return map[ext.toLowerCase()] || "plaintext";
+    return extensions[key] || javascript();
   };
 
-  const handleMount: OnMount = (editor, monaco) => {
-    editorRef.current = editor;
-
-    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
-      noSemanticValidation: true,
-      noSyntaxValidation: false,
-    });
-
-    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-      noSemanticValidation: true,
-      noSyntaxValidation: false,
-    });
-
-    monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-      target: monaco.languages.typescript.ScriptTarget.Latest,
-      allowNonTsExtensions: true,
-      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
-      module: monaco.languages.typescript.ModuleKind.CommonJS,
-      noEmit: true,
-      esModuleInterop: true,
-      jsx: monaco.languages.typescript.JsxEmit.React,
-      reactNamespace: "React",
-      allowJs: true,
-      typeRoots: ["node_modules/@types"],
-    });
-
-    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-      target: monaco.languages.typescript.ScriptTarget.Latest,
-      allowNonTsExtensions: true,
-      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
-      module: monaco.languages.typescript.ModuleKind.CommonJS,
-      noEmit: true,
-      esModuleInterop: true,
-      jsx: monaco.languages.typescript.JsxEmit.React,
-      reactNamespace: "React",
-      allowJs: true,
-      typeRoots: ["node_modules/@types"],
-    });
-  };
-
-  useEffect(() => {
-    if (editorRef.current) {
-      const newTheme = (resolvedTheme || theme) === "dark" ? "vs-dark" : "vs";
-      editorRef.current.updateOptions({
-        theme: newTheme,
-      });
-    }
-  }, [theme, resolvedTheme]);
-
-  const monacoTheme = (resolvedTheme || theme) === "dark" ? "vs-dark" : "vs";
+  const extensions = useMemo(() => {
+    return [
+      getLanguageExtension(lang),
+      EditorView.lineWrapping,
+      EditorView.theme({
+        "&": {
+          backgroundColor: "transparent !important",
+        },
+        ".cm-gutters": {
+          backgroundColor: "transparent !important",
+          borderRight: "1px solid rgba(255, 255, 255, 0.1)",
+        },
+        ".cm-scroller": {
+          backgroundColor: "transparent !important",
+        },
+      }),
+    ];
+  }, [lang]);
 
   return (
-    <Editor
-      height="100%"
-      defaultLanguage={getLanguage(lang)}
-      language={getLanguage(lang)}
-      defaultValue={code}
-      value={code}
-      theme={monacoTheme}
-      onMount={handleMount}
-      onChange={(value) => {
-        if (onChange && value !== undefined) {
-          onChange(value);
-        }
-      }}
-      options={{
-        readOnly: readOnly,
-        minimap: { enabled: false },
-        fontSize: 13,
-        fontFamily: "'JetBrains Mono', 'Fira Code', Consolas, monospace",
-        lineNumbers: "on",
-        scrollBeyondLastLine: false,
-        automaticLayout: true,
-        tabSize: 2,
-        insertSpaces: true,
-
-        // ✅ Enhanced Word Wrap Settings
-        wordWrap: "on", // Enable word wrap
-        wordWrapColumn: 120, // Wrap at 120 characters (optional)
-        wrappingIndent: "indent", // Maintain indentation on wrapped lines
-        wrappingStrategy: "advanced", // Better wrapping algorithm
-
-        padding: { top: 12, bottom: 12 },
-        folding: true,
-
-        quickSuggestions: {
-          other: true,
-          comments: false,
-          strings: true,
-        },
-        parameterHints: { enabled: true },
-        suggestOnTriggerCharacters: true,
-        acceptSuggestionOnCommitCharacter: true,
-        tabCompletion: "on",
-        wordBasedSuggestions: "matchingDocuments",
-
-        formatOnPaste: true,
-        formatOnType: false,
-
-        scrollbar: {
-          verticalScrollbarSize: 8,
-          horizontalScrollbarSize: 8,
-        },
-        renderLineHighlight: "all",
-        guides: {
-          bracketPairs: true,
-          indentation: true,
-        },
-      }}
-    />
+    <div className="h-full w-full overflow-auto">
+      <CodeMirror
+        value={code}
+        height="100%"
+        extensions={extensions}
+        theme={getTheme()}
+        onChange={(value) => {
+          if (onChange) {
+            onChange(value);
+          }
+        }}
+        editable={!readOnly}
+        basicSetup={{
+          lineNumbers: true,
+          highlightActiveLineGutter: true,
+          highlightSpecialChars: true,
+          foldGutter: true,
+          drawSelection: true,
+          dropCursor: true,
+          allowMultipleSelections: true,
+          indentOnInput: true,
+          syntaxHighlighting: true,
+          bracketMatching: true,
+          closeBrackets: true,
+          autocompletion: true,
+          rectangularSelection: true,
+          crosshairCursor: true,
+          highlightActiveLine: true,
+          highlightSelectionMatches: true,
+          closeBracketsKeymap: true,
+          searchKeymap: true,
+          foldKeymap: true,
+          completionKeymap: true,
+          lintKeymap: true,
+        }}
+        style={{
+          fontSize: "14px",
+          fontFamily: "'JetBrains Mono', 'Fira Code', Consolas, monospace",
+          background: "transparent",
+        }}
+      />
+    </div>
   );
 };
