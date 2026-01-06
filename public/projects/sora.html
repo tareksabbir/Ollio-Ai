@@ -1,0 +1,3799 @@
+<html lang="en" class="dark scroll-smooth" id="html-root">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Sora Business Solutions - AI Automation &amp; Growth for Service Businesses."
+    />
+    <title>Sora Business Solutions | Automate. Sell. Scale.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Warning suppress করুন
+      tailwind.config = {
+        corePlugins: {
+          preflight: false, // conflict কমাতে
+        },
+      };
+    </script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            animation: {
+              "fade-in": "fadeIn 0.5s ease-out forwards",
+              blob: "blob 10s infinite",
+              scan: "scan 8s linear infinite",
+              "slide-up": "slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+              "slide-up-delayed":
+                "slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0", transform: "translateY(10px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              slideUp: {
+                "0%": { opacity: "0", transform: "translateY(30px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              blob: {
+                "0%": { transform: "translate(0px, 0px) scale(1)" },
+                "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+                "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+                "100%": { transform: "translate(0px, 0px) scale(1)" },
+              },
+              scan: {
+                "0%": { transform: "translateY(-100%)" },
+                "100%": { transform: "translateY(100%)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Smooth Theme Transition */
+      body,
+      .bg-transition,
+      div,
+      nav,
+      button,
+      section,
+      span,
+      p,
+      h1,
+      h2,
+      h3,
+      input,
+      textarea,
+      label {
+        transition-property: background-color, border-color, color, fill, stroke;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 300ms;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+        cursor: default;
+        --mouse-x: 50vw;
+        --mouse-y: 50vh;
+      }
+      .font-mono {
+        font-family: "JetBrains Mono", monospace;
+      }
+      .font-serif {
+        font-family: "Newsreader", serif;
+      }
+      /*
+* CURSOR SPOTLIGHT EFFECT
+* Large, diffuse radial gradient that tracks mouse coordinates
+*/
+      .spotlight-overlay {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2; /* Above lasers, below content */
+        background: radial-gradient(
+          800px circle at var(--mouse-x) var(--mouse-y),
+          rgba(59, 130, 246, 0.08),
+          transparent 40%
+        );
+        mix-blend-mode: normal;
+      }
+      html.dark .spotlight-overlay {
+        background: radial-gradient(
+          800px circle at var(--mouse-x) var(--mouse-y),
+          rgba(59, 130, 246, 0.15),
+          transparent 45%
+        );
+        mix-blend-mode: screen;
+      }
+      /*
+* VERTICAL MOTION LASERS
+* Ambient background lines moving vertically
+*/
+      @keyframes laser-down {
+        0% {
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+        15% {
+          opacity: 1;
+        }
+        85% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+      }
+      @keyframes laser-up {
+        0% {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        15% {
+          opacity: 1;
+        }
+        85% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+      }
+      .laser-beam-container {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        overflow: hidden;
+        mask-image: linear-gradient(
+          to bottom,
+          transparent,
+          black 15%,
+          black 85%,
+          transparent
+        );
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          transparent,
+          black 15%,
+          black 85%,
+          transparent
+        );
+      }
+      .laser-line {
+        position: absolute;
+        width: 1px;
+        top: -50%;
+        bottom: -50%;
+        opacity: 0.1; /* Base opacity */
+      }
+      html.dark .laser-line {
+        opacity: 0.15;
+      }
+      .laser-line.down {
+        animation: laser-down linear infinite;
+      }
+      .laser-line.up {
+        animation: laser-up linear infinite;
+      }
+      /* Reduced Motion Safety */
+      @media (prefers-reduced-motion: reduce) {
+        .spotlight-overlay {
+          display: none;
+        }
+        .laser-line {
+          animation: none;
+          opacity: 0.05;
+        }
+      }
+      /* Moving Grid Background */
+      .tech-grid {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background-size: 50px 50px;
+        mask-image: radial-gradient(
+          circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+          black 0%,
+          transparent 60%
+        );
+        -webkit-mask-image: radial-gradient(
+          circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+          black 0%,
+          transparent 60%
+        );
+        opacity: 0.3;
+      }
+      /* Ambient Aurora/Nebula Animation */
+      .ambient-glow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .glow-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.6;
+        animation: blob 20s infinite alternate;
+      }
+      html.dark .glow-blob {
+        opacity: 0.3;
+      }
+      /* Button & UI Effects */
+      .btn-glow-border {
+        position: relative;
+        overflow: hidden;
+        border-radius: 6px;
+        padding: 1px;
+        transition: transform 0.1s;
+      }
+      .btn-glow-border:active {
+        transform: scale(0.98);
+      }
+      .btn-glow-border::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(
+          from 0deg,
+          transparent 0deg,
+          #3b82f6 90deg,
+          #10b981 180deg,
+          transparent 270deg
+        );
+        animation: rotate 3s linear infinite;
+      }
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .btn-content-slide {
+        position: relative;
+        overflow: hidden;
+        display: block;
+        height: 1.25em;
+      }
+      .btn-text-original,
+      .btn-text-hover {
+        display: block;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .btn-text-hover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transform: translateY(120%);
+      }
+      .group:hover .btn-text-original {
+        transform: translateY(-120%);
+      }
+      .group:hover .btn-text-hover {
+        transform: translateY(0);
+      }
+      /* 3D Dashboard */
+      .dashboard-container {
+        perspective: 2000px;
+        transform-style: preserve-3d;
+      }
+      .dashboard-ui {
+        transform: rotateX(20deg) scale(0.9);
+        box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        backdrop-filter: blur(12px);
+      }
+      html.dark .dashboard-ui {
+        box-shadow: 0 -40px 100px -30px rgba(59, 130, 246, 0.15);
+      }
+      .dashboard-ui:hover {
+        transform: rotateX(5deg) scale(0.95);
+      }
+      /* Horizon Ring */
+      .horizon-ring {
+        width: 150vw;
+        height: 150vw;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        bottom: -130vw;
+        transform: translateX(-50%);
+        z-index: 10;
+        pointer-events: none;
+      }
+      /* Modal Styles */
+      .modal-enter {
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.95);
+      }
+      .modal-enter-active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: scale(1);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+      .modal-exit {
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.95);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+      /* HERO ANIMATION STYLES */
+      .cursor-blink {
+        animation: blink 0.7s step-end infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      @keyframes aggressive-underline {
+        0% {
+          transform: scaleX(0);
+          transform-origin: left;
+        }
+        12% {
+          transform: scaleX(1);
+          transform-origin: left;
+        }
+        35% {
+          transform: scaleX(1);
+          transform-origin: right;
+        }
+        45% {
+          transform: scaleX(0);
+          transform-origin: right;
+        }
+        100% {
+          transform: scaleX(0);
+          transform-origin: right;
+        }
+      }
+      .sell-word {
+        position: relative;
+        display: inline-block;
+        transition: color 0.5s ease-out;
+        z-index: 10;
+      }
+      .sell-word::after {
+        content: "";
+        position: absolute;
+        bottom: 2px;
+        left: -5%;
+        width: 110%;
+        height: 8px;
+        background: #3b82f6;
+        border-radius: 4px;
+        z-index: -1;
+        opacity: 1;
+        transform: scaleX(0);
+        will-change: transform;
+        animation: aggressive-underline 3s infinite
+          cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      html.dark .sell-word::after {
+        background: #93c5fd;
+      }
+      .sell-word.emphasized {
+        color: #2563eb;
+      }
+      html.dark .sell-word.emphasized {
+        color: #60a5fa;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .sell-word::after {
+          animation: none;
+          transform: scaleX(1);
+          width: 100%;
+          left: 0;
+          opacity: 1;
+        }
+      }
+      /* Chaos & Pulse Animations */
+      @keyframes floatJitter {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        25% {
+          transform: translate(1px, -1px) rotate(0.5deg);
+        }
+        50% {
+          transform: translate(-1px, 2px) rotate(-0.5deg);
+        }
+        75% {
+          transform: translate(0px, -2px) rotate(0deg);
+        }
+      }
+      @keyframes drift {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-70px);
+        }
+      }
+      .chaos-item {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        will-change: transform, opacity;
+      }
+      .chaos-item.idle {
+        animation: drift 4s ease-in-out infinite alternate;
+      }
+      .chaos-item.jitter {
+        animation: floatJitter 0.4s linear infinite;
+      }
+      /* 3D Transform utilities */
+      .perspective-dramatic {
+        perspective: 100px !important;
+      }
+    </style>
+    <style>
+      @keyframes rain-drop {
+        0% {
+          transform: translateY(-100vh);
+          opacity: 0;
+        }
+        15% {
+          opacity: var(--streak-opacity, 0.4);
+        }
+        85% {
+          opacity: var(--streak-opacity, 0.4);
+        }
+        100% {
+          transform: translateY(200vh);
+          opacity: 0;
+        }
+      }
+      .energy-streak {
+        position: absolute;
+        top: -20%;
+        width: 1px;
+        height: 40vh;
+        background: linear-gradient(
+          180deg,
+          transparent,
+          var(--streak-color, #3b82f6),
+          transparent
+        );
+        animation: rain-drop linear infinite;
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+      .energy-streak.layer-far {
+        width: 1px;
+        filter: blur(1.5px);
+        z-index: 0;
+      }
+      .energy-streak.layer-mid {
+        width: 1px;
+        filter: blur(0.5px);
+        z-index: 1;
+      }
+      .energy-streak.layer-near {
+        width: 2px;
+        filter: blur(0);
+        z-index: 2;
+        height: 25vh;
+      }
+      .energy-streak.star {
+        background: linear-gradient(
+          180deg,
+          transparent,
+          rgba(255, 255, 255, 0.9),
+          transparent
+        );
+        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .energy-streak {
+          display: none;
+        }
+      }
+    </style>
+    <style>
+      /* Aura Build - Illuminated Outline */
+      @keyframes aura-pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.6),
+            0 0 15px rgba(148, 163, 184, 0.2),
+            0 20px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+        50% {
+          box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.8),
+            0 0 25px rgba(148, 163, 184, 0.3),
+            0 20px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+      }
+      @keyframes aura-pulse-dark {
+        0%,
+        100% {
+          box-shadow: 0 0 0 1px #3b82f6, 0 0 30px -5px rgba(255, 255, 255, 0.1),
+            0 -40px 100px -30px rgba(59, 130, 246, 0.15);
+        }
+        50% {
+          box-shadow: 0 0 0 1px #60a5fa, 0 0 45px -5px rgba(255, 255, 255, 0.15),
+            0 -40px 100px -30px rgba(59, 130, 246, 0.2);
+        }
+      }
+      .dashboard-ui {
+        box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.6),
+          0 0 15px rgba(148, 163, 184, 0.2),
+          0 20px 50px -12px rgba(0, 0, 0, 0.1) !important;
+        animation: aura-pulse 8s ease-in-out infinite;
+      }
+      html.dark .dashboard-ui {
+        box-shadow: 0 0 0 1px #3b82f6, 0 0 30px -5px rgba(255, 255, 255, 0.1),
+          0 -40px 100px -30px rgba(59, 130, 246, 0.15) !important;
+        animation: aura-pulse-dark 8s ease-in-out infinite;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .dashboard-ui {
+          animation: none;
+        }
+      }
+    </style>
+    <style>
+      /* Aura Build - Intensity Boost */
+      .spotlight-overlay {
+        background: radial-gradient(
+          800px circle at var(--mouse-x) var(--mouse-y),
+          rgba(37, 99, 235, 0.12),
+          transparent 40%
+        ) !important;
+      }
+      html.dark .spotlight-overlay {
+        background: radial-gradient(
+          800px circle at var(--mouse-x) var(--mouse-y),
+          rgba(59, 130, 246, 0.25),
+          transparent 45%
+        ) !important;
+      }
+    </style>
+  </head>
+  <body
+    class="antialiased selection:bg-blue-500/30 font-sans text-slate-600 dark:text-slate-400 bg-white dark:bg-[#020204]"
+  >
+    <!-- GLOBAL VISUAL FX LAYER (Pointer Events None) -->
+    <div
+      class="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-blue-50/60 dark:bg-[#030610] transition-colors duration-500"
+    >
+      <!-- 1. Ambient Glow Blobs -->
+      <div class="ambient-glow">
+        <div
+          class="glow-blob bg-blue-600/50 dark:bg-blue-600/40 w-[600px] h-[600px] top-[-20%] left-[-10%] mix-blend-multiply dark:mix-blend-screen animate-blob"
+        ></div>
+        <div
+          class="glow-blob bg-blue-600/50 dark:bg-blue-700/40 w-[500px] h-[500px] top-[40%] right-[-10%] mix-blend-multiply dark:mix-blend-screen animate-blob"
+          style="animation-delay: 2s"
+        ></div>
+        <div
+          class="glow-blob bg-blue-500/50 dark:bg-blue-600/40 w-[400px] h-[400px] bottom-[-10%] left-[20%] mix-blend-multiply dark:mix-blend-screen animate-blob"
+          style="animation-delay: 4s"
+        ></div>
+      </div>
+
+      <!-- 2. Cursor Spotlight (Updates via JS) -->
+      <div class="spotlight-overlay"></div>
+
+      <!-- 3. Vertical Laser Beams (Ambient Motion) -->
+      <div
+        class="laser-beam-container fixed inset-0 z-0 pointer-events-none overflow-hidden"
+        aria-hidden="true"
+      >
+        <div
+          class="energy-streak layer-far"
+          style="
+            left: 2%;
+            animation-duration: 13s;
+            animation-delay: -2s;
+            --streak-opacity: 0.08;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-far hidden md:block"
+          style="
+            left: 15%;
+            animation-duration: 15s;
+            animation-delay: -10s;
+            --streak-opacity: 0.1;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-mid"
+          style="
+            left: 22%;
+            animation-duration: 8s;
+            animation-delay: -5s;
+            --streak-opacity: 0.18;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-mid"
+          style="
+            left: 35%;
+            animation-duration: 10s;
+            animation-delay: -1s;
+            --streak-opacity: 0.2;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-near star hidden md:block"
+          style="
+            left: 42%;
+            animation-duration: 4s;
+            animation-delay: -3s;
+            --streak-opacity: 0.5;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-far"
+          style="
+            left: 50%;
+            animation-duration: 14s;
+            animation-delay: -12s;
+            --streak-opacity: 0.09;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-mid"
+          style="
+            left: 60%;
+            animation-duration: 8s;
+            animation-delay: -8s;
+            --streak-opacity: 0.19;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-near"
+          style="
+            left: 68%;
+            animation-duration: 5s;
+            animation-delay: -4s;
+            --streak-opacity: 0.4;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-far hidden md:block"
+          style="
+            left: 75%;
+            animation-duration: 15s;
+            animation-delay: -6s;
+            --streak-opacity: 0.1;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-mid"
+          style="
+            left: 82%;
+            animation-duration: 9s;
+            animation-delay: -9s;
+            --streak-opacity: 0.22;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-mid"
+          style="
+            left: 90%;
+            animation-duration: 7s;
+            animation-delay: -2s;
+            --streak-opacity: 0.25;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-far hidden md:block"
+          style="
+            left: 96%;
+            animation-duration: 17s;
+            animation-delay: -10s;
+            --streak-opacity: 0.08;
+          "
+        ></div>
+      </div>
+
+      <!-- 4. Tech Grid (Masked by Spotlight) -->
+      <div
+        class="tech-grid bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)]"
+      ></div>
+
+      <!-- 5. Top Edge Light -->
+      <div
+        class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent to-transparent via-blue-500/50"
+      ></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav
+      class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 border-b bg-white/70 dark:bg-[#020204]/70 backdrop-blur-xl border-slate-200 dark:border-white/5 transition-all duration-300 supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-[#020204]/60"
+    >
+      <a
+        href="#"
+        class="flex items-center gap-2 cursor-pointer group"
+        onclick="window.scrollTo(0,0); return false;"
+      >
+        <div
+          class="relative flex items-center justify-center w-9 h-9 transition-transform group-active:scale-95 bg-gradient-to-br from-blue-50 to-emerald-50 dark:from-blue-500/20 dark:to-emerald-500/20 rounded-lg border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none"
+        >
+          <iconify-icon
+            icon="lucide:layers"
+            class="text-blue-600 dark:text-blue-400"
+            width="20"
+          ></iconify-icon>
+        </div>
+        <div class="flex flex-col">
+          <span
+            class="text-sm tracking-tight font-bold text-slate-900 dark:text-white leading-none"
+          >
+            SORA
+          </span>
+          <span
+            class="text-[9px] tracking-widest text-blue-600 dark:text-blue-400 uppercase font-mono mt-0.5"
+          >
+            Business Solutions
+          </span>
+        </div>
+      </a>
+
+      <div
+        class="hidden md:flex items-center gap-1 p-1 rounded-full border backdrop-blur-md bg-slate-100/50 dark:bg-white/5 border-slate-200 dark:border-white/5"
+      >
+        <a
+          href="#home"
+          class="px-4 py-1.5 text-xs font-medium rounded-full transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5"
+        >
+          Home
+        </a>
+        <a
+          href="#services"
+          class="px-4 py-1.5 text-xs font-medium rounded-full transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5"
+        >
+          Systems
+        </a>
+        <a
+          href="#app"
+          class="px-4 py-1.5 text-xs font-medium rounded-full transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5"
+        >
+          Sora App
+        </a>
+        <a
+          href="#method"
+          class="px-4 py-1.5 text-xs font-medium rounded-full transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5"
+        >
+          Method
+        </a>
+        <a
+          href="#pricing"
+          class="px-4 py-1.5 text-xs font-medium rounded-full transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5"
+        >
+          Pricing
+        </a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Theme Toggle -->
+        <button
+          id="theme-toggle"
+          class="group theme-toggle-btn w-9 h-9 flex items-center justify-center rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0a0a0c] text-slate-600 dark:text-slate-400 hover:border-blue-500/50 hover:text-blue-500 transition-all shadow-sm dark:shadow-none"
+          aria-label="Toggle Theme"
+        >
+          <iconify-icon
+            id="theme-icon-moon"
+            icon="lucide:moon"
+            width="16"
+            class="absolute transition-transform duration-500 rotate-0 scale-100 dark:-rotate-90 dark:scale-0 dark:opacity-0"
+          ></iconify-icon>
+          <iconify-icon
+            id="theme-icon-sun"
+            icon="lucide:sun"
+            width="16"
+            class="absolute transition-transform duration-500 rotate-90 scale-0 opacity-0 dark:rotate-0 dark:scale-100 dark:opacity-100"
+          ></iconify-icon>
+        </button>
+
+        <button
+          onclick="openAuditModal()"
+          class="group relative text-xs font-semibold bg-white dark:bg-[#0a0a0c] border px-5 py-2 rounded-md transition-all overflow-hidden hover:border-blue-500/50 shadow-sm dark:shadow-[0_0_0_1px_rgba(0,0,0,0)] dark:hover:shadow-[0_0_0_1px_rgba(59,130,246,0.2)] text-slate-900 dark:text-white border-slate-200 dark:border-white/10 active:scale-95"
+        >
+          <span class="btn-content-slide">
+            <span class="btn-text-original">
+              <span class="md:hidden">Free Audit</span>
+              <span class="hidden md:inline">Free Growth Audit</span>
+            </span>
+            <span class="btn-text-hover text-blue-600 dark:text-blue-300">
+              Book Audit →
+            </span>
+          </span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Hero -->
+    <main
+      id="home"
+      class="min-h-screen flex flex-col overflow-hidden z-10 w-full pt-32 pb-20 relative items-center"
+    >
+      <!-- Hero Text -->
+      <div
+        class="z-20 text-center max-w-5xl mr-auto ml-auto pr-6 pl-6 relative"
+      >
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 dark:bg-blue-500/5 text-[11px] font-medium mb-6 animate-fade-in shadow-[0_0_20px_rgba(59,130,246,0.15)] text-blue-700 dark:text-blue-300 backdrop-blur-sm"
+        >
+          <span class="relative flex h-2 w-2">
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-blue-400"
+            ></span>
+            <span
+              class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"
+            ></span>
+          </span>
+          <span>Sora Business Solutions</span>
+        </div>
+
+        <h1 class="flex flex-col items-center text-center z-20 mt-2 mb-10">
+          <span
+            class="block text-5xl md:text-8xl font-extrabold tracking-tighter text-slate-900 dark:text-white leading-[0.95] animate-slide-up bg-clip-text text-transparent bg-gradient-to-b from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-white dark:to-white/80 drop-shadow-sm pb-2 md:pb-3"
+          >
+            Automate.
+            <span
+              id="word-sell"
+              class="sell-word text-slate-900 dark:text-white"
+            >
+              Sell
+            </span>
+            . Scale.
+          </span>
+
+          <span
+            class="block h-[1.1em] text-4xl md:text-7xl font-serif italic font-light text-slate-500 dark:text-slate-400/90 tracking-tight mt-1 md:-mt-2 opacity-100 min-h-[1.1em]"
+          >
+            service businesses:
+            <span id="typewriter-text"></span>
+            <span
+              id="cursor"
+              class="cursor-blink inline-block w-[2px] md:w-[3px] h-[0.85em] bg-blue-500/80 dark:bg-blue-400/80 ml-1 align-baseline rounded-full relative top-[2px]"
+            ></span>
+          </span>
+        </h1>
+
+        <p
+          class="leading-relaxed text-base max-w-2xl mx-auto mb-10 font-light text-slate-600 dark:text-slate-400 relative z-20 animate-slide-up-delayed opacity-0"
+          style="animation-delay: 2.2s"
+        >
+          Sora builds the
+          <span class="text-slate-900 dark:text-white font-medium">
+            infrastructure
+          </span>
+          that captures, qualifies, and converts leads automatically. Stop
+          chasing work and start growing your business.
+        </p>
+
+        <div
+          class="flex flex-col md:flex-row items-center justify-center gap-5 relative z-20 animate-slide-up-delayed opacity-0"
+          style="animation-delay: 2.3s"
+        >
+          <div
+            class="btn-glow-border group cursor-pointer w-full md:w-auto shadow-lg shadow-blue-500/10 dark:shadow-none"
+          >
+            <button
+              onclick="openAuditModal()"
+              class="relative z-10 w-full md:w-auto block px-8 py-3.5 bg-slate-900 dark:bg-[#0a0a0c] text-sm font-semibold rounded-[5px] transition-all hover:bg-slate-800 dark:hover:bg-[#121215] active:bg-black dark:active:bg-[#16161a] text-white"
+            >
+              <span class="btn-content-slide">
+                <span class="btn-text-original">Book Free Audit</span>
+                <span class="btn-text-hover text-blue-300">
+                  Start Scaling Now
+                </span>
+              </span>
+            </button>
+          </div>
+
+          <button
+            onclick="document.getElementById('app').scrollIntoView({behavior: 'smooth'})"
+            class="group flex transition-all md:w-auto text-sm font-medium bg-white/80 dark:bg-[#0a0a0b] w-full border border-slate-200 dark:border-transparent rounded-md pt-3 pr-6 pb-3 pl-6 gap-x-2 gap-y-2 items-center justify-center hover:text-slate-900 dark:hover:text-white text-slate-500 dark:text-slate-400 active:scale-95 shadow-sm dark:shadow-none backdrop-blur-sm"
+          >
+            <iconify-icon
+              icon="lucide:layout-grid"
+              class="text-slate-400 dark:text-slate-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"
+              width="16"
+            ></iconify-icon>
+            <span
+              class="border-b border-transparent group-hover:border-slate-500 transition-all"
+            >
+              See the Sora System
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Interface (3D Tilted) -->
+      <div
+        class="dashboard-container w-full max-w-6xl z-20 mx-auto px-4 relative animate-slide-up-delayed opacity-0 mt-[120px]"
+        style="animation-delay: 0.5s"
+      >
+        <div
+          class="dashboard-ui relative w-full rounded-xl bg-white dark:bg-[#0a0a0c] overflow-hidden"
+        >
+          <style>
+            @keyframes flowBeam {
+              0% {
+                transform: translateX(-100%);
+                opacity: 0;
+              }
+              50% {
+                opacity: 1;
+              }
+              100% {
+                transform: translateX(100%);
+                opacity: 0;
+              }
+            }
+            @keyframes flowBeamVertical {
+              0% {
+                transform: translateY(-100%);
+                opacity: 0;
+              }
+              50% {
+                opacity: 1;
+              }
+              100% {
+                transform: translateY(100%);
+                opacity: 0;
+              }
+            }
+            .animate-flow-beam {
+              animation: flowBeam 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            }
+            .animate-flow-beam-vertical {
+              animation: flowBeamVertical 2s cubic-bezier(0.4, 0, 0.2, 1)
+                infinite;
+            }
+          </style>
+
+          <!-- Window Header -->
+          <div
+            class="h-9 border-b bg-slate-50 dark:bg-white/[0.02] border-slate-200 dark:border-white/5 flex items-center px-4 justify-between select-none"
+          >
+            <div class="flex gap-1.5 opacity-60">
+              <div
+                class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-white/20"
+              ></div>
+              <div
+                class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-white/20"
+              ></div>
+              <div
+                class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-white/20"
+              ></div>
+            </div>
+            <div
+              class="text-[10px] font-mono text-slate-400 dark:text-slate-500 tracking-widest uppercase flex items-center gap-2"
+            >
+              <iconify-icon icon="lucide:activity" width="12"></iconify-icon>
+              Revenue_Motion_v2
+            </div>
+            <div class="w-10"></div>
+          </div>
+
+          <!-- Main System Diagram -->
+          <div
+            class="relative p-6 md:p-10 min-h-[420px] flex flex-col justify-center bg-slate-50/50 dark:bg-[#030304] overflow-hidden"
+          >
+            <!-- Background Grid -->
+            <div
+              class="absolute inset-0"
+              style="
+                background-image: radial-gradient(
+                  circle,
+                  var(--dot-color, #cbd5e1) 1px,
+                  transparent 1px
+                );
+                background-size: 24px 24px;
+                opacity: 0.5;
+              "
+            ></div>
+            <style>
+              html.dark .absolute[style*="background-image"] {
+                --dot-color: #262626;
+              }
+            </style>
+
+            <!-- Flow Container -->
+            <div
+              class="relative z-10 w-full max-w-5xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-8 md:gap-4"
+            >
+              <!-- STEP 1: TRIGGER (Missed Call) -->
+              <div class="flex-1 flex flex-col items-center group">
+                <!-- Top Stat -->
+                <div
+                  class="mb-4 transform transition-all duration-500 md:group-hover:-translate-y-1"
+                >
+                  <div
+                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-sm"
+                  >
+                    <span
+                      class="text-[9px] uppercase tracking-wider text-slate-500 font-bold"
+                    >
+                      Leads Captured
+                    </span>
+                    <span
+                      class="text-xs font-mono font-bold text-slate-900 dark:text-white"
+                    >
+                      128
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Card -->
+                <div
+                  class="relative w-full max-w-[240px] p-px rounded-xl bg-gradient-to-b from-slate-200 to-slate-100 dark:from-white/10 dark:to-white/5 shadow-lg transition-transform md:group-hover:scale-105 duration-300"
+                >
+                  <div
+                    class="bg-white dark:bg-[#0e0e10] rounded-[11px] p-5 relative overflow-hidden h-full flex flex-col items-center text-center"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-500/10 flex items-center justify-center mb-3 text-red-500 dark:text-red-400 border border-red-100 dark:border-red-500/20"
+                    >
+                      <iconify-icon
+                        icon="lucide:phone-missed"
+                        width="18"
+                      ></iconify-icon>
+                    </div>
+                    <h3
+                      class="text-sm font-semibold text-slate-900 dark:text-white mb-1"
+                    >
+                      Inbound Lead Missed
+                    </h3>
+                    <p
+                      class="text-[10px] text-slate-500 dark:text-slate-400 leading-snug"
+                    >
+                      Call, SMS, or web inquiry received but not answered
+                      instantly.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CONNECTION 1 (Beam) -->
+              <div
+                class="hidden md:flex flex-col justify-center flex-1 mx-2 relative h-12"
+              >
+                <!-- Line -->
+                <div
+                  class="h-[2px] w-full bg-slate-200 dark:bg-white/10 relative overflow-hidden rounded-full"
+                >
+                  <div
+                    class="absolute top-0 bottom-0 w-1/2 bg-gradient-to-r from-transparent via-blue-500 to-transparent animate-flow-beam"
+                    style="left: -50%"
+                  ></div>
+                </div>
+              </div>
+              <!-- Mobile Vertical Line -->
+              <div
+                class="md:hidden h-12 w-[2px] bg-slate-200 dark:bg-white/10 mx-auto relative overflow-hidden rounded-full"
+              >
+                <div
+                  class="absolute left-0 right-0 h-1/2 bg-gradient-to-b from-transparent via-blue-500 to-transparent animate-flow-beam-vertical w-full"
+                  style="top: -50%"
+                ></div>
+              </div>
+
+              <!-- STEP 2: ACTION (Sora Receptionist - HERO) -->
+              <div class="flex-[1.4] flex flex-col items-center z-20 group">
+                <!-- Top Stat -->
+                <div
+                  class="mb-5 transform transition-all duration-500 md:group-hover:-translate-y-1"
+                >
+                  <div
+                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-500/30 shadow-sm shadow-blue-500/10 backdrop-blur-sm"
+                  >
+                    <span
+                      class="text-[9px] uppercase tracking-wider text-blue-600 dark:text-blue-300 font-bold"
+                    >
+                      Response Time
+                    </span>
+                    <span
+                      class="text-xs font-mono font-bold text-blue-700 dark:text-blue-200"
+                    >
+                      0:12s
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Card -->
+                <div
+                  class="relative w-full max-w-[320px] p-[1px] rounded-2xl bg-gradient-to-br from-blue-300 via-blue-500 to-indigo-600 shadow-[0_0_50px_-10px_rgba(59,130,246,0.25)] transition-transform md:group-hover:scale-105 duration-300"
+                >
+                  <div
+                    class="bg-white dark:bg-[#0a0a0c] rounded-[15px] p-6 relative overflow-hidden h-full"
+                  >
+                    <!-- Subtle inner glow -->
+                    <div
+                      class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 blur-3xl pointer-events-none"
+                    ></div>
+
+                    <div
+                      class="flex items-center gap-4 mb-5 border-b border-slate-100 dark:border-white/5 pb-4"
+                    >
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 shrink-0"
+                      >
+                        <iconify-icon
+                          icon="lucide:bot"
+                          width="24"
+                        ></iconify-icon>
+                      </div>
+                      <div>
+                        <h3
+                          class="text-base font-bold text-slate-900 dark:text-white leading-tight"
+                        >
+                          Sora Receptionist
+                        </h3>
+                        <p
+                          class="text-[10px] text-blue-600 dark:text-blue-400 font-medium uppercase tracking-wide"
+                        >
+                          AI Automation Hub
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Features List -->
+                    <div class="space-y-2.5">
+                      <div
+                        class="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5"
+                      >
+                        <div
+                          class="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_5px_#3b82f6]"
+                        ></div>
+                        <span
+                          class="text-[11px] font-medium text-slate-700 dark:text-slate-200"
+                        >
+                          Replies instantly (24/7)
+                        </span>
+                      </div>
+                      <div
+                        class="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5"
+                      >
+                        <div
+                          class="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_5px_#3b82f6]"
+                        ></div>
+                        <span
+                          class="text-[11px] font-medium text-slate-700 dark:text-slate-200"
+                        >
+                          Qualifies lead intent
+                        </span>
+                      </div>
+                      <div
+                        class="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5"
+                      >
+                        <div
+                          class="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_5px_#3b82f6]"
+                        ></div>
+                        <span
+                          class="text-[11px] font-medium text-slate-700 dark:text-slate-200"
+                        >
+                          Auto-follows up
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CONNECTION 2 (Beam) -->
+              <div
+                class="hidden md:flex flex-col justify-center flex-1 mx-2 relative h-12"
+              >
+                <div
+                  class="h-[2px] w-full bg-slate-200 dark:bg-white/10 relative overflow-hidden rounded-full"
+                >
+                  <div
+                    class="absolute top-0 bottom-0 w-1/2 bg-gradient-to-r from-transparent via-emerald-500 to-transparent animate-flow-beam"
+                    style="left: -50%; animation-delay: 1s"
+                  ></div>
+                </div>
+              </div>
+              <!-- Mobile Vertical Line -->
+              <div
+                class="md:hidden h-12 w-[2px] bg-slate-200 dark:bg-white/10 mx-auto relative overflow-hidden rounded-full"
+              >
+                <div
+                  class="absolute left-0 right-0 h-1/2 bg-gradient-to-b from-transparent via-emerald-500 to-transparent animate-flow-beam-vertical w-full"
+                  style="top: -50%; animation-delay: 1s"
+                ></div>
+              </div>
+
+              <!-- STEP 3: OUTCOME (Job Booked) -->
+              <div class="flex-1 flex flex-col items-center group">
+                <!-- Top Stat -->
+                <div
+                  class="mb-4 transform transition-all duration-500 md:group-hover:-translate-y-1"
+                >
+                  <div
+                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-500/30 shadow-sm backdrop-blur-sm"
+                  >
+                    <span
+                      class="text-[9px] uppercase tracking-wider text-emerald-600 dark:text-emerald-300 font-bold"
+                    >
+                      Jobs Quoted
+                    </span>
+                    <span
+                      class="text-xs font-mono font-bold text-emerald-700 dark:text-emerald-200"
+                    >
+                      $84.2k
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Card -->
+                <div
+                  class="relative w-full max-w-[240px] p-px rounded-xl bg-gradient-to-b from-emerald-400 to-emerald-600 shadow-[0_0_30px_-5px_rgba(16,185,129,0.2)] transition-transform md:group-hover:scale-105 duration-300"
+                >
+                  <div
+                    class="bg-white dark:bg-[#0e0e10] rounded-[11px] p-5 relative overflow-hidden h-full flex flex-col items-center text-center"
+                  >
+                    <div
+                      class="absolute inset-0 bg-emerald-500/5 pointer-events-none"
+                    ></div>
+                    <div
+                      class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center mb-3 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30"
+                    >
+                      <iconify-icon
+                        icon="lucide:check-circle-2"
+                        width="18"
+                      ></iconify-icon>
+                    </div>
+                    <h3
+                      class="text-sm font-bold text-slate-900 dark:text-white mb-1"
+                    >
+                      Job Booked Automatically
+                    </h3>
+                    <p
+                      class="text-[10px] text-emerald-700 dark:text-emerald-400/80 font-medium leading-snug"
+                    >
+                      Added to calendar &amp; CRM. Quote sent.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Label -->
+            <div class="absolute bottom-4 left-0 right-0 text-center">
+              <div
+                class="inline-flex items-center gap-2 text-[10px] text-slate-400 dark:text-slate-600 font-mono uppercase tracking-widest opacity-60"
+              >
+                <span
+                  class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"
+                ></span>
+                System Active
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="horizon-ring border border-slate-200 dark:border-white/5 shadow-[0_-40px_100px_-20px_rgba(59,130,246,0.1),inset_0_20px_100px_-20px_rgba(16,185,129,0.05)] dark:shadow-[0_-40px_100px_-20px_rgba(59,130,246,0.2),inset_0_20px_100px_-20px_rgba(16,185,129,0.1)]"
+      ></div>
+    </main>
+
+    <!-- Method Section -->
+    <section
+      id="method"
+      class="relative py-24 bg-transparent overflow-hidden border-t border-slate-200 dark:border-white/5"
+    >
+      <div
+        class="absolute inset-0 bg-slate-50/10 dark:bg-[#020204]/70 -z-10 transition-colors duration-500"
+      ></div>
+
+      <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="text-center mb-16">
+          <h2
+            class="text-3xl font-medium text-slate-900 dark:text-white tracking-tight font-serif mb-4"
+          >
+            The Sora System
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400">
+            A proven 3-step framework to scale service businesses.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Step 1 -->
+          <div
+            class="p-8 rounded-xl border border-slate-200 dark:border-white/5 bg-white/70 dark:bg-white/[0.02] hover:border-slate-300 dark:hover:bg-white/[0.04] transition-all relative group backdrop-blur-sm shadow-sm dark:shadow-none"
+          >
+            <div
+              class="text-5xl font-bold text-slate-100 dark:text-white/5 absolute right-4 top-4 group-hover:text-blue-500/10 transition-colors"
+            >
+              01
+            </div>
+            <div
+              class="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mb-6 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-500/20"
+            >
+              <iconify-icon icon="lucide:search" width="24"></iconify-icon>
+            </div>
+            <h3 class="text-xl text-slate-900 dark:text-white font-medium mb-3">
+              Audit &amp; Strategy
+            </h3>
+            <p
+              class="text-sm text-slate-600 dark:text-slate-500 leading-relaxed"
+            >
+              We analyze your entire customer journey. We identify where you are
+              leaking leads and find the highest-ROI automation opportunities.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div
+            class="p-8 rounded-xl border border-slate-200 dark:border-white/5 bg-white/70 dark:bg-white/[0.02] hover:border-slate-300 dark:hover:bg-white/[0.04] transition-all relative group backdrop-blur-sm shadow-sm dark:shadow-none"
+          >
+            <div
+              class="text-5xl font-bold text-slate-100 dark:text-white/5 absolute right-4 top-4 group-hover:text-emerald-500/10 transition-colors"
+            >
+              02
+            </div>
+            <div
+              class="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center mb-6 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-500/20"
+            >
+              <iconify-icon icon="lucide:cpu" width="24"></iconify-icon>
+            </div>
+            <h3 class="text-xl text-slate-900 dark:text-white font-medium mb-3">
+              Build &amp; Automate
+            </h3>
+            <p
+              class="text-sm text-slate-600 dark:text-slate-500 leading-relaxed"
+            >
+              We deploy the Sora Operating System. We set up your AI reception,
+              CRM, and workflow automations tailored to your specific trade.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div
+            class="p-8 rounded-xl border border-slate-200 dark:border-white/5 bg-white/70 dark:bg-white/[0.02] hover:border-slate-300 dark:hover:bg-white/[0.04] transition-all relative group backdrop-blur-sm shadow-sm dark:shadow-none"
+          >
+            <div
+              class="text-5xl font-bold text-slate-100 dark:text-white/5 absolute right-4 top-4 group-hover:text-orange-500/10 transition-colors"
+            >
+              03
+            </div>
+            <div
+              class="w-12 h-12 rounded-full bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center mb-6 text-orange-600 dark:text-orange-400 border border-orange-100 dark:border-orange-500/20"
+            >
+              <iconify-icon icon="lucide:rocket" width="24"></iconify-icon>
+            </div>
+            <h3 class="text-xl text-slate-900 dark:text-white font-medium mb-3">
+              Optimise &amp; Scale
+            </h3>
+            <p
+              class="text-sm text-slate-600 dark:text-slate-500 leading-relaxed"
+            >
+              We don't leave you hanging. We refine the AI's performance, train
+              your team on the app, and support your growth to 7-figures and
+              beyond.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Services (Bento Grid) -->
+    <section
+      class="overflow-hidden bg-transparent border-slate-200 dark:border-white/5 border-t pt-32 pb-32 relative"
+      id="services"
+    >
+      <div
+        class="absolute inset-0 bg-slate-50/20 dark:bg-[#020204]/70 -z-10 transition-colors duration-500"
+      ></div>
+
+      <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="mb-20 max-w-2xl">
+          <h2
+            class="text-3xl md:text-4xl font-medium tracking-tight mb-6 font-serif text-slate-900 dark:text-white"
+          >
+            Built for
+            <span class="font-serif text-blue-600 dark:text-blue-400">
+              real-world outcomes.
+            </span>
+          </h2>
+          <p
+            class="text-lg leading-relaxed font-light text-slate-600 dark:text-slate-400"
+          >
+            We don't just "do AI". We implement complete business operating
+            systems that handle your reception, sales, and admin.
+          </p>
+        </div>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 relative z-10"
+        >
+          <!-- Primary: AI Lead Reception -->
+          <div
+            tabindex="0"
+            class="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-[#050505]/80 p-8 shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:border-blue-500/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:-translate-y-1 focus:shadow-2xl backdrop-blur-sm md:col-span-2 lg:col-span-6 lg:row-span-2"
+          >
+            <div
+              class="absolute top-10 right-10 z-0 opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 hidden lg:flex items-center gap-2 select-none pointer-events-none"
+            >
+              <div
+                class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm"
+              >
+                <iconify-icon icon="lucide:phone" width="14"></iconify-icon>
+              </div>
+              <div class="w-3 h-0.5 bg-blue-200 dark:bg-blue-800/50"></div>
+              <div
+                class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm"
+              >
+                <iconify-icon
+                  icon="lucide:message-square"
+                  width="14"
+                ></iconify-icon>
+              </div>
+              <div class="w-3 h-0.5 bg-blue-200 dark:bg-blue-800/50"></div>
+              <div
+                class="w-8 h-8 rounded-lg bg-blue-600 dark:bg-blue-500 border border-blue-600 dark:border-blue-500 flex items-center justify-center text-white shadow-sm"
+              >
+                <iconify-icon
+                  icon="lucide:calendar-check"
+                  width="14"
+                ></iconify-icon>
+              </div>
+            </div>
+            <div
+              class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_50%)] opacity-100 transition-opacity duration-500"
+            ></div>
+            <div class="relative z-10 flex flex-col h-full">
+              <div class="flex items-center gap-4 mb-8">
+                <div
+                  class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-blue-100 bg-blue-50 text-blue-600 transition-colors duration-300 dark:border-blue-500/10 dark:bg-blue-500/5 dark:text-blue-400 group-hover:bg-blue-100 dark:group-hover:bg-blue-500/20 shadow-sm"
+                >
+                  <iconify-icon
+                    icon="lucide:phone-call"
+                    width="28"
+                  ></iconify-icon>
+                </div>
+                <h3
+                  class="text-2xl font-medium tracking-tight text-slate-900 dark:text-white"
+                >
+                  AI Lead Reception
+                </h3>
+              </div>
+              <p
+                class="mb-8 text-base leading-relaxed text-slate-600 dark:text-slate-400 flex-1"
+              >
+                Never miss a job because you were on a ladder. Our AI handles
+                calls, SMS, and web forms 24/7. It qualifies leads, answers
+                questions, and books appointments directly into your calendar.
+              </p>
+              <div class="grid grid-cols-2 gap-3 mt-auto">
+                <div
+                  class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 transition-colors dark:border-white/5 dark:bg-white/[0.02] dark:text-slate-300 group-hover:border-blue-200 dark:group-hover:border-blue-500/20"
+                >
+                  Missed Call Textback
+                </div>
+                <div
+                  class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 transition-colors dark:border-white/5 dark:bg-white/[0.02] dark:text-slate-300 group-hover:border-blue-200 dark:group-hover:border-blue-500/20"
+                >
+                  <div
+                    class="absolute top-8 right-8 z-0 opacity-40 group-hover:opacity-100 transition-all duration-500 pointer-events-none"
+                  >
+                    <div class="flex items-end gap-1.5 h-10">
+                      <div
+                        class="w-2.5 bg-emerald-200/50 dark:bg-emerald-500/20 rounded-t-sm h-[30%]"
+                      ></div>
+                      <div
+                        class="w-2.5 bg-emerald-300/50 dark:bg-emerald-500/40 rounded-t-sm h-[50%]"
+                      ></div>
+                      <div
+                        class="w-2.5 bg-emerald-400/50 dark:bg-emerald-500/60 rounded-t-sm h-[70%]"
+                      ></div>
+                      <div
+                        class="w-2.5 bg-emerald-500 dark:bg-emerald-500 rounded-t-sm h-[100%] shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                      ></div>
+                    </div>
+                  </div>
+                  Instant Quotes
+                </div>
+                <div
+                  class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 transition-colors dark:border-white/5 dark:bg-white/[0.02] dark:text-slate-300 group-hover:border-blue-200 dark:group-hover:border-blue-500/20"
+                >
+                  <div
+                    class="absolute top-8 right-8 z-0 opacity-40 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  >
+                    <div class="flex items-center gap-1.5">
+                      <div
+                        class="w-2 h-2 rounded-full bg-cyan-400/50 dark:bg-cyan-500/50"
+                      ></div>
+                      <div class="w-6 h-px bg-cyan-200 dark:bg-cyan-800"></div>
+                      <div
+                        class="w-2 h-2 rounded-full bg-cyan-500/80 dark:bg-cyan-400/80 shadow-[0_0_5px_rgba(6,182,212,0.4)]"
+                      ></div>
+                      <div class="w-6 h-px bg-cyan-200 dark:bg-cyan-800"></div>
+                      <div
+                        class="w-2 h-2 rounded-full bg-cyan-400/50 dark:bg-cyan-500/50"
+                      ></div>
+                    </div>
+                  </div>
+                  Calendar Booking
+                </div>
+                <div
+                  class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 transition-colors dark:border-white/5 dark:bg-white/[0.02] dark:text-slate-300 group-hover:border-blue-200 dark:group-hover:border-blue-500/20"
+                >
+                  <div
+                    class="absolute top-8 right-8 z-0 opacity-40 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  >
+                    <div
+                      class="w-14 h-10 border border-purple-200 dark:border-purple-500/30 rounded bg-purple-50/50 dark:bg-purple-900/10 flex flex-col p-1 gap-1"
+                    >
+                      <div
+                        class="w-full h-1.5 bg-purple-200 dark:bg-purple-500/40 rounded-sm"
+                      ></div>
+                      <div class="flex gap-1 h-full">
+                        <div
+                          class="w-full h-full bg-purple-100 dark:bg-purple-500/20 rounded-sm"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  Google Review AI
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Secondary 1: CRM & Sales Automation -->
+          <div
+            tabindex="0"
+            class="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-[#050505]/80 p-8 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-emerald-500/30 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:-translate-y-1 focus:shadow-xl backdrop-blur-sm md:col-span-2 lg:col-span-6"
+          >
+            <div class="relative z-10 flex flex-col h-full">
+              <div class="flex items-center gap-4 mb-6">
+                <div
+                  class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 text-emerald-600 transition-colors duration-300 dark:border-emerald-500/10 dark:bg-emerald-500/5 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20 shadow-sm"
+                >
+                  <iconify-icon
+                    icon="lucide:bar-chart-3"
+                    width="24"
+                  ></iconify-icon>
+                </div>
+                <h3
+                  class="text-xl font-medium tracking-tight text-slate-900 dark:text-white"
+                >
+                  CRM &amp; Sales Automation
+                </h3>
+              </div>
+              <p
+                class="mb-6 text-sm leading-relaxed text-slate-600 dark:text-slate-400 flex-1"
+              >
+                Stop using spreadsheets. We build visual pipelines that track
+                every dollar. Automate follow-ups so no lead goes cold.
+              </p>
+              <div
+                class="flex items-center gap-6 opacity-80 grayscale transition-all duration-500 group-hover:opacity-100 group-hover:grayscale-0 mt-auto"
+              >
+                <div class="flex flex-col gap-1">
+                  <span
+                    class="font-mono text-[10px] text-emerald-600 dark:text-emerald-400"
+                  >
+                    PIPELINE VALUE
+                  </span>
+                  <span
+                    class="font-mono text-lg text-slate-900 dark:text-white"
+                  >
+                    $142,500
+                  </span>
+                </div>
+                <div class="h-8 w-px bg-slate-200 dark:bg-white/10"></div>
+                <div class="flex flex-col gap-1">
+                  <span
+                    class="font-mono text-[10px] text-slate-500 dark:text-slate-400"
+                  >
+                    CONVERSION
+                  </span>
+                  <span
+                    class="font-mono text-lg text-slate-900 dark:text-white"
+                  >
+                    28%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Secondary 2: Total Integration -->
+          <div
+            tabindex="0"
+            class="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-[#050505]/80 p-8 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-cyan-500/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:-translate-y-1 focus:shadow-xl backdrop-blur-sm md:col-span-2 lg:col-span-6"
+          >
+            <div
+              class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(6,182,212,0.08),transparent_50%)]"
+            ></div>
+            <div class="relative z-10 flex flex-col h-full">
+              <div class="flex items-center gap-4 mb-6">
+                <div
+                  class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-cyan-100 bg-cyan-50 text-cyan-600 transition-colors duration-300 dark:border-white/10 dark:bg-white/5 dark:text-cyan-400 group-hover:bg-cyan-100 dark:group-hover:bg-cyan-500/20 shadow-sm"
+                >
+                  <iconify-icon icon="lucide:network" width="24"></iconify-icon>
+                </div>
+                <h3
+                  class="text-xl font-medium tracking-tight text-slate-900 dark:text-white"
+                >
+                  Total Integration
+                </h3>
+              </div>
+              <p
+                class="mb-6 text-sm leading-relaxed text-slate-600 dark:text-slate-400 flex-1"
+              >
+                We connect your world. Ads to Website → Website to CRM → CRM to
+                Invoicing (Xero/Quickbooks). Eliminating manual admin data entry
+                entirely.
+              </p>
+              <div
+                class="inline-flex items-center gap-2 text-xs font-medium text-cyan-600 transition-colors hover:text-cyan-500 dark:text-cyan-400 dark:hover:text-cyan-300 mt-auto"
+              >
+                Audit your workflow
+                <iconify-icon
+                  icon="lucide:arrow-right"
+                  width="12"
+                ></iconify-icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tertiary 1: Websites -->
+          <div
+            tabindex="0"
+            class="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-[#050505]/80 p-8 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-purple-500/30 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:-translate-y-1 focus:shadow-xl backdrop-blur-sm md:col-span-1 lg:col-span-3"
+          >
+            <div class="relative z-10 flex flex-col h-full">
+              <div class="flex items-center gap-4 mb-6">
+                <div
+                  class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-purple-100 bg-purple-50 text-purple-600 transition-colors duration-300 dark:border-white/10 dark:bg-white/5 dark:text-purple-400 group-hover:bg-purple-100 dark:group-hover:bg-purple-500/20 shadow-sm"
+                >
+                  <iconify-icon icon="lucide:layout" width="24"></iconify-icon>
+                </div>
+                <h3
+                  class="text-lg font-medium tracking-tight text-slate-900 dark:text-white"
+                >
+                  Websites
+                </h3>
+              </div>
+              <p
+                class="text-xs leading-relaxed text-slate-600 dark:text-slate-400 flex-1"
+              >
+                High-conversion sites designed to turn visitors into booked
+                jobs. Mobile-optimized for trades.
+              </p>
+            </div>
+          </div>
+
+          <!-- Tertiary 2: Growth Ops -->
+          <div
+            tabindex="0"
+            class="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-[#050505]/80 p-8 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-orange-500/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:-translate-y-1 focus:shadow-xl backdrop-blur-sm md:col-span-1 lg:col-span-3"
+          >
+            <div
+              class="absolute top-8 right-8 z-0 opacity-40 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            >
+              <div class="relative w-8 h-8">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-orange-400/80 dark:text-orange-500/80 absolute inset-0 w-full h-full"
+                >
+                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                  <polyline points="16 7 22 7 22 13"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="relative z-10 flex flex-col h-full">
+              <div class="flex items-center gap-4 mb-6">
+                <div
+                  class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-orange-100 bg-orange-50 text-orange-600 transition-colors duration-300 dark:border-white/10 dark:bg-white/5 dark:text-orange-400 group-hover:bg-orange-100 dark:group-hover:bg-orange-500/20 shadow-sm"
+                >
+                  <iconify-icon
+                    icon="lucide:trending-up"
+                    width="24"
+                  ></iconify-icon>
+                </div>
+                <h3
+                  class="text-lg font-medium tracking-tight text-slate-900 dark:text-white"
+                >
+                  Growth Ops
+                </h3>
+              </div>
+              <p
+                class="text-xs leading-relaxed text-slate-600 dark:text-slate-400 flex-1"
+              >
+                Funnels, ads management, and reputation management to keep the
+                leads flowing.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- App / Feature Section -->
+    <section
+      class="relative py-12 md:py-24 bg-transparent border-t border-slate-200 dark:border-white/5 overflow-hidden"
+      id="app"
+    >
+      <!-- Background grid effect -->
+      <div
+        class="absolute inset-0 bg-blue-50/10 dark:bg-[#020204]/70 -z-10 transition-colors duration-500"
+      ></div>
+      <div
+        id="chaos-container"
+        class="hidden md:block absolute inset-0 z-0 pointer-events-none chaos-container md:overflow-hidden"
+        aria-hidden="true"
+      >
+        <!-- Left Cluster -->
+        <div
+          class="chaos-item jitter"
+          style="
+            margin-left: -320px;
+            margin-top: -240px;
+            --mx: -20px;
+            --my: -20px;
+            animation-delay: 0s;
+          "
+        >
+          <div
+            class="flex items-center gap-3 px-5 py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-full shadow-lg border border-white/50 dark:border-white/10"
+          >
+            <div class="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
+            <iconify-icon
+              icon="lucide:mail"
+              class="text-slate-600 dark:text-slate-400"
+              width="20"
+            ></iconify-icon>
+            <span
+              class="text-sm font-semibold text-slate-700 dark:text-slate-300"
+            >
+              New Inquiry
+            </span>
+          </div>
+        </div>
+        <div
+          class="chaos-item idle"
+          style="
+            margin-left: -380px;
+            margin-top: -40px;
+            --mx: -40px;
+            --my: 10px;
+            animation-delay: 0.2s;
+          "
+        >
+          <div
+            class="p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-3xl shadow-xl border border-slate-200/50 dark:border-white/10"
+          >
+            <iconify-icon icon="logos:whatsapp-icon" width="26"></iconify-icon>
+          </div>
+        </div>
+        <div
+          class="chaos-item idle"
+          style="
+            margin-left: -300px;
+            margin-top: 160px;
+            --mx: -15px;
+            --my: 30px;
+            animation-delay: 0.5s;
+          "
+        >
+          <div
+            class="flex items-center gap-3 px-5 py-2.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-xl shadow-lg border border-red-100 dark:border-red-500/20"
+          >
+            <iconify-icon
+              icon="lucide:phone-missed"
+              class="text-red-500"
+              width="20"
+            ></iconify-icon>
+            <span class="text-xs font-mono text-slate-500">0412...</span>
+          </div>
+        </div>
+        <div
+          class="chaos-item jitter"
+          style="
+            margin-left: -220px;
+            margin-top: 300px;
+            --mx: -30px;
+            --my: 20px;
+            animation-delay: 0.1s;
+          "
+        >
+          <div
+            class="flex items-center gap-3 px-4 py-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-full shadow-lg border border-blue-100 dark:border-blue-500/20"
+          >
+            <iconify-icon icon="logos:messenger" width="22"></iconify-icon>
+            <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+          </div>
+        </div>
+        <div
+          class="chaos-item idle"
+          style="
+            margin-left: -120px;
+            margin-top: -340px;
+            --mx: -10px;
+            --my: -30px;
+            animation-delay: 1.2s;
+          "
+        >
+          <div
+            class="w-12 h-12 flex items-center justify-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-full shadow border border-slate-100 dark:border-white/10"
+          >
+            <iconify-icon
+              icon="lucide:message-square"
+              class="text-slate-400"
+              width="20"
+            ></iconify-icon>
+          </div>
+        </div>
+
+        <!-- Right Cluster -->
+        <div
+          class="chaos-item idle"
+          style="
+            margin-left: 320px;
+            margin-top: -220px;
+            --mx: 20px;
+            --my: -25px;
+            animation-delay: 0.7s;
+          "
+        >
+          <div
+            class="flex items-center gap-3 px-5 py-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-2xl shadow-xl border border-slate-200 dark:border-white/10"
+          >
+            <iconify-icon
+              icon="lucide:calendar"
+              class="text-orange-500"
+              width="20"
+            ></iconify-icon>
+            <span
+              class="text-sm font-medium text-slate-600 dark:text-slate-300"
+            >
+              Booking Req
+            </span>
+          </div>
+        </div>
+        <div
+          class="chaos-item jitter"
+          style="
+            margin-left: 380px;
+            margin-top: -20px;
+            --mx: 15px;
+            --my: 5px;
+            animation-delay: 0.3s;
+          "
+        >
+          <div
+            class="p-3.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-full shadow-lg border border-pink-100 dark:border-pink-500/20"
+          >
+            <iconify-icon
+              icon="skill-icons:instagram"
+              width="24"
+            ></iconify-icon>
+          </div>
+        </div>
+        <div
+          class="chaos-item idle"
+          style="
+            margin-left: 300px;
+            margin-top: 180px;
+            --mx: 40px;
+            --my: 15px;
+            animation-delay: 0.9s;
+          "
+        >
+          <div
+            class="flex flex-col gap-1.5 p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-xl shadow-lg border border-slate-200 dark:border-white/10"
+          >
+            <div
+              class="h-1.5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"
+            ></div>
+            <div
+              class="h-1.5 w-11 bg-slate-200 dark:bg-slate-700 rounded-full"
+            ></div>
+          </div>
+        </div>
+        <div
+          class="chaos-item idle"
+          style="
+            margin-left: 220px;
+            margin-top: 320px;
+            --mx: 25px;
+            --my: 40px;
+            animation-delay: 1.5s;
+          "
+        >
+          <div
+            class="flex items-center gap-3 px-5 py-2.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-full shadow-md border border-slate-100 dark:border-white/10"
+          >
+            <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+            <span class="text-xs text-slate-500">Lead #291</span>
+          </div>
+        </div>
+        <div
+          class="chaos-item jitter"
+          style="
+            margin-left: 100px;
+            margin-top: -310px;
+            --mx: 50px;
+            --my: -10px;
+            animation-delay: 0.4s;
+          "
+        >
+          <div
+            class="w-9 h-9 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20"
+          >
+            <iconify-icon
+              icon="lucide:at-sign"
+              class="text-blue-500"
+              width="18"
+            ></iconify-icon>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="z-10 flex flex-col max-w-7xl mr-auto ml-auto pr-6 pl-6 relative items-center"
+      >
+        <!-- Header Content -->
+        <div class="text-center mb-10 md:mb-20 max-w-3xl">
+          <span
+            class="text-xs font-mono text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-6 block"
+          >
+            The Sora Solution
+          </span>
+          <h2
+            class="md:text-6xl text-4xl font-medium text-slate-900 dark:text-white tracking-tight mb-6"
+          >
+            Every Conversation.
+            <span class="text-blue-500">One Inbox.</span>
+            Total Control.
+          </h2>
+          <p
+            class="text-slate-600 dark:text-slate-400 text-lg font-light max-w-xl mx-auto"
+          >
+            CRM, Messages, Pipeline, Tasks, Automations — Unified.
+          </p>
+        </div>
+
+        <!-- Phone Mockup Container -->
+        <div
+          class="relative w-auto max-w-[90vw] md:max-w-[360px] md:w-full h-[70vh] md:h-auto aspect-[9/19.5] md:aspect-auto perspective-dramatic mx-auto group phone-wrapper-trigger"
+        >
+          <!-- Hover Glow -->
+          <div
+            class="absolute inset-0 z-[-1] rounded-[3rem] bg-blue-500/0 transition-all duration-700 ease-out group-hover:bg-blue-400/10 dark:group-hover:bg-blue-500/10 scale-95 group-hover:scale-110 blur-2xl md:blur-3xl"
+          ></div>
+          <!-- Control Pulse Ring -->
+          <div
+            class="phone-pulse-ring absolute inset-[-10px] z-[-1] rounded-[3.2rem] border-2 border-blue-500/50 pointer-events-none"
+          ></div>
+          <!-- Floating Background Card (Left) -->
+          <div
+            tabindex="0"
+            class="absolute top-32 -left-12 md:-left-24 w-52 h-64 bg-white/95 dark:bg-[#0a0a0c]/90 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-2xl dark:shadow-blue-900/10 z-0 transform -rotate-6 origin-bottom-right transition-all duration-300 ease-out hover:-translate-x-12 hover:scale-105 hover:opacity-100 focus:-translate-x-12 focus:scale-105 focus:opacity-100 opacity-90 border border-slate-100 dark:border-white/10 group/card motion-reduce:transition-opacity motion-reduce:hover:translate-x-0 motion-reduce:hover:transform-none hidden md:block"
+          >
+            <div class="p-5 h-full flex flex-col">
+              <!-- Header (Visible on Peek) -->
+              <div class="flex items-center gap-3 mb-4">
+                <div
+                  class="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 shadow-sm border border-emerald-100 dark:border-emerald-500/20"
+                >
+                  <iconify-icon
+                    icon="lucide:trending-up"
+                    width="18"
+                  ></iconify-icon>
+                </div>
+                <div class="flex flex-col">
+                  <span
+                    class="text-xs font-bold text-slate-900 dark:text-white leading-none"
+                  >
+                    Monthly Revenue
+                  </span>
+                  <span
+                    class="text-[9px] text-slate-500 dark:text-slate-400 mt-1 font-medium tracking-tight"
+                  >
+                    Consistent growth
+                  </span>
+                </div>
+              </div>
+
+              <!-- Chart (Hidden until Reveal) -->
+              <div class="flex-1 relative w-full flex items-end pb-1">
+                <!-- Background Lines -->
+                <div
+                  class="absolute inset-0 flex flex-col justify-between py-2 opacity-[0.08] pointer-events-none"
+                >
+                  <div class="w-full h-px bg-slate-900 dark:bg-white"></div>
+                  <div class="w-full h-px bg-slate-900 dark:bg-white"></div>
+                  <div class="w-full h-px bg-slate-900 dark:bg-white"></div>
+                  <div class="w-full h-px bg-slate-900 dark:bg-white"></div>
+                </div>
+                <!-- Trend Line -->
+                <svg
+                  class="w-full h-28 overflow-visible z-10"
+                  viewBox="0 0 100 40"
+                  preserveAspectRatio="none"
+                >
+                  <defs>
+                    <linearGradient
+                      id="revenueGradient"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="0%"
+                        stop-color="#10b981"
+                        stop-opacity="0.2"
+                      ></stop>
+                      <stop
+                        offset="100%"
+                        stop-color="#10b981"
+                        stop-opacity="0"
+                      ></stop>
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M0,35 C15,32 25,25 40,22 C55,19 65,26 75,15 C85,6 92,8 100,2"
+                    fill="none"
+                    stroke="#10b981"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M0,35 C15,32 25,25 40,22 C55,19 65,26 75,15 C85,6 92,8 100,2 V40 H0 Z"
+                    fill="url(#revenueGradient)"
+                    stroke="none"
+                  ></path>
+                  <circle
+                    cx="100"
+                    cy="2"
+                    r="3.5"
+                    class="fill-white dark:fill-[#0a0a0c] stroke-emerald-500 stroke-2"
+                  ></circle>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating Background Card (Right) -->
+          <div
+            tabindex="0"
+            class="absolute top-48 -right-12 md:-right-24 w-52 h-64 bg-white/95 dark:bg-[#0a0a0c]/90 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-2xl dark:shadow-blue-900/10 z-0 transform rotate-6 origin-bottom-left transition-all duration-300 ease-out hover:translate-x-12 hover:scale-105 hover:opacity-100 focus:translate-x-12 focus:scale-105 focus:opacity-100 opacity-90 border border-slate-100 dark:border-white/10 group/card motion-reduce:transition-opacity motion-reduce:hover:translate-x-0 motion-reduce:hover:transform-none hidden md:block"
+          >
+            <div class="p-5 h-full flex flex-col">
+              <!-- Header (Visible on Peek) -->
+              <div
+                class="flex flex-row-reverse items-center gap-3 mb-4 text-right"
+              >
+                <div
+                  class="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 shadow-sm border border-blue-100 dark:border-blue-500/20"
+                >
+                  <iconify-icon
+                    icon="lucide:calendar"
+                    width="18"
+                  ></iconify-icon>
+                </div>
+                <div class="flex flex-col">
+                  <span
+                    class="text-xs font-bold text-slate-900 dark:text-white leading-none"
+                  >
+                    Booked Calendar
+                  </span>
+                  <span
+                    class="text-[9px] text-slate-500 dark:text-slate-400 mt-1 font-medium tracking-tight"
+                  >
+                    Jobs confirmed
+                  </span>
+                </div>
+              </div>
+
+              <!-- Calendar Grid (Hidden until Reveal) -->
+              <div
+                class="flex-1 w-full grid grid-cols-4 gap-2 opacity-90 content-start"
+              >
+                <div
+                  class="aspect-square rounded-md bg-slate-100 dark:bg-white/5"
+                ></div>
+                <div
+                  class="aspect-square rounded-md bg-slate-100 dark:bg-white/5"
+                ></div>
+                <div
+                  class="col-span-2 aspect-auto rounded-md bg-blue-500 shadow-md shadow-blue-500/20 flex items-center justify-center"
+                >
+                  <span class="text-[10px] font-bold text-white">Booked</span>
+                </div>
+                <div
+                  class="aspect-square rounded-md bg-slate-100 dark:bg-white/5"
+                ></div>
+                <div
+                  class="col-span-2 aspect-auto rounded-md bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-500/20"
+                ></div>
+                <div
+                  class="aspect-square rounded-md bg-slate-100 dark:bg-white/5"
+                ></div>
+                <div
+                  class="aspect-square rounded-md bg-slate-100 dark:bg-white/5"
+                ></div>
+                <div
+                  class="aspect-square rounded-md bg-slate-100 dark:bg-white/5"
+                ></div>
+                <div
+                  class="col-span-2 aspect-auto rounded-md bg-blue-500 shadow-md shadow-blue-500/20 flex items-center justify-center"
+                >
+                  <iconify-icon
+                    icon="lucide:check"
+                    class="text-white w-3 h-3"
+                  ></iconify-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Phone Device -->
+          <div
+            class="relative z-10 bg-white rounded-[2.5rem] md:rounded-[3rem] border-[6px] md:border-[8px] border-[#1c1c1e] overflow-hidden w-full h-full md:h-[720px] shadow-2xl flex flex-col ring-1 ring-black/5 dark:ring-white/10"
+          >
+            <div
+              class="absolute top-0 inset-x-0 h-8 bg-transparent z-50 flex justify-center pointer-events-none"
+            >
+              <div class="w-28 h-7 bg-[#1c1c1e] rounded-b-2xl"></div>
+            </div>
+            <div
+              class="pt-14 pb-2 px-6 bg-white flex items-center justify-between border-b border-transparent"
+            >
+              <div class="flex items-center gap-2">
+                <div class="text-blue-600">
+                  <iconify-icon icon="lucide:layers" width="22"></iconify-icon>
+                </div>
+                <span class="font-bold text-slate-900 tracking-tight text-lg">
+                  SORA
+                </span>
+              </div>
+              <button
+                class="text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <iconify-icon
+                  icon="lucide:search"
+                  width="20"
+                  class=""
+                ></iconify-icon>
+              </button>
+            </div>
+            <div
+              class="flex items-center px-6 border-b border-slate-100 bg-white pt-2"
+            >
+              <div
+                class="pb-3 border-b-[2.5px] border-blue-600 text-blue-600 text-sm font-semibold cursor-pointer mr-6 transition-colors"
+              >
+                Inbox
+              </div>
+              <div
+                class="pb-3 border-b-[2.5px] border-transparent text-slate-400 text-sm font-medium cursor-pointer hover:text-slate-600 mr-6 transition-colors"
+              >
+                CRM
+              </div>
+              <div
+                class="pb-3 border-b-[2.5px] border-transparent text-slate-400 text-sm font-medium cursor-pointer hover:text-slate-600 mr-6 transition-colors"
+              >
+                Calendar
+              </div>
+              <div
+                class="pb-3 border-b-[2.5px] border-transparent text-slate-400 text-sm font-medium cursor-pointer hover:text-slate-600 transition-colors"
+              >
+                Tasks
+              </div>
+            </div>
+            <div
+              class="flex-1 overflow-y-auto bg-slate-50/50 p-4 space-y-3 no-scrollbar scroll-smooth"
+            >
+              <div
+                class="bg-white p-4 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] border border-slate-100 flex items-center gap-3.5 hover:shadow-md transition-shadow cursor-pointer group"
+              >
+                <div
+                  class="w-11 h-11 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-sm border border-emerald-200/50"
+                >
+                  R
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex justify-between items-center mb-0.5">
+                    <span class="font-semibold text-slate-900 text-[15px]">
+                      Rick
+                    </span>
+                    <iconify-icon
+                      icon="logos:whatsapp-icon"
+                      width="16"
+                      class="opacity-80 group-hover:opacity-100 transition-opacity"
+                    ></iconify-icon>
+                  </div>
+                  <p
+                    class="text-[13px] text-slate-500 truncate group-hover:text-slate-700 transition-colors"
+                  >
+                    Yep lock it in 👍
+                  </p>
+                </div>
+              </div>
+              <div
+                class="bg-white p-4 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] border border-slate-100 flex items-center gap-3.5 hover:shadow-md transition-shadow cursor-pointer group"
+              >
+                <div
+                  class="w-11 h-11 rounded-full bg-orange-100 flex items-center justify-center text-orange-700 font-bold text-sm border border-orange-200/50"
+                >
+                  C
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex justify-between items-center mb-0.5">
+                    <span class="font-semibold text-slate-900 text-[15px]">
+                      Clark
+                    </span>
+                    <iconify-icon
+                      icon="skill-icons:instagram"
+                      width="16"
+                      class="opacity-80 group-hover:opacity-100 transition-opacity"
+                    ></iconify-icon>
+                  </div>
+                  <p
+                    class="text-[13px] text-slate-500 truncate group-hover:text-slate-700 transition-colors"
+                  >
+                    Deposit paid just now...
+                  </p>
+                </div>
+              </div>
+              <div
+                class="bg-white p-4 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] border border-slate-100 flex items-center gap-3.5 hover:shadow-md transition-shadow cursor-pointer group"
+              >
+                <div
+                  class="w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-sm border border-blue-200/50"
+                >
+                  C
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex justify-between items-center mb-0.5">
+                    <span class="font-semibold text-slate-900 text-[15px]">
+                      Christine
+                    </span>
+                    <iconify-icon
+                      icon="logos:messenger"
+                      width="16"
+                      class="opacity-80 group-hover:opacity-100 transition-opacity"
+                    ></iconify-icon>
+                  </div>
+                  <p
+                    class="text-[13px] text-slate-500 truncate group-hover:text-slate-700 transition-colors"
+                  >
+                    Great — when can you start?
+                  </p>
+                </div>
+              </div>
+              <div
+                class="bg-white p-4 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] border border-slate-100 flex items-center gap-3.5 hover:shadow-md transition-shadow cursor-pointer group"
+              >
+                <div
+                  class="w-11 h-11 rounded-full bg-rose-100 flex items-center justify-center text-rose-700 font-bold text-sm border border-rose-200/50"
+                >
+                  T
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex justify-between items-center mb-0.5">
+                    <span class="font-semibold text-slate-900 text-[15px]">
+                      Tammy
+                    </span>
+                    <iconify-icon
+                      icon="logos:google-gmail"
+                      width="16"
+                      class="opacity-80 group-hover:opacity-100 transition-opacity"
+                    ></iconify-icon>
+                  </div>
+                  <p
+                    class="text-[13px] text-slate-500 truncate group-hover:text-slate-700 transition-colors"
+                  >
+                    Thursday works for us...
+                  </p>
+                </div>
+              </div>
+              <div
+                class="bg-white p-4 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] border border-slate-100 flex items-center gap-3.5 hover:shadow-md transition-shadow cursor-pointer group"
+              >
+                <div
+                  class="w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-sm border border-blue-200/50"
+                >
+                  M
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex justify-between items-center mb-0.5">
+                    <span class="font-semibold text-slate-900 text-[15px]">
+                      Michael
+                    </span>
+                    <iconify-icon
+                      icon="logos:linkedin-icon"
+                      width="16"
+                      class="opacity-80 group-hover:opacity-100 transition-opacity"
+                    ></iconify-icon>
+                  </div>
+                  <p
+                    class="text-[13px] text-slate-500 truncate group-hover:text-slate-700 transition-colors"
+                  >
+                    Can you send the contract?
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="h-[88px] bg-white border-t border-slate-100 px-6 pb-4 flex items-center justify-between relative z-20"
+            >
+              <button
+                class="flex flex-col items-center gap-1.5 text-blue-600 w-12 hover:bg-slate-50/50 rounded-lg py-1 transition-colors"
+              >
+                <iconify-icon icon="lucide:inbox" width="22"></iconify-icon>
+                <span class="text-[10px] font-semibold">Inbox</span>
+              </button>
+              <button
+                class="flex flex-col items-center gap-1.5 text-slate-400 hover:text-slate-700 w-12 hover:bg-slate-50/50 rounded-lg py-1 transition-colors"
+              >
+                <iconify-icon icon="lucide:users" width="22"></iconify-icon>
+                <span class="text-[10px] font-medium">CRM</span>
+              </button>
+              <div class="absolute left-1/2 -top-6 -translate-x-1/2">
+                <button
+                  class="w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-600/30 hover:bg-blue-500 hover:scale-105 active:scale-95 transition-all"
+                >
+                  <iconify-icon icon="lucide:plus" width="28"></iconify-icon>
+                </button>
+              </div>
+              <button
+                class="flex flex-col items-center gap-1.5 text-slate-400 hover:text-slate-700 w-12 hover:bg-slate-50/50 rounded-lg py-1 transition-colors"
+              >
+                <iconify-icon
+                  icon="lucide:check-square"
+                  width="22"
+                ></iconify-icon>
+                <span class="text-[10px] font-medium">Tasks</span>
+              </button>
+              <button
+                class="flex flex-col items-center gap-1.5 text-slate-400 hover:text-slate-700 w-12 hover:bg-slate-50/50 rounded-lg py-1 transition-colors"
+              >
+                <iconify-icon icon="lucide:settings" width="22"></iconify-icon>
+                <span class="text-[10px] font-medium">Auto</span>
+              </button>
+            </div>
+            <div
+              class="absolute bottom-2 left-0 right-0 flex justify-center z-30 pointer-events-none"
+            >
+              <div class="w-32 h-1 bg-slate-200/80 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section
+      id="pricing"
+      class="relative py-24 bg-transparent border-t border-slate-200 dark:border-white/5"
+    >
+      <div
+        class="absolute inset-0 bg-slate-50/10 dark:bg-[#020204]/70 -z-10 transition-colors duration-500"
+      ></div>
+
+      <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div
+          class="energy-streak layer-mid"
+          style="
+            left: 16.66%;
+            animation-duration: 14s;
+            animation-delay: -4s;
+            --streak-color: rgba(180, 140, 100, 0.5);
+            --streak-opacity: 0.2;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-near star hidden md:block"
+          style="
+            left: 20%;
+            animation-duration: 8s;
+            animation-delay: -1s;
+            --streak-color: rgba(210, 180, 140, 0.6);
+            --streak-opacity: 0.5;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-mid"
+          style="
+            left: 50%;
+            animation-duration: 16s;
+            animation-delay: -8s;
+            --streak-color: rgba(148, 163, 184, 0.5);
+            --streak-opacity: 0.2;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-far hidden md:block"
+          style="
+            left: 45%;
+            animation-duration: 25s;
+            animation-delay: -15s;
+            --streak-color: rgba(148, 163, 184, 0.3);
+            --streak-opacity: 0.1;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-mid"
+          style="
+            left: 83.33%;
+            animation-duration: 15s;
+            animation-delay: -2s;
+            --streak-color: rgba(234, 179, 8, 0.5);
+            --streak-opacity: 0.2;
+          "
+        ></div>
+        <div
+          class="energy-streak layer-near hidden md:block"
+          style="
+            left: 88%;
+            animation-duration: 9s;
+            animation-delay: -5s;
+            --streak-color: rgba(250, 204, 21, 0.5);
+            --streak-opacity: 0.4;
+          "
+        ></div>
+      </div>
+      <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="text-center mb-16">
+          <h2
+            class="text-3xl font-medium text-slate-900 dark:text-white tracking-tight font-serif mb-4"
+          >
+            Simple, transparent pricing.
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400">
+            Choose the scale that fits your business.
+          </p>
+        </div>
+
+        <!-- Parent Grid Container with Uniform Heights -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch group/pricing"
+        >
+          <!-- TIER 1: BRONZE (FOUNDATION) -->
+          <div
+            tabindex="0"
+            class="group relative flex flex-col h-full rounded-2xl p-[3px] transition-all duration-300 ease-out outline-none bg-gradient-to-br from-[#eaddcf] via-[#a88b70] to-[#785e45] hover:scale-[1.05] focus:scale-[1.05] hover:z-10 focus:z-10 hover:shadow-[0_0_40px_-10px_rgba(168,139,112,0.3)] focus:shadow-[0_0_40px_-10px_rgba(168,139,112,0.3)] md:group-hover/pricing:opacity-90 md:hover:!opacity-100 md:focus:!opacity-100"
+          >
+            <!-- Inner Card Face -->
+            <div
+              class="h-full w-full rounded-xl flex flex-col p-8 relative overflow-hidden backdrop-blur-sm bg-gradient-to-b from-[#fdfbf7] to-[#f5f0e6] dark:from-[#292524] dark:to-[#0c0a09] ring-1 ring-inset ring-white/40 dark:ring-white/5"
+            >
+              <div class="mb-6">
+                <h3
+                  class="text-xl font-bold text-[#785e45] dark:text-[#d6c3b0] mb-2 flex items-center gap-2"
+                >
+                  Foundation
+                  <!-- True Bronze Dot -->
+                  <span
+                    class="w-2 h-2 rounded-full bg-[#a88b70] shadow-[0_0_8px_#a88b70]"
+                  ></span>
+                </h3>
+                <p
+                  class="text-xs font-medium text-[#8f7459] dark:text-[#a88b70] h-8 leading-snug"
+                >
+                  For businesses getting systems in place fast.
+                </p>
+              </div>
+
+              <div class="mb-8">
+                <div class="flex items-baseline gap-1">
+                  <span
+                    class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight"
+                  >
+                    $500
+                  </span>
+                  <span class="text-sm text-slate-500 font-medium">
+                    /mo AUD
+                  </span>
+                </div>
+                <div
+                  class="text-xs text-[#a88b70] dark:text-[#8f7459] mt-2 font-mono"
+                >
+                  + $1,000 Setup
+                </div>
+              </div>
+
+              <ul class="space-y-3 mb-8 flex-1">
+                <li
+                  class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
+                >
+                  <iconify-icon
+                    icon="lucide:check"
+                    class="text-[#a88b70] shrink-0 mt-0.5"
+                    width="16"
+                  ></iconify-icon>
+                  <span>CRM setup</span>
+                </li>
+                <li
+                  class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
+                >
+                  <iconify-icon
+                    icon="lucide:check"
+                    class="text-[#a88b70] shrink-0 mt-0.5"
+                    width="16"
+                  ></iconify-icon>
+                  <span>SMS follow-ups &amp; text back</span>
+                </li>
+                <li
+                  class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
+                >
+                  <iconify-icon
+                    icon="lucide:check"
+                    class="text-[#a88b70] shrink-0 mt-0.5"
+                    width="16"
+                  ></iconify-icon>
+                  <span>Ads + landing page</span>
+                </li>
+              </ul>
+
+              <!-- CTA: Metallic Bronze Gradient -->
+              <button
+                onclick="openAuditModal()"
+                class="w-full py-3 rounded-lg text-white font-medium text-sm transition-all duration-300 shadow-md bg-gradient-to-r from-[#8f7459] to-[#785e45] hover:from-[#a88b70] hover:to-[#8f7459] shadow-[#785e45]/20"
+              >
+                Get Started
+              </button>
+            </div>
+          </div>
+
+          <!-- TIER 2: SILVER (GROWTH) -->
+          <div
+            tabindex="0"
+            class="group relative flex flex-col h-full rounded-2xl p-[3px] transition-all duration-300 ease-out outline-none bg-gradient-to-br from-[#e2e8f0] via-[#94a3b8] to-[#475569] hover:scale-[1.05] focus:scale-[1.05] hover:z-10 focus:z-10 hover:shadow-[0_0_40px_-10px_rgba(148,163,184,0.3)] focus:shadow-[0_0_40px_-10px_rgba(148,163,184,0.3)] md:group-hover/pricing:opacity-90 md:hover:!opacity-100 md:focus:!opacity-100"
+          >
+            <div
+              class="h-full w-full rounded-xl flex flex-col p-8 relative overflow-hidden backdrop-blur-sm bg-gradient-to-b from-[#f8fafc] to-[#e2e8f0] dark:from-[#0f172a] dark:to-[#020617] ring-1 ring-inset ring-white/40 dark:ring-white/5"
+            >
+              <div class="mb-6">
+                <div class="flex justify-between items-start mb-2">
+                  <h3
+                    class="text-xl font-bold text-[#334155] dark:text-[#e2e8f0] flex items-center gap-2"
+                  >
+                    Growth
+                    <!-- Silver Dot -->
+                    <span
+                      class="w-2 h-2 rounded-full bg-[#94a3b8] shadow-[0_0_8px_#94a3b8]"
+                    ></span>
+                  </h3>
+                  <span
+                    class="text-[9px] font-bold uppercase tracking-wider text-slate-600 dark:text-white bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 px-2 py-0.5 rounded-full"
+                  >
+                    Recommended
+                  </span>
+                </div>
+                <p
+                  class="text-xs font-medium text-slate-600 dark:text-slate-400 h-8 leading-snug"
+                >
+                  For businesses ready for predictable monthly revenue.
+                </p>
+              </div>
+
+              <div class="mb-8">
+                <div class="flex items-baseline gap-1">
+                  <span
+                    class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight"
+                  >
+                    $1,600
+                  </span>
+                  <span class="text-sm text-slate-500 font-medium">
+                    /mo AUD
+                  </span>
+                </div>
+                <div
+                  class="text-xs text-slate-500/80 dark:text-slate-400/60 mt-2 font-mono"
+                >
+                  + $2,000 Setup
+                </div>
+              </div>
+
+              <ul class="space-y-3 mb-8 flex-1">
+                <li
+                  class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
+                >
+                  <iconify-icon
+                    icon="lucide:check"
+                    class="text-slate-500 dark:text-slate-400 shrink-0 mt-0.5"
+                    width="16"
+                  ></iconify-icon>
+                  <span>Full automation (SMS + Email)</span>
+                </li>
+                <li
+                  class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
+                >
+                  <iconify-icon
+                    icon="lucide:check"
+                    class="text-slate-500 dark:text-slate-400 shrink-0 mt-0.5"
+                    width="16"
+                  ></iconify-icon>
+                  <span>Smart lead routing</span>
+                </li>
+                <li
+                  class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
+                >
+                  <iconify-icon
+                    icon="lucide:check"
+                    class="text-slate-500 dark:text-slate-400 shrink-0 mt-0.5"
+                    width="16"
+                  ></iconify-icon>
+                  <span>Enhanced ads &amp; tracking</span>
+                </li>
+                <li
+                  class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
+                >
+                  <iconify-icon
+                    icon="lucide:check"
+                    class="text-slate-500 dark:text-slate-400 shrink-0 mt-0.5"
+                    width="16"
+                  ></iconify-icon>
+                  <span>Reviews &amp; social proof system</span>
+                </li>
+              </ul>
+
+              <!-- CTA: Silver/Slate Gradient -->
+              <button
+                onclick="openAuditModal()"
+                class="w-full py-3 rounded-lg text-white font-medium text-sm transition-all duration-300 shadow-md bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 shadow-slate-900/10"
+              >
+                Book a Free Audit
+              </button>
+            </div>
+          </div>
+
+          <!-- TIER 3: GOLD (ENTERPRISE) -->
+          <div
+            tabindex="0"
+            class="group relative flex flex-col h-full rounded-2xl p-[3px] transition-all duration-300 ease-out outline-none bg-gradient-to-br from-[#fde047] via-[#ca8a04] to-[#854d0e] hover:scale-[1.05] focus:scale-[1.05] hover:z-10 focus:z-10 hover:shadow-[0_0_40px_-10px_rgba(234,179,8,0.3)] focus:shadow-[0_0_40px_-10px_rgba(234,179,8,0.3)] md:group-hover/pricing:opacity-90 md:hover:!opacity-100 md:focus:!opacity-100"
+          >
+            <div
+              class="h-full w-full rounded-xl flex flex-col p-8 relative overflow-hidden backdrop-blur-sm bg-gradient-to-b from-[#fefce8] to-[#fef9c3] dark:from-[#422006] dark:to-[#0c0a09] ring-1 ring-inset ring-white/40 dark:ring-white/5"
+            >
+              <div class="mb-6">
+                <h3
+                  class="text-xl font-bold text-[#854d0e] dark:text-[#fde047] mb-2 flex items-center gap-2"
+                >
+                  Enterprise
+                  <!-- Gold Dot -->
+                  <span
+                    class="w-2 h-2 rounded-full bg-[#ca8a04] shadow-[0_0_8px_#ca8a04]"
+                  ></span>
+                </h3>
+                <p
+                  class="text-xs font-medium text-yellow-800/70 dark:text-yellow-200/60 h-8 leading-snug"
+                >
+                  For businesses scaling without adding staff.
+                </p>
+              </div>
+
+              <div class="mb-8">
+                <div class="flex items-baseline gap-1">
+                  <span
+                    class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight"
+                  >
+                    $2,000
+                  </span>
+                  <span class="text-sm text-slate-500 font-medium">
+                    /mo AUD
+                  </span>
+                </div>
+                <div
+                  class="text-xs text-yellow-800/60 dark:text-yellow-400/60 mt-2 font-mono"
+                >
+                  + $3,000 Setup
+                </div>
+              </div>
+
+              <ul class="space-y-3 mb-8 flex-1">
+                <li
+                  class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
+                >
+                  <iconify-icon
+                    icon="lucide:check"
+                    class="text-yellow-600 dark:text-yellow-500 shrink-0 mt-0.5"
+                    width="16"
+                  ></iconify-icon>
+                  <span>AI receptionist &amp; setter</span>
+                </li>
+                <li
+                  class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
+                >
+                  <iconify-icon
+                    icon="lucide:check"
+                    class="text-yellow-600 dark:text-yellow-500 shrink-0 mt-0.5"
+                    width="16"
+                  ></iconify-icon>
+                  <span>Multi-location systems</span>
+                </li>
+                <li
+                  class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
+                >
+                  <iconify-icon
+                    icon="lucide:check"
+                    class="text-yellow-600 dark:text-yellow-500 shrink-0 mt-0.5"
+                    width="16"
+                  ></iconify-icon>
+                  <span>Advanced automations</span>
+                </li>
+                <li
+                  class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300"
+                >
+                  <iconify-icon
+                    icon="lucide:check"
+                    class="text-yellow-600 dark:text-yellow-500 shrink-0 mt-0.5"
+                    width="16"
+                  ></iconify-icon>
+                  <span>Authority &amp; content engine</span>
+                </li>
+              </ul>
+
+              <!-- CTA: Gold/Amber Gradient -->
+              <button
+                onclick="openAuditModal()"
+                class="w-full py-3 rounded-lg text-white font-medium text-sm transition-all duration-300 shadow-md bg-gradient-to-r from-yellow-700 to-yellow-800 hover:from-yellow-600 hover:to-yellow-700 shadow-yellow-900/10"
+              >
+                Talk to Us
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-12">
+          <p class="text-xs text-slate-400 dark:text-slate-600 font-medium">
+            Built for service businesses. Scales with you.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA & Footer -->
+    <section
+      class="overflow-hidden bg-transparent w-full border-slate-200 dark:border-white/5 border-t py-12 relative"
+      id="cta"
+    >
+      <div
+        class="absolute inset-0 bg-slate-50/10 dark:bg-[#020204]/70 -z-10 transition-colors duration-500"
+      ></div>
+
+      <div class="max-w-4xl mx-auto px-6 relative z-10 text-center">
+        <h2
+          class="text-3xl font-medium tracking-tight text-slate-900 dark:text-white mb-6"
+        >
+          Ready to scale?
+        </h2>
+        <button
+          onclick="openAuditModal()"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all font-medium mb-12 shadow-lg shadow-blue-500/20 active:scale-95"
+        >
+          Book Free Growth Audit
+          <iconify-icon icon="lucide:arrow-right" width="16"></iconify-icon>
+        </button>
+
+        <!-- Footer Links -->
+        <div
+          class="pt-8 border-t border-slate-200 dark:border-white/5 flex flex-wrap gap-6 text-sm text-slate-500 dark:text-slate-400 items-center justify-between"
+        >
+          <div>
+            <a
+              href="mailto:hello@sorasolutions.com"
+              class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors mr-6"
+            >
+              hello@sorasolutions.com
+            </a>
+          </div>
+          <div class="flex gap-4">
+            <a href="#" class="hover:text-slate-900 dark:hover:text-white">
+              Privacy Policy
+            </a>
+            <a href="#" class="hover:text-slate-900 dark:hover:text-white">
+              Terms
+            </a>
+          </div>
+        </div>
+
+        <div
+          class="text-center text-xs text-slate-500 dark:text-slate-600 mt-6"
+        >
+          © 2024 Sora Business Solutions. All rights reserved.
+        </div>
+      </div>
+    </section>
+
+    <!-- POP-UP MODAL -->
+    <div
+      id="audit-modal"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+    >
+      <!-- Backdrop -->
+      <div
+        class="absolute inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm transition-opacity"
+        onclick="closeAuditModal()"
+      ></div>
+
+      <!-- Modal Content -->
+      <div
+        id="audit-modal-content"
+        class="relative w-full max-w-2xl bg-white dark:bg-[#0c0c0e] rounded-2xl shadow-2xl shadow-blue-500/10 border border-slate-200 dark:border-white/10 overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col max-h-[90vh]"
+      >
+        <!-- Header -->
+        <div
+          class="px-6 py-4 border-b border-slate-100 dark:border-white/5 flex items-center justify-between bg-slate-50/50 dark:bg-white/[0.02] shrink-0"
+        >
+          <div class="flex items-center gap-2">
+            <div
+              class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400"
+            >
+              <iconify-icon icon="lucide:bar-chart-3" width="16"></iconify-icon>
+            </div>
+            <h3 class="font-semibold text-slate-900 dark:text-white">
+              Growth Audit Request
+            </h3>
+          </div>
+          <button
+            onclick="closeAuditModal()"
+            class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+          >
+            <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+          </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-100 dark:bg-white/5 h-1 shrink-0">
+          <div
+            id="audit-progress"
+            class="bg-blue-600 h-1 transition-all duration-300 ease-out"
+            style="width: 20%"
+          ></div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6 overflow-y-auto custom-scrollbar flex-1 relative">
+          <form id="multi-step-form" onsubmit="event.preventDefault();">
+            <!-- STEP 1: Business Basics -->
+            <div class="form-step transition-all duration-300" data-step="1">
+              <div class="mb-6">
+                <h4
+                  class="text-lg font-medium text-slate-900 dark:text-white mb-1"
+                >
+                  Let’s start with the basics
+                </h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                  This helps us understand your business at a high level.
+                </p>
+              </div>
+              <div class="space-y-4">
+                <div class="space-y-1.5">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Business Name
+                    <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Smith Electrical Services Pty Ltd"
+                    required=""
+                    class="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#151518] border border-slate-200 dark:border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-slate-900 dark:text-white placeholder:text-slate-400"
+                  />
+                </div>
+                <div class="space-y-1.5">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Industry / Services
+                    <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Residential &amp; commercial electrical work"
+                    required=""
+                    class="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#151518] border border-slate-200 dark:border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-slate-900 dark:text-white placeholder:text-slate-400"
+                  />
+                </div>
+                <div class="space-y-1.5">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Service Area
+                    <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Sydney metro, Newcastle"
+                    required=""
+                    class="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#151518] border border-slate-200 dark:border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-slate-900 dark:text-white placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 2: Revenue -->
+            <div
+              class="form-step hidden transition-all duration-300"
+              data-step="2"
+            >
+              <div class="mb-6">
+                <h4
+                  class="text-lg font-medium text-slate-900 dark:text-white mb-1"
+                >
+                  Where you’re at vs where you want to go
+                </h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                  We use this to map realistic growth opportunities.
+                </p>
+              </div>
+              <div class="space-y-5">
+                <div class="space-y-2">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Current Monthly Revenue
+                    <span class="text-red-500">*</span>
+                  </label>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <label
+                      class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-white/10 cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5 transition-colors has-[:checked]:border-blue-500/50 has-[:checked]:bg-blue-50/50 dark:has-[:checked]:bg-blue-500/10"
+                    >
+                      <input
+                        type="radio"
+                        name="revenue"
+                        value="Under 10k"
+                        class="text-blue-600 focus:ring-blue-500 bg-slate-100 border-slate-300 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-700 dark:text-slate-300">
+                        Under $10,000
+                      </span>
+                    </label>
+                    <label
+                      class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-white/10 cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5 transition-colors has-[:checked]:border-blue-500/50 has-[:checked]:bg-blue-50/50 dark:has-[:checked]:bg-blue-500/10"
+                    >
+                      <input
+                        type="radio"
+                        name="revenue"
+                        value="10k-30k"
+                        class="text-blue-600 focus:ring-blue-500 bg-slate-100 border-slate-300 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-700 dark:text-slate-300">
+                        $10k – $30k
+                      </span>
+                    </label>
+                    <label
+                      class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-white/10 cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5 transition-colors has-[:checked]:border-blue-500/50 has-[:checked]:bg-blue-50/50 dark:has-[:checked]:bg-blue-500/10"
+                    >
+                      <input
+                        type="radio"
+                        name="revenue"
+                        value="30k-75k"
+                        class="text-blue-600 focus:ring-blue-500 bg-slate-100 border-slate-300 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-700 dark:text-slate-300">
+                        $30k – $75k
+                      </span>
+                    </label>
+                    <label
+                      class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-white/10 cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5 transition-colors has-[:checked]:border-blue-500/50 has-[:checked]:bg-blue-50/50 dark:has-[:checked]:bg-blue-500/10"
+                    >
+                      <input
+                        type="radio"
+                        name="revenue"
+                        value="75k-150k"
+                        class="text-blue-600 focus:ring-blue-500 bg-slate-100 border-slate-300 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-700 dark:text-slate-300">
+                        $75k – $150k
+                      </span>
+                    </label>
+                    <label
+                      class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-white/10 cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5 transition-colors sm:col-span-2 has-[:checked]:border-blue-500/50 has-[:checked]:bg-blue-50/50 dark:has-[:checked]:bg-blue-500/10"
+                    >
+                      <input
+                        type="radio"
+                        name="revenue"
+                        value="150k+"
+                        class="text-blue-600 focus:ring-blue-500 bg-slate-100 border-slate-300 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-700 dark:text-slate-300">
+                        $150,000+
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="space-y-1.5">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Target Monthly Revenue (6-12 mo)
+                    <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. $60,000 per month"
+                    required=""
+                    class="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#151518] border border-slate-200 dark:border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-slate-900 dark:text-white placeholder:text-slate-400"
+                  />
+                </div>
+                <div class="space-y-1.5">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Average Job Value
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. $1,200 per job"
+                    class="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#151518] border border-slate-200 dark:border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-slate-900 dark:text-white placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 3: Ideal Client -->
+            <div
+              class="form-step hidden transition-all duration-300"
+              data-step="3"
+            >
+              <div class="mb-6">
+                <h4
+                  class="text-lg font-medium text-slate-900 dark:text-white mb-1"
+                >
+                  Who you want more of
+                </h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                  This determines how we position your brand and offers.
+                </p>
+              </div>
+              <div class="space-y-4">
+                <div class="space-y-1.5">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Ideal Client Description
+                    <span class="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    rows="3"
+                    placeholder="Homeowners and builders who value quality..."
+                    required=""
+                    class="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#151518] border border-slate-200 dark:border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-slate-900 dark:text-white placeholder:text-slate-400"
+                  ></textarea>
+                </div>
+                <div class="space-y-1.5">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Why Clients Choose You
+                    <span class="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    rows="3"
+                    placeholder="Fast response, upfront pricing..."
+                    required=""
+                    class="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#151518] border border-slate-200 dark:border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-slate-900 dark:text-white placeholder:text-slate-400"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 4: Leads -->
+            <div
+              class="form-step hidden transition-all duration-300"
+              data-step="4"
+            >
+              <div class="mb-6">
+                <h4
+                  class="text-lg font-medium text-slate-900 dark:text-white mb-1"
+                >
+                  How leads currently flow
+                </h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                  This shows us where money is leaking.
+                </p>
+              </div>
+              <div class="space-y-6">
+                <div class="space-y-2">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Lead Sources
+                  </label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Google Search
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Social Media
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Referrals
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Marketplaces
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Paid Ads
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Walk-ins
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Booking Method
+                  </label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Phone Calls
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        SMS / DMs
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Web Forms
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Online Calendar
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Follow-Up System
+                  </label>
+                  <div class="flex flex-col gap-2">
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="followup"
+                        class="text-blue-600 focus:ring-blue-500 bg-slate-100 border-slate-300 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        No follow-up
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="followup"
+                        class="text-blue-600 focus:ring-blue-500 bg-slate-100 border-slate-300 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Manual SMS / Email
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="followup"
+                        class="text-blue-600 focus:ring-blue-500 bg-slate-100 border-slate-300 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Automated System
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 5: Final -->
+            <div
+              class="form-step hidden transition-all duration-300"
+              data-step="5"
+            >
+              <div class="mb-6">
+                <h4
+                  class="text-lg font-medium text-slate-900 dark:text-white mb-1"
+                >
+                  Final step
+                </h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                  This helps us tailor the audit recommendations.
+                </p>
+              </div>
+              <div class="space-y-5">
+                <div class="space-y-2">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Digital Assets
+                  </label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Logo
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Professional Website
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Brand Fonts/Colors
+                      </span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:bg-[#151518] dark:border-white/20"
+                      />
+                      <span class="text-sm text-slate-600 dark:text-slate-400">
+                        Website Generates Leads
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="space-y-1.5">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    Website URL
+                  </label>
+                  <input
+                    type="url"
+                    placeholder="https://..."
+                    class="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#151518] border border-slate-200 dark:border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-slate-900 dark:text-white placeholder:text-slate-400"
+                  />
+                </div>
+                <div class="space-y-1.5">
+                  <label
+                    class="text-xs font-medium text-slate-700 dark:text-slate-300"
+                  >
+                    What does success look like in 12 months?
+                    <span class="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    rows="3"
+                    placeholder="Consistent leads, fewer missed calls..."
+                    required=""
+                    class="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#151518] border border-slate-200 dark:border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-slate-900 dark:text-white placeholder:text-slate-400"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUCCESS -->
+            <div
+              class="form-step hidden transition-all duration-300 text-center py-10"
+              data-step="success"
+            >
+              <div
+                class="w-16 h-16 bg-emerald-100 dark:bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20"
+              >
+                <iconify-icon icon="lucide:check" width="32"></iconify-icon>
+              </div>
+              <h4
+                class="text-2xl font-semibold text-slate-900 dark:text-white mb-3"
+              >
+                Audit Request Submitted
+              </h4>
+              <p
+                class="text-slate-600 dark:text-slate-400 max-w-sm mx-auto mb-8 leading-relaxed"
+              >
+                Our team will review your responses and identify where revenue,
+                leads, and time are being lost. You’ll be contacted shortly with
+                next steps.
+              </p>
+              <p class="text-xs text-slate-400 mb-8">
+                No spam. No obligation. Real recommendations.
+              </p>
+              <button
+                type="button"
+                onclick="closeAuditModal()"
+                class="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-all shadow-lg shadow-blue-500/20 active:scale-95"
+              >
+                Close Window
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Footer Nav -->
+        <div
+          id="audit-footer"
+          class="px-6 py-4 border-t border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] flex justify-between shrink-0"
+        >
+          <button
+            type="button"
+            id="btn-back"
+            class="hidden px-4 py-2 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1"
+            onclick="prevStep()"
+          >
+            <iconify-icon icon="lucide:arrow-left" width="14"></iconify-icon>
+            Back
+          </button>
+          <div class="flex items-center gap-4 ml-auto">
+            <span
+              id="step-indicator"
+              class="text-xs font-medium text-slate-400"
+            >
+              Step 1 of 5
+            </span>
+            <button
+              type="button"
+              id="btn-next"
+              class="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg shadow-lg shadow-blue-500/20 transition-all active:scale-95 flex items-center gap-2"
+              onclick="nextStep()"
+            >
+              Next Step
+              <iconify-icon icon="lucide:arrow-right" width="14"></iconify-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN SCRIPT LOGIC -->
+    <script>
+      // --- 1. THEME TOGGLE LOGIC ---
+      const themeBtn = document.getElementById("theme-toggle");
+      const html = document.getElementById("html-root");
+
+      // Check local storage or system preference
+      if (
+        localStorage.theme === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        html.classList.add("dark");
+      } else {
+        html.classList.remove("dark");
+      }
+
+      themeBtn.addEventListener("click", () => {
+        if (html.classList.contains("dark")) {
+          html.classList.remove("dark");
+          localStorage.theme = "light";
+        } else {
+          html.classList.add("dark");
+          localStorage.theme = "dark";
+        }
+      });
+
+      // --- 2. SPOTLIGHT & MOUSE TRACKING ---
+      document.addEventListener("mousemove", (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+
+        // Update CSS variables for the spotlight effect
+        document.body.style.setProperty("--mouse-x", `${x}px`);
+        document.body.style.setProperty("--mouse-y", `${y}px`);
+
+        // Parallax effect for chaos items in the app section
+        const chaosItems = document.querySelectorAll(".chaos-item");
+        chaosItems.forEach((item) => {
+          const speed = 0.03;
+          const rect = item.getBoundingClientRect();
+          // Calculate distance from center of item
+          const itemX = rect.left + rect.width / 2;
+          const itemY = rect.top + rect.height / 2;
+
+          // Apply gentle movement away from mouse
+          const moveX = (x - itemX) * speed * -1;
+          const moveY = (y - itemY) * speed * -1;
+
+          // We modify the custom properties used in CSS if needed,
+          // or apply transform directly. Here we use simple transform
+          // preserving the original idle animation is tricky via JS override
+          // so we'll stick to CSS vars or skip complex JS parallax to keep CSS clean.
+        });
+      });
+
+      // --- 3. TYPEWRITER EFFECT ---
+      const words = [
+        "plumbers",
+        "electricians",
+        "HVAC",
+        "landscapers",
+        "builders",
+        "roofers",
+      ];
+      let wordIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+      const typeSpeed = 100;
+      const deleteSpeed = 50;
+      const pauseTime = 2000;
+      const typeElement = document.getElementById("typewriter-text");
+      const cursorElement = document.getElementById("cursor");
+
+      function type() {
+        const currentWord = words[wordIndex];
+
+        if (isDeleting) {
+          typeElement.textContent = currentWord.substring(0, charIndex - 1);
+          charIndex--;
+        } else {
+          typeElement.textContent = currentWord.substring(0, charIndex + 1);
+          charIndex++;
+        }
+
+        if (!isDeleting && charIndex === currentWord.length) {
+          isDeleting = true;
+          cursorElement.classList.add("cursor-blink");
+          setTimeout(type, pauseTime);
+        } else if (isDeleting && charIndex === 0) {
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          cursorElement.classList.remove("cursor-blink");
+          setTimeout(type, 500);
+        } else {
+          cursorElement.classList.remove("cursor-blink");
+          setTimeout(type, isDeleting ? deleteSpeed : typeSpeed);
+        }
+      }
+
+      // Start typewriter on load
+      document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(type, 1000);
+      });
+
+      // --- 4. MODAL LOGIC ---
+      const modal = document.getElementById("audit-modal");
+      const modalContent = document.getElementById("audit-modal-content");
+
+      function openAuditModal() {
+        modal.classList.remove("hidden");
+        // Small delay to allow display:block to apply before opacity transition
+        setTimeout(() => {
+          modalContent.classList.remove("scale-95", "opacity-0");
+          modalContent.classList.add("scale-100", "opacity-100");
+        }, 10);
+        document.body.style.overflow = "hidden"; // Prevent background scrolling
+      }
+
+      function closeAuditModal() {
+        modalContent.classList.remove("scale-100", "opacity-100");
+        modalContent.classList.add("scale-95", "opacity-0");
+
+        setTimeout(() => {
+          modal.classList.add("hidden");
+          document.body.style.overflow = ""; // Restore scrolling
+        }, 300); // Match transition duration
+      }
+
+      // Close on Escape key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+          closeAuditModal();
+        }
+      });
+
+      // --- 5. INTERSECTION OBSERVER FOR ANIMATIONS ---
+      // Triggers 'emphasized' class on the word "Sell" when scrolled into view
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              document.getElementById("word-sell").classList.add("emphasized");
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+
+      observer.observe(document.querySelector("h1"));
+    </script>
+
+    <script>
+      let currentStep = 1;
+      const totalSteps = 5;
+
+      function updateModalUI() {
+        const steps = document.querySelectorAll(".form-step");
+        const progressBar = document.getElementById("audit-progress");
+        const backBtn = document.getElementById("btn-back");
+        const nextBtn = document.getElementById("btn-next");
+        const indicator = document.getElementById("step-indicator");
+        const footer = document.getElementById("audit-footer");
+
+        if (currentStep === "success") {
+          steps.forEach((el) => el.classList.add("hidden"));
+          document
+            .querySelector('[data-step="success"]')
+            .classList.remove("hidden");
+          if (footer) footer.style.display = "none";
+          if (progressBar) progressBar.style.width = "100%";
+          return;
+        }
+
+        steps.forEach((el) => {
+          if (el.dataset.step == currentStep) {
+            el.classList.remove("hidden");
+          } else {
+            el.classList.add("hidden");
+          }
+        });
+
+        if (progressBar)
+          progressBar.style.width = `${(currentStep / totalSteps) * 100}%`;
+
+        if (footer) footer.style.display = "flex";
+
+        if (backBtn) {
+          if (currentStep === 1) backBtn.classList.add("hidden");
+          else backBtn.classList.remove("hidden");
+        }
+
+        if (nextBtn) {
+          if (currentStep === totalSteps) {
+            nextBtn.innerHTML =
+              'Submit Audit <iconify-icon icon="lucide:check" width="14"></iconify-icon>';
+          } else {
+            nextBtn.innerHTML =
+              'Next Step <iconify-icon icon="lucide:arrow-right" width="14"></iconify-icon>';
+          }
+        }
+
+        if (indicator)
+          indicator.textContent = `Step ${currentStep} of ${totalSteps}`;
+      }
+
+      function nextStep() {
+        const currentStepEl = document.querySelector(
+          `.form-step[data-step="${currentStep}"]`
+        );
+        const inputs = currentStepEl.querySelectorAll(
+          "input[required], textarea[required]"
+        );
+        let valid = true;
+        inputs.forEach((input) => {
+          if (!input.value.trim()) {
+            valid = false;
+            input.classList.add("border-red-500", "ring-1", "ring-red-500");
+            input.addEventListener(
+              "input",
+              () =>
+                input.classList.remove(
+                  "border-red-500",
+                  "ring-1",
+                  "ring-red-500"
+                ),
+              { once: true }
+            );
+          }
+        });
+
+        if (currentStep === 2) {
+          const rev = currentStepEl.querySelector(
+            'input[name="revenue"]:checked'
+          );
+          if (!rev) {
+            valid = false;
+            alert("Please select a revenue range.");
+          }
+        }
+
+        if (!valid) return;
+
+        if (currentStep < totalSteps) {
+          currentStep++;
+          updateModalUI();
+        } else {
+          currentStep = "success";
+          updateModalUI();
+        }
+      }
+
+      function prevStep() {
+        if (currentStep > 1) {
+          currentStep--;
+          updateModalUI();
+        }
+      }
+
+      // Overwrite openAuditModal to reset form
+      window.originalOpenAuditModal = window.openAuditModal;
+      window.openAuditModal = function () {
+        currentStep = 1;
+        if (typeof updateModalUI === "function") updateModalUI();
+        if (window.originalOpenAuditModal) window.originalOpenAuditModal();
+      };
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const dashboard = document.querySelector(".dashboard-ui");
+        if (!dashboard) return;
+
+        // Optimization: Hint browser for transform changes
+        dashboard.style.willChange = "transform";
+        // Override CSS transition to allow smooth JS interpolation for transform, while keeping box-shadow
+        dashboard.style.transition =
+          "box-shadow 0.5s ease, border-color 0.3s ease";
+
+        // Initial state matches the "idle" state (smaller)
+        let currentScale = 0.92;
+        let currentRot = 20;
+        let targetScale = 0.92;
+        let targetRot = 20;
+        let isHovered = false;
+
+        dashboard.addEventListener("mouseenter", () => (isHovered = true));
+        dashboard.addEventListener("mouseleave", () => (isHovered = false));
+
+        const loop = () => {
+          // Reduced Motion Check
+          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            // Capped at 1.0 for accessibility/simplicity
+            dashboard.style.transform = "rotateX(20deg) scale(1)";
+            requestAnimationFrame(loop);
+            return;
+          }
+
+          const rect = dashboard.getBoundingClientRect();
+          const viewportHeight = window.innerHeight;
+          const centerY = rect.top + rect.height / 2;
+          const viewportCenter = viewportHeight / 2;
+
+          // Distance from center (0 = centered)
+          const dist = Math.abs(centerY - viewportCenter);
+          // Active range: approx 65% of viewport height (smooth entry/exit)
+          const range = viewportHeight * 0.65;
+
+          let progress = 1 - dist / range;
+          progress = Math.max(0, Math.min(1, progress));
+
+          // Smooth easing (Quad ease out)
+          const p = progress * (2 - progress);
+
+          // Target Calculations
+          // Scale: Starts smaller (0.92) -> Grows to normal (1.00)
+          // Range 0.92 to 1.00
+          const minScale = 0.92;
+          const maxScale = 1.0;
+          const baseScale = minScale + (maxScale - minScale) * p;
+
+          // Hover forces max scale (1.00)
+          targetScale = isHovered ? maxScale : baseScale;
+
+          // Rotation: 20deg (idle) -> 5deg (active/center)
+          // Keeps the dashboard facing the user when focused
+          const baseRot = 20 - 15 * p;
+          targetRot = isHovered ? 5 : baseRot;
+
+          // Lerp for cinematic smoothing (0.08 factor)
+          currentScale += (targetScale - currentScale) * 0.08;
+          currentRot += (targetRot - currentRot) * 0.08;
+
+          // Apply Transform
+          dashboard.style.transform = `rotateX(${currentRot.toFixed(
+            2
+          )}deg) scale(${currentScale.toFixed(3)})`;
+
+          requestAnimationFrame(loop);
+        };
+
+        loop();
+      });
+    </script>
+  </body>
+</html>

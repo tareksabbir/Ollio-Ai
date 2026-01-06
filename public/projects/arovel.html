@@ -1,0 +1,866 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arovell | Scent Culture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: "#0A2A1F",
+              paper: "#F8F4E8",
+              acid: "#D2E823",
+            },
+            fontFamily: {
+              display: ["Dela Gothic One", "cursive"],
+              sans: ["Space Grotesk", "sans-serif"],
+            },
+            boxShadow: {
+              hard: "4px 4px 0px 0px #0A2A1F",
+              "hard-sm": "2px 2px 0px 0px #0A2A1F",
+              "hard-xl": "8px 8px 0px 0px #0A2A1F",
+            },
+            animation: {
+              marquee: "marquee 25s linear infinite",
+              float: "float 4s ease-in-out infinite",
+            },
+            keyframes: {
+              marquee: {
+                "0%": { transform: "translateX(0%)" },
+                "100%": { transform: "translateX(-100%)" },
+              },
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-10px)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #f8f4e8;
+        color: #0a2a1f;
+      }
+      /* Hide scrollbar for clean horizontal scroll */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .text-outline {
+        -webkit-text-stroke: 1px #0a2a1f;
+        color: transparent;
+      }
+      .text-outline-acid {
+        -webkit-text-stroke: 1px #d2e823;
+        color: transparent;
+      }
+    </style>
+  </head>
+  <body class="font-sans antialiased selection:bg-acid selection:text-ink">
+    <!-- Top Marquee -->
+    <div class="bg-ink text-paper overflow-hidden py-3 border-b-2 border-ink">
+      <div class="flex animate-marquee whitespace-nowrap">
+        <div
+          class="flex items-center gap-12 mx-4 font-display uppercase text-sm tracking-widest"
+        >
+          <span>✸ Don't buy blind</span>
+          <span>✸ 100% Authentic Juice</span>
+          <span>✸ Free Shipping $50+</span>
+          <span>✸ Decants, not debts</span>
+          <span>✸ Smell Expensive for cheap</span>
+          <span>✸ Don't buy blind</span>
+          <span>✸ 100% Authentic Juice</span>
+          <span>✸ Free Shipping $50+</span>
+          <span>✸ Decants, not debts</span>
+          <span>✸ Smell Expensive for cheap</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 px-4 md:px-8">
+      <div
+        class="bg-paper/80 backdrop-blur-md border-2 border-ink rounded-xl shadow-hard flex justify-between items-center p-4"
+      >
+        <!-- Mobile Menu -->
+        <button
+          class="md:hidden p-2 hover:bg-acid rounded-lg border border-transparent hover:border-ink transition-all"
+        >
+          <i data-lucide="menu" class="w-6 h-6 stroke-[1.5]"></i>
+        </button>
+
+        <!-- Logo -->
+        <a
+          href="#"
+          class="text-2xl md:text-3xl font-display tracking-tighter flex items-center gap-1"
+        >
+          ARO<span
+            class="text-acid text-shadow-sm"
+            style="-webkit-text-stroke: 1px #0a2a1f"
+            >VELL</span
+          >
+        </a>
+
+        <!-- Desktop Links -->
+        <div
+          class="hidden md:flex items-center gap-8 font-semibold text-sm tracking-tight"
+        >
+          <a
+            href="#"
+            class="hover:text-acid hover:bg-ink px-3 py-1 rounded transition-colors"
+            >NEW DROPS</a
+          >
+          <a
+            href="#"
+            class="hover:text-acid hover:bg-ink px-3 py-1 rounded transition-colors"
+            >BESTSELLERS</a
+          >
+          <a
+            href="#"
+            class="hover:text-acid hover:bg-ink px-3 py-1 rounded transition-colors"
+            >BRANDS</a
+          >
+          <a
+            href="#"
+            class="hover:text-acid hover:bg-ink px-3 py-1 rounded transition-colors"
+            >BUNDLES</a
+          >
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-3">
+          <button
+            class="hidden md:block hover:bg-acid rounded-lg p-2 border border-transparent hover:border-ink transition-all"
+          >
+            <i data-lucide="search" class="w-5 h-5 stroke-[1.5]"></i>
+          </button>
+          <button
+            class="bg-ink text-acid px-4 py-2 rounded-lg font-display text-sm border-2 border-ink hover:bg-acid hover:text-ink transition-colors flex items-center gap-2"
+          >
+            CART (0)
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="px-4 md:px-8 pt-12 pb-20 max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Content -->
+        <div class="lg:col-span-7 flex flex-col items-start gap-8 z-10">
+          <div
+            class="inline-flex items-center gap-2 border-2 border-ink px-4 py-2 rounded-full bg-acid shadow-hard-sm rotate-[-2deg]"
+          >
+            <i data-lucide="sparkles" class="w-4 h-4 stroke-[1.5]"></i>
+            <span class="font-bold text-xs uppercase tracking-wider"
+              >The Anti-Full Bottle Club</span
+            >
+          </div>
+
+          <h1
+            class="font-display text-6xl md:text-8xl leading-[0.9] tracking-tighter text-ink"
+          >
+            SMELL LIKE <br />
+            <span class="relative">
+              A MILLION
+              <svg
+                class="absolute -bottom-4 left-0 w-full"
+                viewBox="0 0 200 20"
+                fill="none"
+              >
+                <path
+                  d="M2 15Q100 2 198 12"
+                  stroke="#D2E823"
+                  stroke-width="8"
+                  stroke-linecap="round"
+                ></path>
+              </svg> </span
+            ><br />
+            BUCKS.
+          </h1>
+
+          <p
+            class="font-medium text-lg md:text-xl max-w-lg leading-relaxed opacity-90"
+          >
+            Authentic designer &amp; niche perfume decants. Try the 5ml before
+            you commit to the $300 mistake.
+          </p>
+
+          <div class="flex flex-wrap gap-4 w-full">
+            <a
+              href="#"
+              class="flex-1 md:flex-none text-center bg-ink text-acid border-2 border-ink px-8 py-4 rounded-xl font-display text-lg tracking-wide shadow-hard hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all"
+            >
+              SHOP THE DROP
+            </a>
+            <a
+              href="#"
+              class="flex-1 md:flex-none text-center bg-paper text-ink border-2 border-ink px-8 py-4 rounded-xl font-display text-lg tracking-wide shadow-hard hover:bg-acid hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all"
+            >
+              TAKE QUIZ
+            </a>
+          </div>
+
+          <div class="flex items-center gap-4 text-sm font-semibold mt-4">
+            <div class="flex -space-x-4">
+              <div
+                class="w-10 h-10 rounded-full border-2 border-paper bg-gray-300"
+              ></div>
+              <div
+                class="w-10 h-10 rounded-full border-2 border-paper bg-gray-400"
+              ></div>
+              <div
+                class="w-10 h-10 rounded-full border-2 border-paper bg-gray-500"
+              ></div>
+            </div>
+            <p>
+              Trust Pilot <span class="bg-acid px-1 text-ink">4.9/5</span> from
+              2k+ sniffers
+            </p>
+          </div>
+        </div>
+
+        <!-- Right Visual: Collection Grid -->
+        <div class="lg:col-span-5 relative mt-10 lg:mt-0">
+          <!-- Decorative Elements -->
+          <div
+            class="absolute top-0 right-0 w-full h-full bg-acid rounded-[2rem] border-2 border-ink rotate-6 z-0"
+          ></div>
+
+          <!-- Floating Element -->
+          <div
+            class="absolute -bottom-8 -left-8 z-20 animate-float bg-paper border-2 border-ink p-4 rounded-xl shadow-hard"
+          >
+            <div class="flex items-center gap-3">
+              <div class="bg-green-100 p-2 rounded-lg border border-ink">
+                <i data-lucide="package-check" class="w-5 h-5 stroke-[1.5]"></i>
+              </div>
+              <div>
+                <div class="font-display text-sm">Monthly Bundle</div>
+                <div class="text-xs font-mono">Ready to ship</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Card: The Grid Collection -->
+          <div
+            class="relative bg-ink rounded-[2rem] border-2 border-ink overflow-hidden z-10 aspect-[4/5] shadow-hard-xl group"
+          >
+            <!-- 2x2 Grid of Generic Scents -->
+            <div class="grid grid-cols-2 h-full w-full">
+              <img
+                src="https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&amp;w=400&amp;auto=format&amp;fit=crop"
+                class="w-full h-full object-cover border-r-2 border-b-2 border-ink opacity-90 group-hover:opacity-100 transition-opacity"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&amp;w=400&amp;auto=format&amp;fit=crop"
+                class="w-full h-full object-cover border-b-2 border-ink opacity-80 group-hover:opacity-100 transition-opacity"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1519669011783-4eaa95fa1b7d?q=80&amp;w=400&amp;auto=format&amp;fit=crop"
+                class="w-full h-full object-cover border-r-2 border-ink opacity-80 group-hover:opacity-100 transition-opacity"
+              />
+              <img
+                src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/917d6f93-fb36-439a-8c48-884b67b35381_1600w.jpg"
+                class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+              />
+            </div>
+
+            <!-- Overlay Text -->
+            <div
+              class="absolute bottom-0 left-0 w-full p-6 bg-ink/90 border-t-2 border-ink backdrop-blur-sm"
+            >
+              <span
+                class="bg-acid text-ink text-xs font-bold px-2 py-1 rounded-md mb-2 inline-block"
+                >500+ SCENTS</span
+              >
+              <h3 class="text-paper font-display text-2xl">THE ARCHIVE</h3>
+              <p class="text-paper/80 font-mono text-sm">
+                Curated Designer &amp; Niche Collection
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Scrolling Ticker -->
+    <div
+      class="border-y-2 border-ink bg-acid py-6 overflow-hidden rotate-1 scale-105 transform origin-left"
+    >
+      <div
+        class="animate-marquee whitespace-nowrap flex gap-12 text-4xl font-display text-ink items-center"
+      >
+        <span>NO MORE BORING SCENTS</span>
+        <i data-lucide="zap" class="w-8 h-8 fill-ink"></i>
+        <span class="text-outline">NO MORE BORING SCENTS</span>
+        <i data-lucide="zap" class="w-8 h-8 fill-transparent stroke-ink"></i>
+        <span>NO MORE BORING SCENTS</span>
+        <i data-lucide="zap" class="w-8 h-8 fill-ink"></i>
+        <span class="text-outline">NO MORE BORING SCENTS</span>
+        <i data-lucide="zap" class="w-8 h-8 fill-transparent stroke-ink"></i>
+        <span>NO MORE BORING SCENTS</span>
+        <i data-lucide="zap" class="w-8 h-8 fill-ink"></i>
+        <span class="text-outline">NO MORE BORING SCENTS</span>
+      </div>
+    </div>
+
+    <!-- Categories / Bento Grid -->
+    <section class="py-24 px-4 md:px-8 max-w-7xl mx-auto">
+      <div class="flex justify-between items-end mb-12">
+        <h2
+          class="font-display text-4xl md:text-5xl tracking-tighter text-ink uppercase"
+        >
+          Pick Your<br />Poison
+        </h2>
+        <a
+          href="#"
+          class="hidden md:flex items-center gap-2 font-bold hover:text-acid hover:bg-ink px-4 py-2 rounded-lg border-2 border-transparent hover:border-transparent transition-all"
+        >
+          View All Collections
+          <i data-lucide="arrow-right" class="w-5 h-5 stroke-[1.5]"></i>
+        </a>
+      </div>
+
+      <div class="grid md:grid-cols-3 md:grid-rows-2 gap-6 h-auto md:h-[600px]">
+        <!-- Large Card -->
+        <div
+          class="md:col-span-2 md:row-span-2 relative group rounded-2xl border-2 border-ink overflow-hidden shadow-hard hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all bg-ink"
+        >
+          <img
+            src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4734259a-bad7-422f-981e-ce01e79184f2_1600w.jpg"
+            class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity"
+          />
+          <div class="absolute inset-0 flex flex-col justify-end p-8">
+            <h3 class="text-5xl font-display text-acid mb-2 tracking-tighter">
+              MEN'S<br />ESSENTIALS
+            </h3>
+            <div class="flex justify-between items-end">
+              <p class="text-paper max-w-xs font-medium">
+                The heavy hitters. Compliment getters. The "Who is he?" vibes.
+              </p>
+              <button
+                class="bg-paper text-ink rounded-full p-3 hover:bg-acid border-2 border-transparent hover:border-ink transition-colors"
+              >
+                <i
+                  data-lucide="arrow-up-right"
+                  class="w-6 h-6 stroke-[1.5]"
+                ></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Small Card 1 -->
+        <div
+          class="relative group rounded-2xl border-2 border-ink overflow-hidden shadow-hard hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all bg-paper"
+        >
+          <div
+            class="absolute inset-0 bg-[radial-gradient(#D2E823_2px,transparent_2px)] [background-size:16px_16px] opacity-30"
+          ></div>
+          <div
+            class="absolute inset-0 flex flex-col justify-center items-center p-6 text-center"
+          >
+            <div
+              class="w-16 h-16 bg-acid rounded-full flex items-center justify-center border-2 border-ink mb-4 group-hover:scale-110 transition-transform"
+            >
+              <i data-lucide="flower-2" class="w-8 h-8 stroke-[1.5]"></i>
+            </div>
+            <h3 class="text-2xl font-display tracking-tight text-ink">
+              FOR HER
+            </h3>
+            <p class="text-sm opacity-60 font-semibold mt-1">
+              Floral, Sweet, &amp; Sexy
+            </p>
+          </div>
+        </div>
+
+        <!-- Small Card 2 -->
+        <div
+          class="relative group rounded-2xl border-2 border-ink overflow-hidden shadow-hard hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all bg-acid"
+        >
+          <div class="absolute top-4 right-4">
+            <span
+              class="bg-ink text-acid text-[10px] font-bold px-2 py-1 rounded"
+              >HOT</span
+            >
+          </div>
+          <div
+            class="absolute inset-0 flex flex-col justify-center items-center p-6 text-center"
+          >
+            <div
+              class="w-16 h-16 bg-paper rounded-full flex items-center justify-center border-2 border-ink mb-4 group-hover:scale-110 transition-transform"
+            >
+              <i data-lucide="flask-conical" class="w-8 h-8 stroke-[1.5]"></i>
+            </div>
+            <h3 class="text-2xl font-display tracking-tight text-ink">
+              DISCOVERY SETS
+            </h3>
+            <p class="text-sm opacity-60 font-semibold mt-1">
+              5 Scents for $40
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Us Section -->
+    <section class="bg-ink text-paper py-20 border-y-2 border-ink">
+      <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="grid md:grid-cols-3 gap-12 text-center md:text-left">
+          <div class="space-y-4">
+            <i
+              data-lucide="shield-check"
+              class="w-12 h-12 text-acid stroke-[1.5]"
+            ></i>
+            <h3 class="font-display text-2xl text-acid">100% LEGIT</h3>
+            <p class="opacity-80 leading-relaxed">
+              We extract directly from the original bottle. No watering down, no
+              fakes. We hate fakes.
+            </p>
+          </div>
+          <div class="space-y-4">
+            <i
+              data-lucide="package"
+              class="w-12 h-12 text-acid stroke-[1.5]"
+            ></i>
+            <h3 class="font-display text-2xl text-acid">POCKET SIZED</h3>
+            <p class="opacity-80 leading-relaxed">
+              Our 5ml and 10ml atomizers fit in your jeans, purse, or gym bag.
+              Freshness on tap.
+            </p>
+          </div>
+          <div class="space-y-4">
+            <i
+              data-lucide="piggy-bank"
+              class="w-12 h-12 text-acid stroke-[1.5]"
+            ></i>
+            <h3 class="font-display text-2xl text-acid">SMART MONEY</h3>
+            <p class="opacity-80 leading-relaxed">
+              Why buy one $200 bottle when you can have 10 different scents for
+              the same price?
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- New Arrivals / Horizontal Scroll -->
+    <section class="py-24 border-b-2 border-ink">
+      <div
+        class="max-w-7xl mx-auto px-4 md:px-8 mb-12 flex items-center justify-between"
+      >
+        <h2 class="font-display text-4xl md:text-5xl tracking-tighter">
+          FRESH JUICE
+        </h2>
+        <div class="flex gap-2">
+          <button
+            class="w-10 h-10 border-2 border-ink rounded-lg flex items-center justify-center hover:bg-acid transition-colors"
+          >
+            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+          </button>
+          <button
+            class="w-10 h-10 border-2 border-ink rounded-lg flex items-center justify-center hover:bg-acid transition-colors"
+          >
+            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scroll Container -->
+      <div
+        class="flex overflow-x-auto gap-8 px-4 md:px-8 pb-12 no-scrollbar snap-x snap-mandatory max-w-[100vw]"
+      >
+        <!-- Product Card 1 -->
+        <div class="min-w-[280px] md:min-w-[320px] snap-center group">
+          <div
+            class="relative bg-white border-2 border-ink rounded-2xl aspect-square mb-4 overflow-hidden"
+          >
+            <div
+              class="absolute top-3 left-3 z-10 bg-acid border border-ink px-2 py-0.5 text-xs font-bold rounded"
+            >
+              BESTSELLER
+            </div>
+            <img
+              src="https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&amp;w=600&amp;auto=format&amp;fit=crop"
+              class="w-full h-full object-contain p-6 group-hover:scale-110 transition-transform duration-500"
+            />
+            <button
+              class="absolute bottom-3 right-3 bg-ink text-acid p-3 rounded-xl opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300"
+            >
+              <i data-lucide="plus" class="w-6 h-6 stroke-[2]"></i>
+            </button>
+          </div>
+          <h3 class="font-display text-xl leading-none mb-1">
+            Dior Sauvage Elixir
+          </h3>
+          <p class="text-sm font-medium opacity-60 mb-3">
+            Spicy, Wood, Lavender
+          </p>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-lg bg-acid/30 px-2 rounded"
+              >$18.00</span
+            >
+            <span class="text-xs font-bold line-through opacity-40"
+              >$24.00</span
+            >
+          </div>
+        </div>
+
+        <!-- Product Card 2 -->
+        <div class="min-w-[280px] md:min-w-[320px] snap-center group">
+          <div
+            class="relative bg-white border-2 border-ink rounded-2xl aspect-square mb-4 overflow-hidden"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&amp;w=600&amp;auto=format&amp;fit=crop"
+              class="w-full h-full object-contain p-6 group-hover:scale-110 transition-transform duration-500"
+            />
+            <button
+              class="absolute bottom-3 right-3 bg-ink text-acid p-3 rounded-xl opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300"
+            >
+              <i data-lucide="plus" class="w-6 h-6 stroke-[2]"></i>
+            </button>
+          </div>
+          <h3 class="font-display text-xl leading-none mb-1">
+            YSL Y Eau de Parfum
+          </h3>
+          <p class="text-sm font-medium opacity-60 mb-3">Fresh, Sage, Apple</p>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-lg bg-acid/30 px-2 rounded"
+              >$14.50</span
+            >
+          </div>
+        </div>
+
+        <!-- Product Card 3 -->
+        <div class="min-w-[280px] md:min-w-[320px] snap-center group">
+          <div
+            class="relative bg-white border-2 border-ink rounded-2xl aspect-square mb-4 overflow-hidden"
+          >
+            <div
+              class="absolute top-3 left-3 z-10 bg-ink text-paper border border-paper px-2 py-0.5 text-xs font-bold rounded"
+            >
+              SOLD OUT
+            </div>
+            <img
+              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c543a9e1-f226-4ced-80b0-feb8445a75b9_1600w.jpg"
+              class="w-full h-full object-contain p-6 opacity-50 grayscale"
+            />
+          </div>
+          <h3 class="font-display text-xl leading-none mb-1">
+            Tom Ford Lost Cherry
+          </h3>
+          <p class="text-sm font-medium opacity-60 mb-3">
+            Cherry, Almond, Liqueur
+          </p>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-lg bg-acid/30 px-2 rounded"
+              >$22.00</span
+            >
+          </div>
+        </div>
+
+        <!-- Product Card 4 -->
+        <div class="min-w-[280px] md:min-w-[320px] snap-center group">
+          <div
+            class="relative bg-white border-2 border-ink rounded-2xl aspect-square mb-4 overflow-hidden"
+          >
+            <img
+              src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5bab247f-35d9-400d-a82b-fd87cfe913d2_1600w.webp"
+              class="w-full h-full object-contain p-6 group-hover:scale-110 transition-transform duration-500"
+            />
+            <button
+              class="absolute bottom-3 right-3 bg-ink text-acid p-3 rounded-xl opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300"
+            >
+              <i data-lucide="plus" class="w-6 h-6 stroke-[2]"></i>
+            </button>
+          </div>
+          <h3 class="font-display text-xl leading-none mb-1">Bleu de Chanel</h3>
+          <p class="text-sm font-medium opacity-60 mb-3">Citrus, Amber, Wood</p>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-lg bg-acid/30 px-2 rounded"
+              >$16.00</span
+            >
+          </div>
+        </div>
+
+        <!-- See All Card -->
+        <div
+          class="min-w-[280px] md:min-w-[320px] snap-center flex flex-col justify-center items-center border-2 border-ink border-dashed rounded-2xl aspect-square hover:bg-white transition-colors cursor-pointer group"
+        >
+          <div
+            class="w-16 h-16 bg-acid rounded-full flex items-center justify-center border-2 border-ink mb-4 group-hover:scale-110 transition-transform"
+          >
+            <i data-lucide="arrow-right" class="w-8 h-8 stroke-[2]"></i>
+          </div>
+          <h3 class="font-display text-xl">VIEW ALL</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section (New) -->
+    <section class="py-24 bg-paper relative overflow-hidden">
+      <!-- Abstract Decoration -->
+      <div
+        class="absolute -right-10 top-20 w-40 h-40 bg-acid rounded-full border-2 border-ink opacity-20"
+      ></div>
+      <div
+        class="absolute -left-10 bottom-20 w-20 h-20 bg-ink rounded-full opacity-10"
+      ></div>
+
+      <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="text-center mb-16">
+          <div
+            class="inline-block bg-ink text-acid font-bold text-xs uppercase px-3 py-1 rounded-full mb-4 border border-ink"
+          >
+            Real Talk
+          </div>
+          <h2
+            class="font-display text-4xl md:text-5xl tracking-tighter text-ink"
+          >
+            STREET CRED
+          </h2>
+          <p class="mt-4 text-lg opacity-70">
+            Don't just take our word for it.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- Review 1 -->
+          <div
+            class="bg-white p-8 rounded-2xl border-2 border-ink shadow-hard hover:translate-y-[-4px] transition-transform duration-300"
+          >
+            <div class="flex gap-1 mb-4 text-acid">
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-ink"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-ink"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-ink"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-ink"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-ink"></i>
+            </div>
+            <p class="font-medium text-lg leading-relaxed mb-6">
+              "Finally a way to try Creed without selling my kidney. The
+              packaging is sick and shipping was faster than Amazon."
+            </p>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-ink rounded-full flex items-center justify-center text-paper font-display text-sm"
+              >
+                JD
+              </div>
+              <div>
+                <div class="font-bold text-sm">Jason D.</div>
+                <div
+                  class="text-xs opacity-50 font-bold uppercase tracking-wide"
+                >
+                  Verified Buyer
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 2 (Highlighted) -->
+          <div
+            class="bg-ink text-paper p-8 rounded-2xl border-2 border-ink shadow-hard md:-rotate-2 hover:rotate-0 transition-transform duration-300 z-10"
+          >
+            <div class="flex gap-1 mb-4 text-acid">
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-acid"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-acid"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-acid"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-acid"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-acid"></i>
+            </div>
+            <p class="font-medium text-lg leading-relaxed mb-6">
+              "I was skeptical about decants but Arovell is the real deal. The
+              atomizers are high quality and don't leak. 10/10."
+            </p>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-acid rounded-full flex items-center justify-center text-ink font-display text-sm border border-paper"
+              >
+                SC
+              </div>
+              <div>
+                <div class="font-bold text-sm">Sarah C.</div>
+                <div
+                  class="text-xs opacity-50 font-bold uppercase tracking-wide"
+                >
+                  Verified Buyer
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 3 -->
+          <div
+            class="bg-white p-8 rounded-2xl border-2 border-ink shadow-hard hover:translate-y-[-4px] transition-transform duration-300"
+          >
+            <div class="flex gap-1 mb-4 text-acid">
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-ink"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-ink"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-ink"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-ink"></i>
+              <i data-lucide="star" class="w-5 h-5 fill-acid stroke-ink"></i>
+            </div>
+            <p class="font-medium text-lg leading-relaxed mb-6">
+              "Got the discovery set for my boyfriend. He loved 3 out of 5 so we
+              bought the larger decants. Super fun experience."
+            </p>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-ink font-display text-sm border-2 border-ink"
+              >
+                MK
+              </div>
+              <div>
+                <div class="font-bold text-sm">Mike K.</div>
+                <div
+                  class="text-xs opacity-50 font-bold uppercase tracking-wide"
+                >
+                  Verified Buyer
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter / Footer Top -->
+    <section class="max-w-7xl mx-auto px-4 md:px-8 py-20">
+      <div
+        class="bg-acid rounded-[2rem] border-2 border-ink p-8 md:p-16 text-center relative overflow-hidden shadow-hard-xl"
+      >
+        <!-- Background doodle -->
+        <svg
+          class="absolute top-0 left-0 opacity-20 w-full h-full"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0 0 L100 100 M100 0 L0 100"
+            stroke="#0A2A1F"
+            stroke-width="0.5"
+          ></path>
+        </svg>
+
+        <div class="relative z-10 max-w-2xl mx-auto">
+          <h2
+            class="font-display text-4xl md:text-6xl text-ink mb-6 tracking-tighter"
+          >
+            DON'T BE STINKY.
+          </h2>
+          <p class="text-ink text-lg font-medium mb-8">
+            Join the club. Get 15% off your first decant and find out when we
+            drop the rare stuff.
+          </p>
+
+          <form class="flex flex-col md:flex-row gap-4">
+            <input
+              type="email"
+              placeholder="your@email.com"
+              class="flex-1 bg-paper border-2 border-ink rounded-xl px-6 py-4 font-bold text-ink placeholder:text-ink/40 outline-none focus:shadow-hard transition-all"
+            />
+            <button
+              type="button"
+              class="bg-ink text-acid font-display text-xl px-8 py-4 rounded-xl border-2 border-ink hover:translate-x-1 hover:translate-y-1 transition-transform"
+            >
+              JOIN
+            </button>
+          </form>
+          <p class="mt-4 text-xs font-bold opacity-60">No spam, just scents.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-ink text-paper pt-16 pb-8 border-t-2 border-ink">
+      <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
+          <div class="col-span-2 md:col-span-1">
+            <a
+              href="#"
+              class="text-3xl font-display tracking-tighter flex items-center gap-1 mb-4"
+            >
+              ARO<span class="text-transparent text-outline-acid">VELL</span>
+            </a>
+            <p class="text-sm opacity-60 max-w-[200px]">
+              Making niche fragrance accessible to everyone. Except your ex.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="font-display text-lg text-acid mb-4">SHOP</h4>
+            <ul class="space-y-2 text-sm font-medium opacity-80">
+              <li><a href="#" class="hover:text-acid">New Arrivals</a></li>
+              <li><a href="#" class="hover:text-acid">Men's Cologne</a></li>
+              <li><a href="#" class="hover:text-acid">Women's Perfume</a></li>
+              <li><a href="#" class="hover:text-acid">Unisex</a></li>
+              <li><a href="#" class="hover:text-acid">Discovery Sets</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-display text-lg text-acid mb-4">SUPPORT</h4>
+            <ul class="space-y-2 text-sm font-medium opacity-80">
+              <li><a href="#" class="hover:text-acid">Track Order</a></li>
+              <li><a href="#" class="hover:text-acid">Shipping Info</a></li>
+              <li><a href="#" class="hover:text-acid">Returns</a></li>
+              <li><a href="#" class="hover:text-acid">Contact Us</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-display text-lg text-acid mb-4">SOCIALS</h4>
+            <div class="flex gap-3">
+              <a
+                href="#"
+                class="bg-paper text-ink p-2 rounded-lg hover:bg-acid transition-colors"
+                ><i data-lucide="instagram" class="w-5 h-5"></i
+              ></a>
+              <a
+                href="#"
+                class="bg-paper text-ink p-2 rounded-lg hover:bg-acid transition-colors"
+                ><i data-lucide="twitter" class="w-5 h-5"></i
+              ></a>
+              <a
+                href="#"
+                class="bg-paper text-ink p-2 rounded-lg hover:bg-acid transition-colors"
+                ><i data-lucide="youtube" class="w-5 h-5"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-paper/20 text-xs font-bold opacity-40"
+        >
+          <p>© 2024 Arovell Scents. Est. 2024.</p>
+          <div class="flex gap-6 mt-4 md:mt-0">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Sitemap</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

@@ -100,7 +100,7 @@ const ProjectsList = () => {
   );
 
   return (
-    <section className="w-full bg-white dark:bg-sidebar rounded-xl p-8 border flex flex-col gap-y-6 sm:gap-y-4">
+    <section className="w-full bg-white dark:bg-sidebar rounded-xl p-8 border flex flex-col gap-y-6 sm:gap-y-4 mb-50">
       <h2 className="text-xl font-semibold">
         Hi, {user?.firstName} Your Recent Works!
       </h2>

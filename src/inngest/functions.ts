@@ -76,7 +76,7 @@ export const uiGenerationAgent = inngest.createFunction(
       description: "An Expart coding agent",
       system: PROMPT,
       model: openai({
-        model: "gpt-4.1",
+        model: "gpt-5-mini-2025-08-07",
         defaultParameters: { temperature: 0.1 },
       }),
       tools: [

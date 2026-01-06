@@ -26,10 +26,11 @@ const Layout = ({ children }: Props) => {
       </div>
       
       {/* Spotlight Effect - Only in Dark Mode - Responsive positioning */}
-      <Spotlight
-        className="-top-20 left-1/2 -translate-x-1/2 sm:-top-32 sm:left-1/2 md:-top-40 md:left-1/2 lg:-top-48 lg:left-2/3 hidden dark:block"
-        fill="white"
+      <div className="hidden md:block ">
+        <Spotlight
+        className="sm:-top-10 sm:left-1/2 md:-top-40 md:left-1/2 lg:-top-50 lg:left-2/5 hidden dark:block"
       />
+      </div>
       
       <Navbar />
       <div className="flex-1 flex flex-col px-4 pb-4">{children}</div>

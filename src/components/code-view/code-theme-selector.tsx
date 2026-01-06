@@ -22,10 +22,10 @@ interface CodeThemeSelectorProps {
 }
 
 const darkThemes: { value: CodeTheme; label: string }[] = [
+  { value: "vscodeDark", label: "VS Code Dark" },
+  { value: "githubDark", label: "GitHub Dark" },
   { value: "tokyoNight", label: "Tokyo Night" },
   { value: "dracula", label: "Dracula" },
-  { value: "githubDark", label: "GitHub Dark" },
-  { value: "vscodeDark", label: "VS Code Dark" },
 ];
 
 const lightThemes: { value: CodeTheme; label: string }[] = [

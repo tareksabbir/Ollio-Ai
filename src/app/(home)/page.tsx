@@ -1,3 +1,4 @@
+import ShowcaseGrid from "@/components/custom/showcase-grid";
 import ProjectForm from "@/modules/home/ui/components/project-form";
 import ProjectsList from "@/modules/home/ui/components/project-list";
 import { SignedIn } from "@clerk/nextjs";
@@ -13,11 +14,11 @@ const Page = () => {
             alt="ollio"
             width={50}
             height={50}
-            className="hidden md:block"
+          
           />
         </div>
         <h1 className="text-2xl md:text-5xl font-bold text-center">
-          Build your UI with ollio
+          Build Your UI With Ollio
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground text-center">
           Create apps and websites by chatting with AI
@@ -29,6 +30,7 @@ const Page = () => {
       <SignedIn>
         <ProjectsList />
       </SignedIn>
+      <ShowcaseGrid/>
     </section>
   );
 };

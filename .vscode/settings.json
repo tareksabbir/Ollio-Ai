@@ -1,0 +1,38 @@
+{
+  // CSS validation সম্পূর্ণ off করুন
+  "css.validate": false,
+  
+  // Tailwind CSS সব warning off করুন
+  "tailwindCSS.lint.cssConflict": "ignore",
+  "tailwindCSS.lint.invalidApply": "ignore",
+  "tailwindCSS.lint.invalidScreen": "ignore",
+  "tailwindCSS.lint.invalidVariant": "ignore",
+  "tailwindCSS.lint.invalidConfigPath": "ignore",
+  "tailwindCSS.lint.invalidTailwindDirective": "ignore",
+  "tailwindCSS.lint.recommendedVariantOrder": "ignore",
+  
+  // HTML validation off করুন
+  "html.validate.styles": false,
+  "html.validate.scripts": false,
+  
+  // Public folder এর সব ফাইল Tailwind থেকে exclude করুন
+  "tailwindCSS.files.exclude": [
+    "**/.git/**",
+    "**/node_modules/**",
+    "**/.hg/**",
+    "**/.svn/**",
+    "**/public/**",
+    "**/dist/**",
+    "**/build/**"
+  ],
+  
+  // VS Code এর built-in CSS hints off করুন
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore",
+  
+  // Emmet কে HTML ফাইলে সঠিকভাবে কাজ করতে দিন
+  "emmet.includeLanguages": {
+    "html": "html"
+  }
+}

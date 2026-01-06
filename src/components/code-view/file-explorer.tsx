@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useTheme } from "next-themes"; // ইমপোর্ট করুন
+import { useTheme } from "next-themes"; 
 import {
   ResizableHandle,
   ResizablePanel,
@@ -63,10 +63,9 @@ const FileExplorer = ({
     const fileKeys = Object.keys(files);
     return fileKeys.length > 0 ? fileKeys[0] : null;
   });
-  
-  // ডিফল্ট থিম সিলেক্ট করার লজিক (Dark হলে Tokyo, Light হলে VSCode Light)
+
   const [codeTheme, setCodeTheme] = useState<CodeTheme>(() => {
-    return isDark ? "tokyoNight" : "vscodeLight";
+    return isDark ? "vscodeDark" : "vscodeLight";
   });
 
   const isMounted = useRef(true);
@@ -125,7 +124,7 @@ const FileExplorer = ({
     ) {
       setCodeTheme("vscodeLight");
     }
-  }, [isDark,codeTheme]);
+  }, [isDark, codeTheme]);
 
   const treeData = useMemo(() => {
     return convertFilesToTreeItems(editedFiles);

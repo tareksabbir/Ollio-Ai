@@ -37,15 +37,15 @@ export const EditableCodeView = ({
 
   // থিম অবজেক্ট ম্যাপ করা হচ্ছে
   const getTheme = () => {
+    if (propTheme === "vscodeDark") return vscodeDark;
+    if (propTheme === "vscodeLight") return vscodeLight;
     if (propTheme === "tokyoNight") return tokyoNight;
     if (propTheme === "dracula") return dracula;
     if (propTheme === "githubDark") return githubDark;
     if (propTheme === "githubLight") return githubLight;
-    if (propTheme === "vscodeDark") return vscodeDark;
-    if (propTheme === "vscodeLight") return vscodeLight;
-    
+
     // ডিফল্ট ফলব্যাক
-    return isDark ? tokyoNight : githubLight;
+    return isDark ? vscodeDark : githubLight;
   };
 
   const getLanguageExtension = (input: string) => {
