@@ -5,6 +5,7 @@ import { CustomSizeInput } from './custom-size-Input';
 import { ResizeHandles } from './resize-handles';
 import { Project } from '@/lib/view-project';
 
+
 type PreviewMode = 'desktop' | 'tablet' | 'mobile';
 type ResizeHandle = 'left' | 'right' | 'top' | 'bottom' | 'corner';
 

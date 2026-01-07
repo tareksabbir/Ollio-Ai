@@ -1,11 +1,16 @@
 import React from 'react';
 import Image from 'next/image';
 
+// HtmlProject মডেলের সাথে ম্যাচ করার জন্য ইন্টারফেসটি আপডেট করা হয়েছে
+// যদিও আমরা এখানে কোড বা ডেট রেন্ডার করছি না, তবে অবজেক্টটি অনPreview ফাংশনে পাস করার জন্য এটি প্রয়োজন
 interface Project {
   id: string;
   title: string;
   category: string;
   image: string;
+  code: string;       // এইগুলো যুক্ত করা হয়েছে
+  createdAt: Date;   // এইগুলো যুক্ত করা হয়েছে
+  updatedAt: Date;   // এইগুলো যুক্ত করা হয়েছে
 }
 
 interface ProjectCardProps {

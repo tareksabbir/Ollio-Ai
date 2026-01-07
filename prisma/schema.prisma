@@ -62,3 +62,13 @@ model Usage {
   points Int
   expire DateTime?
 }
+
+model HtmlCode {
+  id        String   @id @default(uuid())
+  title     String
+  category  String
+  image     String   // Image URL
+  code      String   // Full HTML code will be stored here
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

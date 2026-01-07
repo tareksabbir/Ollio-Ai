@@ -1,27 +1,42 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { projects } from '@/lib/view-project';
-import { useState, useEffect, useRef } from 'react';
-import { CategoryTabs } from './category-tabs';
-import { ProjectCard } from './project-cards';
-import { PreviewModal } from './preview-modal';
+import { useState, useEffect, useRef } from "react";
+import { CategoryTabs } from "./category-tabs";
+import { ProjectCard } from "./project-cards";
+import { PreviewModal } from "./preview-modal";
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
+import { ProjectsSkeletonGrid } from "../skeletons/projects-skeleton-for-grid";
 
+// Prisma HtmlCode Model এর সাথে ম্যাচ করে টাইপ ডিফাইন করা হয়েছে
+type HtmlProject = {
+  id: string;
+  title: string;
+  category: string;
+  image: string;
+  code: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type PreviewMode = "desktop" | "tablet" | "mobile";
+type ResizeHandle = "left" | "right" | "top" | "bottom" | "corner" | null;
 
 const ShowcaseGrid = () => {
-  const [selectedProject, setSelectedProject] = useState<(typeof projects)[0] | null>(null);
+  const trpc = useTRPC();
+  const [selectedProject, setSelectedProject] = useState<HtmlProject | null>(
+    null
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('All');
-  const [htmlContent, setHtmlContent] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [previewMode, setPreviewMode] = useState<PreviewMode>("desktop");
   const [customWidth, setCustomWidth] = useState(1400);
   const [customHeight, setCustomHeight] = useState(900);
   const [isResizing, setIsResizing] = useState(false);
-  const [resizeHandle, setResizeHandle] = useState<'left' | 'right' | 'top' | 'bottom' | 'corner' | null>(null);
+  const [resizeHandle, setResizeHandle] = useState<ResizeHandle>(null);
   const [showSizeInput, setShowSizeInput] = useState(false);
-  const [tempWidth, setTempWidth] = useState('');
-  const [tempHeight, setTempHeight] = useState('');
+  const [tempWidth, setTempWidth] = useState("");
+  const [tempHeight, setTempHeight] = useState("");
 
   const resizeRef = useRef({
     startX: 0,
@@ -30,47 +45,43 @@ const ShowcaseGrid = () => {
     startHeight: 0,
   });
 
-  const categories = ['All', 'Landing Pages', 'Advanced Apps', 'Business Tools', 'Personal Tools', 'E-Commerce'];
-
-  const presetSizes = [
-    { name: 'Mobile S', width: 320, height: 568 },
-    { name: 'Mobile M', width: 375, height: 667 },
-    { name: 'Mobile L', width: 414, height: 896 },
-    { name: 'Tablet', width: 768, height: 1024 },
-    { name: 'Laptop', width: 1366, height: 768 },
-    { name: 'Desktop', width: 1920, height: 1080 },
-    { name: '2K', width: 2240, height: 1440 },
-    { name: '4K', width: 2560, height: 1440 },
+  const categories = [
+    "All",
+    "Landing Pages",
+    "Advanced Apps",
+    "Business Tools",
+    "Personal Tools",
+    "E-Commerce",
   ];
 
+  const presetSizes = [
+    { name: "Mobile S", width: 320, height: 568 },
+    { name: "Mobile M", width: 375, height: 667 },
+    { name: "Mobile L", width: 414, height: 896 },
+    { name: "Tablet", width: 768, height: 1024 },
+    { name: "Laptop", width: 1366, height: 768 },
+    { name: "Desktop", width: 1920, height: 1080 },
+    { name: "2K", width: 2240, height: 1440 },
+    { name: "4K", width: 2560, height: 1440 },
+  ];
+
+  // --- DATA FETCHING ---
+  // তোমার htmlCodeRouter এর getMany প্রসিজার কল করা হচ্ছে
+  const { data: projects = [], isLoading: isProjectsLoading } = useQuery(
+    trpc.htmlCode.getMany.queryOptions()
+  );
+
+  // --- CLIENT SIDE FILTERING ---
+  // যেহেতু getMany তে সার্ভার সাইড ফিল্টার নেই, তাই এখানে ফিল্টার করা হচ্ছে
   const filteredProjects =
-    activeCategory === 'All' ? projects : projects.filter((p) => p.category === activeCategory);
+    activeCategory === "All"
+      ? projects
+      : projects.filter((p) => p.category === activeCategory);
 
-  // Fixed useEffect - avoid synchronous setState
-  useEffect(() => {
-    if (!selectedProject) return;
+  // সিলেক্টেড প্রজেক্টের HTML কোড বের করা (যেহেতু getMany তে সব ডাটা আসে)
+  const currentHtmlContent = selectedProject ? selectedProject.code : "";
 
-    // Use async function inside effect
-    const loadContent = async () => {
-      if (selectedProject.htmlPath) {
-        setIsLoading(true);
-        try {
-          const response = await fetch(selectedProject.htmlPath);
-          const html = await response.text();
-          setHtmlContent(html);
-        } catch (error) {
-          setHtmlContent('<h1>Error loading content</h1>');
-        } finally {
-          setIsLoading(false);
-        }
-      } else if (selectedProject.htmlContent) {
-        setHtmlContent(selectedProject.htmlContent);
-      }
-    };
-
-    loadContent();
-  }, [selectedProject]);
-
+  // --- RESIZE LOGIC (আগের মতোই রাখা হয়েছে) ---
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isResizing || !resizeHandle) return;
@@ -81,16 +92,28 @@ const ShowcaseGrid = () => {
       let newWidth = customWidth;
       let newHeight = customHeight;
 
-      if (resizeHandle === 'right' || resizeHandle === 'corner') {
-        newWidth = Math.max(320, Math.min(2560, resizeRef.current.startWidth + deltaX));
-      } else if (resizeHandle === 'left') {
-        newWidth = Math.max(320, Math.min(2560, resizeRef.current.startWidth - deltaX));
+      if (resizeHandle === "right" || resizeHandle === "corner") {
+        newWidth = Math.max(
+          320,
+          Math.min(2560, resizeRef.current.startWidth + deltaX)
+        );
+      } else if (resizeHandle === "left") {
+        newWidth = Math.max(
+          320,
+          Math.min(2560, resizeRef.current.startWidth - deltaX)
+        );
       }
 
-      if (resizeHandle === 'bottom' || resizeHandle === 'corner') {
-        newHeight = Math.max(400, Math.min(1600, resizeRef.current.startHeight + deltaY));
-      } else if (resizeHandle === 'top') {
-        newHeight = Math.max(400, Math.min(1600, resizeRef.current.startHeight - deltaY));
+      if (resizeHandle === "bottom" || resizeHandle === "corner") {
+        newHeight = Math.max(
+          400,
+          Math.min(1600, resizeRef.current.startHeight + deltaY)
+        );
+      } else if (resizeHandle === "top") {
+        newHeight = Math.max(
+          400,
+          Math.min(1600, resizeRef.current.startHeight - deltaY)
+        );
       }
 
       setCustomWidth(newWidth);
@@ -103,29 +126,32 @@ const ShowcaseGrid = () => {
     };
 
     if (isResizing) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
 
-      if (resizeHandle === 'left' || resizeHandle === 'right') {
-        document.body.style.cursor = 'ew-resize';
-      } else if (resizeHandle === 'top' || resizeHandle === 'bottom') {
-        document.body.style.cursor = 'ns-resize';
-      } else if (resizeHandle === 'corner') {
-        document.body.style.cursor = 'nwse-resize';
+      if (resizeHandle === "left" || resizeHandle === "right") {
+        document.body.style.cursor = "ew-resize";
+      } else if (resizeHandle === "top" || resizeHandle === "bottom") {
+        document.body.style.cursor = "ns-resize";
+      } else if (resizeHandle === "corner") {
+        document.body.style.cursor = "nwse-resize";
       }
 
-      document.body.style.userSelect = 'none';
+      document.body.style.userSelect = "none";
     }
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
     };
   }, [isResizing, resizeHandle, customWidth, customHeight]);
 
-  const startResize = (e: React.MouseEvent, handle: 'left' | 'right' | 'top' | 'bottom' | 'corner') => {
+  const startResize = (
+    e: React.MouseEvent<Element, MouseEvent>,
+    handle: "left" | "right" | "top" | "bottom" | "corner"
+  ) => {
     e.preventDefault();
     setIsResizing(true);
     setResizeHandle(handle);
@@ -149,32 +175,31 @@ const ShowcaseGrid = () => {
     }
 
     setShowSizeInput(false);
-    setTempWidth('');
-    setTempHeight('');
+    setTempWidth("");
+    setTempHeight("");
   };
 
-  const openModal = (project: (typeof projects)[0]) => {
-    // Prevent any default navigation behavior
+  const openModal = (project: HtmlProject) => {
     setSelectedProject(project);
     setIsModalOpen(true);
-    setHtmlContent('');
-    setPreviewMode('desktop');
+    setPreviewMode("desktop");
     setCustomWidth(1400);
     setCustomHeight(900);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   };
 
   const closeModal = () => {
-    // Prevent any navigation
     setIsModalOpen(false);
     setSelectedProject(null);
-    setHtmlContent('');
     setShowSizeInput(false);
-    document.body.style.overflow = 'auto';
-    
-    // Ensure we don't navigate anywhere
-    if (typeof window !== 'undefined') {
-      window.history.pushState(null, '', window.location.pathname + window.location.search);
+    document.body.style.overflow = "auto";
+
+    if (typeof window !== "undefined") {
+      window.history.pushState(
+        null,
+        "",
+        window.location.pathname + window.location.search
+      );
     }
   };
 
@@ -193,25 +218,33 @@ const ShowcaseGrid = () => {
         onCategoryChange={setActiveCategory}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredProjects.length > 0 ? (
-          filteredProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} onPreview={openModal} />
-          ))
-        ) : (
-          <div className="col-span-full text-center py-12">
-            <p className="text-muted-foreground text-lg">
-              No projects found in this category.
-            </p>
-          </div>
-        )}
-      </div>
+      {isProjectsLoading ? (
+        <ProjectsSkeletonGrid />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredProjects.length > 0 ? (
+            filteredProjects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                onPreview={openModal}
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p className="text-muted-foreground text-lg">
+                No projects found in this category.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       <PreviewModal
         isOpen={isModalOpen}
         project={selectedProject}
-        htmlContent={htmlContent}
-        isLoading={isLoading}
+        htmlContent={currentHtmlContent}
+        isLoading={false} // getMany থেকেই ডাটা লোড হয়ে আসছে
         previewMode={previewMode}
         customWidth={customWidth}
         customHeight={customHeight}
