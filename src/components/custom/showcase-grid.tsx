@@ -13,20 +13,29 @@ const ShowcaseGrid = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [htmlContent, setHtmlContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [previewMode, setPreviewMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
+  const [previewMode, setPreviewMode] = useState<
+    "desktop" | "tablet" | "mobile"
+  >("desktop");
   const [customWidth, setCustomWidth] = useState(1400);
   const [customHeight, setCustomHeight] = useState(900);
   const [isResizing, setIsResizing] = useState(false);
-  const [resizeHandle, setResizeHandle] = useState<'left' | 'right' | 'top' | 'bottom' | 'corner' | null>(null);
+  const [resizeHandle, setResizeHandle] = useState<
+    "left" | "right" | "top" | "bottom" | "corner" | null
+  >(null);
   const [showSizeInput, setShowSizeInput] = useState(false);
   const [tempWidth, setTempWidth] = useState("");
   const [tempHeight, setTempHeight] = useState("");
   const modalRef = useRef<HTMLDivElement>(null);
-  const resizeRef = useRef<{ startX: number; startY: number; startWidth: number; startHeight: number }>({ 
-    startX: 0, 
-    startY: 0, 
-    startWidth: 0, 
-    startHeight: 0 
+  const resizeRef = useRef<{
+    startX: number;
+    startY: number;
+    startWidth: number;
+    startHeight: number;
+  }>({
+    startX: 0,
+    startY: 0,
+    startWidth: 0,
+    startHeight: 0,
   });
 
   const categories = [
@@ -36,7 +45,6 @@ const ShowcaseGrid = () => {
     "Business Tools",
     "Personal Tools",
     "E-Commerce",
-    "Content",
   ];
 
   // Common preset sizes
@@ -89,23 +97,35 @@ const ShowcaseGrid = () => {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isResizing || !resizeHandle) return;
-      
+
       const deltaX = e.clientX - resizeRef.current.startX;
       const deltaY = e.clientY - resizeRef.current.startY;
-      
+
       let newWidth = customWidth;
       let newHeight = customHeight;
 
-      if (resizeHandle === 'right' || resizeHandle === 'corner') {
-        newWidth = Math.max(320, Math.min(2560, resizeRef.current.startWidth + deltaX));
-      } else if (resizeHandle === 'left') {
-        newWidth = Math.max(320, Math.min(2560, resizeRef.current.startWidth - deltaX));
+      if (resizeHandle === "right" || resizeHandle === "corner") {
+        newWidth = Math.max(
+          320,
+          Math.min(2560, resizeRef.current.startWidth + deltaX)
+        );
+      } else if (resizeHandle === "left") {
+        newWidth = Math.max(
+          320,
+          Math.min(2560, resizeRef.current.startWidth - deltaX)
+        );
       }
 
-      if (resizeHandle === 'bottom' || resizeHandle === 'corner') {
-        newHeight = Math.max(400, Math.min(1600, resizeRef.current.startHeight + deltaY));
-      } else if (resizeHandle === 'top') {
-        newHeight = Math.max(400, Math.min(1600, resizeRef.current.startHeight - deltaY));
+      if (resizeHandle === "bottom" || resizeHandle === "corner") {
+        newHeight = Math.max(
+          400,
+          Math.min(1600, resizeRef.current.startHeight + deltaY)
+        );
+      } else if (resizeHandle === "top") {
+        newHeight = Math.max(
+          400,
+          Math.min(1600, resizeRef.current.startHeight - deltaY)
+        );
       }
 
       setCustomWidth(newWidth);
@@ -120,15 +140,15 @@ const ShowcaseGrid = () => {
     if (isResizing) {
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
-      
-      if (resizeHandle === 'left' || resizeHandle === 'right') {
+
+      if (resizeHandle === "left" || resizeHandle === "right") {
         document.body.style.cursor = "ew-resize";
-      } else if (resizeHandle === 'top' || resizeHandle === 'bottom') {
+      } else if (resizeHandle === "top" || resizeHandle === "bottom") {
         document.body.style.cursor = "ns-resize";
-      } else if (resizeHandle === 'corner') {
+      } else if (resizeHandle === "corner") {
         document.body.style.cursor = "nwse-resize";
       }
-      
+
       document.body.style.userSelect = "none";
     }
 
@@ -140,7 +160,10 @@ const ShowcaseGrid = () => {
     };
   }, [isResizing, resizeHandle, customWidth, customHeight]);
 
-  const startResize = (e: React.MouseEvent, handle: 'left' | 'right' | 'top' | 'bottom' | 'corner') => {
+  const startResize = (
+    e: React.MouseEvent,
+    handle: "left" | "right" | "top" | "bottom" | "corner"
+  ) => {
     e.preventDefault();
     setIsResizing(true);
     setResizeHandle(handle);
@@ -155,14 +178,14 @@ const ShowcaseGrid = () => {
   const applyCustomSize = () => {
     const width = parseInt(tempWidth);
     const height = parseInt(tempHeight);
-    
+
     if (!isNaN(width) && width >= 320 && width <= 2560) {
       setCustomWidth(width);
     }
     if (!isNaN(height) && height >= 400 && height <= 1600) {
       setCustomHeight(height);
     }
-    
+
     setShowSizeInput(false);
     setTempWidth("");
     setTempHeight("");
@@ -291,7 +314,7 @@ const ShowcaseGrid = () => {
           />
 
           {/* Modal Content */}
-          <div 
+          <div
             ref={modalRef}
             className="relative bg-card w-full max-w-full h-full rounded-2xl shadow-2xl border border-border flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200"
           >
@@ -391,12 +414,14 @@ const ShowcaseGrid = () => {
                   <div className="flex items-center gap-3">
                     {/* Size Display */}
                     <div className="flex items-center gap-2 bg-muted rounded-lg px-3 py-1.5">
-                      <span className="text-xs text-muted-foreground">Size:</span>
+                      <span className="text-xs text-muted-foreground">
+                        Size:
+                      </span>
                       <span className="text-sm font-mono font-semibold text-foreground">
                         {customWidth} × {customHeight}
                       </span>
                     </div>
-                    
+
                     {/* Custom Size Input Toggle */}
                     <button
                       onClick={() => {
@@ -418,7 +443,7 @@ const ShowcaseGrid = () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       >
-                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
                       </svg>
                     </button>
 
@@ -439,19 +464,21 @@ const ShowcaseGrid = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         >
-                          <rect width="18" height="18" x="3" y="3" rx="2"/>
-                          <path d="M9 3v18"/>
-                          <path d="M21 9H3"/>
+                          <rect width="18" height="18" x="3" y="3" rx="2" />
+                          <path d="M9 3v18" />
+                          <path d="M21 9H3" />
                         </svg>
                       </button>
-                      
+
                       {/* Dropdown Menu */}
                       <div className="absolute right-0 top-full mt-2 w-48 bg-card border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                         <div className="p-2">
                           {presetSizes.map((preset) => (
                             <button
                               key={preset.name}
-                              onClick={() => applyPresetSize(preset.width, preset.height)}
+                              onClick={() =>
+                                applyPresetSize(preset.width, preset.height)
+                              }
                               className="w-full text-left px-3 py-2 rounded hover:bg-accent transition-colors text-sm"
                             >
                               <div className="font-medium">{preset.name}</div>
@@ -493,7 +520,9 @@ const ShowcaseGrid = () => {
               <div className="px-6 py-3 border-b border-border bg-muted/20">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <label className="text-sm text-muted-foreground">Width:</label>
+                    <label className="text-sm text-muted-foreground">
+                      Width:
+                    </label>
                     <input
                       type="number"
                       value={tempWidth}
@@ -505,9 +534,11 @@ const ShowcaseGrid = () => {
                     />
                     <span className="text-sm text-muted-foreground">px</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
-                    <label className="text-sm text-muted-foreground">Height:</label>
+                    <label className="text-sm text-muted-foreground">
+                      Height:
+                    </label>
                     <input
                       type="number"
                       value={tempHeight}
@@ -519,14 +550,14 @@ const ShowcaseGrid = () => {
                     />
                     <span className="text-sm text-muted-foreground">px</span>
                   </div>
-                  
+
                   <button
                     onClick={applyCustomSize}
                     className="px-4 py-1.5 text-sm bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
                   >
                     Apply
                   </button>
-                  
+
                   <button
                     onClick={() => setShowSizeInput(false)}
                     className="px-4 py-1.5 text-sm bg-muted text-muted-foreground rounded hover:bg-accent transition-colors"
@@ -548,10 +579,19 @@ const ShowcaseGrid = () => {
                   <div
                     className="bg-background shadow-2xl transition-all duration-300 overflow-hidden relative"
                     style={{
-                      width: previewMode === "desktop" ? `${customWidth}px` : previewDimensions[previewMode].width,
-                      height: previewMode === "desktop" ? `${customHeight}px` : previewDimensions[previewMode].height,
+                      width:
+                        previewMode === "desktop"
+                          ? `${customWidth}px`
+                          : previewDimensions[previewMode].width,
+                      height:
+                        previewMode === "desktop"
+                          ? `${customHeight}px`
+                          : previewDimensions[previewMode].height,
                       maxWidth: "100%",
-                      border: previewMode !== "desktop" ? "8px solid hsl(var(--border))" : "1px solid hsl(var(--border))",
+                      border:
+                        previewMode !== "desktop"
+                          ? "8px solid hsl(var(--border))"
+                          : "1px solid hsl(var(--border))",
                       borderRadius: previewMode !== "desktop" ? "24px" : "8px",
                     }}
                   >
@@ -561,51 +601,51 @@ const ShowcaseGrid = () => {
                       title={`${selectedProject.title} Preview`}
                       sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                     />
-                    
+
                     {/* Enhanced Resize Handles (only visible in desktop mode) */}
                     {previewMode === "desktop" && (
                       <>
                         {/* Right Handle */}
                         <div
-                          onMouseDown={(e) => startResize(e, 'right')}
+                          onMouseDown={(e) => startResize(e, "right")}
                           className="absolute top-0 right-0 w-3 h-full cursor-ew-resize bg-transparent hover:bg-primary/20 transition-colors group"
-                          style={{ right: '-6px' }}
+                          style={{ right: "-6px" }}
                         >
                           <div className="absolute inset-y-0 right-1.5 w-1 bg-primary/0 group-hover:bg-primary transition-colors rounded-full" />
                         </div>
-                        
+
                         {/* Left Handle */}
                         <div
-                          onMouseDown={(e) => startResize(e, 'left')}
+                          onMouseDown={(e) => startResize(e, "left")}
                           className="absolute top-0 left-0 w-3 h-full cursor-ew-resize bg-transparent hover:bg-primary/20 transition-colors group"
-                          style={{ left: '-6px' }}
+                          style={{ left: "-6px" }}
                         >
                           <div className="absolute inset-y-0 left-1.5 w-1 bg-primary/0 group-hover:bg-primary transition-colors rounded-full" />
                         </div>
-                        
+
                         {/* Bottom Handle */}
                         <div
-                          onMouseDown={(e) => startResize(e, 'bottom')}
+                          onMouseDown={(e) => startResize(e, "bottom")}
                           className="absolute bottom-0 left-0 w-full h-3 cursor-ns-resize bg-transparent hover:bg-primary/20 transition-colors group"
-                          style={{ bottom: '-6px' }}
+                          style={{ bottom: "-6px" }}
                         >
                           <div className="absolute inset-x-0 bottom-1.5 h-1 bg-primary/0 group-hover:bg-primary transition-colors rounded-full" />
                         </div>
-                        
+
                         {/* Top Handle */}
                         <div
-                          onMouseDown={(e) => startResize(e, 'top')}
+                          onMouseDown={(e) => startResize(e, "top")}
                           className="absolute top-0 left-0 w-full h-3 cursor-ns-resize bg-transparent hover:bg-primary/20 transition-colors group"
-                          style={{ top: '-6px' }}
+                          style={{ top: "-6px" }}
                         >
                           <div className="absolute inset-x-0 top-1.5 h-1 bg-primary/0 group-hover:bg-primary transition-colors rounded-full" />
                         </div>
-                        
+
                         {/* Corner Handle (Bottom Right) */}
                         <div
-                          onMouseDown={(e) => startResize(e, 'corner')}
+                          onMouseDown={(e) => startResize(e, "corner")}
                           className="absolute bottom-0 right-0 w-6 h-6 cursor-nwse-resize group"
-                          style={{ bottom: '-6px', right: '-6px' }}
+                          style={{ bottom: "-6px", right: "-6px" }}
                         >
                           <div className="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-primary/0 group-hover:border-primary transition-colors rounded-br" />
                         </div>

@@ -73,4 +73,25 @@ export const projects: Project[] = [
     image: "/asset/digital.png",
     htmlPath: "/projects/digital.html", // External file
   },
+  {
+    id: 10,
+    title: "Nexsales",
+    category: "Personal Tools",
+    image: "/asset/nextseles.png",
+    htmlPath: "/projects/nextselse.html", // External file
+  },
+  {
+    id: 11,
+    title: "Cube 3D",
+    category: "Advanced Apps",
+    image: "/asset/cube.png",
+    htmlPath: "/projects/cube.html", // External file
+  },
+  {
+    id: 12,
+    title: "ApexNeural",
+    category: "Advanced Apps",
+    image: "/asset/apex.png",
+    htmlPath: "/projects/apex.html", // External file
+  },
 ];
