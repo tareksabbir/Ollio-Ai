@@ -1,4 +1,4 @@
-import ShowcaseGrid from "@/components/custom/showcase-grid";
+import ShowcaseGrid from "@/components/showcase/showcase-grid-main";
 import ProjectForm from "@/modules/home/ui/components/project-form";
 import ProjectsList from "@/modules/home/ui/components/project-list";
 import { SignedIn } from "@clerk/nextjs";
