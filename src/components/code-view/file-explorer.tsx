@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useTheme } from "next-themes"; 
+import { useTheme } from "next-themes";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -255,11 +255,13 @@ const FileExplorer = ({
                   </span>
                 )}
                 {/* এখানে isDark ডায়নামিকালি পাস করা হচ্ছে */}
-                <CodeThemeSelector
-                  currentTheme={codeTheme}
-                  onThemeChange={setCodeTheme}
-                  isDark={isDark}
-                />
+               
+                  <CodeThemeSelector
+                    currentTheme={codeTheme}
+                    onThemeChange={setCodeTheme}
+                    isDark={isDark}
+                  />
+               
 
                 {allowEdit && (
                   <Hint

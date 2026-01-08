@@ -6,6 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { PaletteIcon, CheckIcon } from "lucide-react";
+import Hint from "../custom/hint";
 
 export type CodeTheme =
   | "tokyoNight"
@@ -43,10 +44,12 @@ export const CodeThemeSelector = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          <PaletteIcon className="w-4 h-4" />
-          Theme
-        </Button>
+        <Hint text="Choose theme" side="bottom" align="start">
+          <Button variant="outline" size="sm">
+            <PaletteIcon className="w-4 h-4" />
+            Theme
+          </Button>
+        </Hint>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {themes.map((theme) => (

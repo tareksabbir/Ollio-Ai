@@ -251,6 +251,7 @@ export const uiGenerationAgent = inngest.createFunction(
           fragment: {
             create: {
               sandboxUrl: sandboxUrl,
+              sandboxId: sandboxId,
               title: parseAgentOutput(fragmentTitleOutput),
               files: result.state.data.files,
             },

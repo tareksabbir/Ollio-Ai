@@ -26,6 +26,7 @@ import UserControl from "@/components/clerk/user-controler";
 import { useTheme } from "next-themes";
 import MessageContainer from "@/modules/messages/ui/components/messages-container";
 import { ComponentErrorBoundary } from "@/components/error-boundary/component-error-boundary";
+import { DownloadProjectButton } from "@/components/download-project-button/download-project-button";
 
 interface Props {
   projectId: string;
@@ -184,7 +185,14 @@ const ProjectView = ({ projectId }: Props) => {
                   <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                   <span className="sr-only">Toggle theme</span>
                 </Button>
-                
+                {activeFragment && (
+                  <>
+                    <DownloadProjectButton
+                      fragmentId={activeFragment.id}
+                      title={activeFragment.title}
+                    />
+                  </>
+                )}
                 <UserControl />
                 <Button asChild size="sm">
                   <Link href="/pricing">
@@ -212,8 +220,8 @@ const ProjectView = ({ projectId }: Props) => {
               </ComponentErrorBoundary>
             </TabsContent>
 
-            <TabsContent 
-              value="code" 
+            <TabsContent
+              value="code"
               className="flex-1 overflow-hidden m-0 bg-background"
             >
               <ComponentErrorBoundary componentName="FileExplorer">
