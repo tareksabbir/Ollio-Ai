@@ -1,5 +1,20 @@
 # Ollio AI - AI-Powered UI Generation Platform
 
+Ollio AI is a sophisticated full-stack web application that enables users to generate user interface components through natural language prompts. The platform leverages cutting-edge AI technology to transform text descriptions into fully functional, production-ready React components with proper styling and interactivity.
+
+### Core Capabilities
+
+**AI-Powered Code Generation**: Users describe the UI they want in plain English, and the system generates complete React components with Tailwind CSS styling.
+
+**Secure Sandbox Execution**: All generated code runs in isolated cloud environments, ensuring security and preventing any impact on the main application infrastructure.
+
+**Real-Time Collaboration**: The system supports conversational interactions where users can iteratively refine their generated components through follow-up prompts.
+
+**Project Management**: Users can manage multiple UI generation projects, with full version history and the ability to export generated code.
+
+**Usage Tracking**: Built-in credit system to manage and monitor API usage and generation costs.
+
+
 ## Table of Contents
 1. [Project Overview](#project-overview)
 2. [Technology Stack](#technology-stack)
@@ -15,25 +30,10 @@
 12. [Security & Authentication](#security--authentication)
 13. [Deployment Considerations](#deployment-considerations)
 
----
-
-## Project Overview
-
-Ollio AI is a sophisticated full-stack web application that enables users to generate user interface components through natural language prompts. The platform leverages cutting-edge AI technology to transform text descriptions into fully functional, production-ready React components with proper styling and interactivity.
-
-### Core Capabilities
-
-**AI-Powered Code Generation**: Users describe the UI they want in plain English, and the system generates complete React components with Tailwind CSS styling.
-
-**Secure Sandbox Execution**: All generated code runs in isolated cloud environments, ensuring security and preventing any impact on the main application infrastructure.
-
-**Real-Time Collaboration**: The system supports conversational interactions where users can iteratively refine their generated components through follow-up prompts.
-
-**Project Management**: Users can manage multiple UI generation projects, with full version history and the ability to export generated code.
-
-**Usage Tracking**: Built-in credit system to manage and monitor API usage and generation costs.
 
 ---
+
+## Screenshot
 
 ## High-Level Architecture Overview
 
@@ -1701,50 +1701,6 @@ The application communicates with Inngest through events:
 - Custom alerts for business-critical operations
 
 ---
-
-## Security & Authentication
-
-### Authentication Flow
-
-**Clerk Integration**:
-- Clerk handles all authentication UI and logic
-- Users sign up/in through Clerk's pre-built components
-- Sessions are managed with secure, HTTP-only cookies
-- Tokens are automatically refreshed
-
-**Session Validation**:
-- Every API request includes the session token
-- tRPC middleware validates the token with Clerk's backend
-- Invalid tokens are rejected immediately
-- Valid tokens provide the userId for authorization checks
-
-**Authorization**:
-- All procedures check that the requesting user owns the requested resource
-- Database queries filter by userId to prevent unauthorized access
-- Admin-only operations check for admin role in the user's session
-
-### Data Security
-
-**SQL Injection Prevention**:
-- Prisma uses parameterized queries exclusively
-- User input is never concatenated into SQL strings
-- All queries are type-checked at compile time
-
-**XSS Prevention**:
-- React escapes all rendered content by default
-- User-generated content is sanitized before rendering
-- Content Security Policy headers restrict script sources
-
-**CSRF Protection**:
-- API calls include CSRF tokens
-- SameSite cookie attributes prevent cross-site attacks
-- Origin headers are validated
-
-**Sandbox Security**:
-- All generated code runs in isolated containers
-- Sandboxes have no network access to internal systems
-- Resource limits prevent denial-of-service attacks
-- Sandboxes are destroyed after use, leaving no traces
 
 ### Environment Variables and Secrets
 
