@@ -36,12 +36,24 @@
 //       where: {
 //         userId: ctx.auth.userId,
 //       },
+//       include: {
+//         messages: {
+//           include: {
+//             fragment: true, // ✅ fragments না, fragment (one-to-one relation)
+//           },
+//           orderBy: {
+//             createdAt: 'desc',
+//           },
+//           take: 1, // প্রতিটি project এর latest message
+//         },
+//       },
 //       orderBy: {
-//         createdAt: "desc",
+//         updatedAt: "desc",
 //       },
 //     });
 //     return projects;
 //   }),
+
 //   create: protectedProcedure
 //     .input(
 //       z.object({
@@ -91,6 +103,7 @@
 //     }),
 // });
 
+
 import z from "zod";
 import { inngest } from "@/inngest/client";
 import prisma from "@/lib/db";
@@ -132,12 +145,12 @@ export const projectsRouter = createTRPCRouter({
       include: {
         messages: {
           include: {
-            fragment: true, // ✅ fragments না, fragment (one-to-one relation)
+            fragment: true,
           },
           orderBy: {
             createdAt: 'desc',
           },
-          take: 1, // প্রতিটি project এর latest message
+          take: 1,
         },
       },
       orderBy: {
@@ -193,5 +206,38 @@ export const projectsRouter = createTRPCRouter({
         data: { value: input.value, projectId: createdProject.id },
       });
       return createdProject;
+    }),
+
+  delete: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().min(1, {
+          message: "Project ID is required",
+        }),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const project = await prisma.project.findUnique({
+        where: {
+          id: input.id,
+          userId: ctx.auth.userId,
+        },
+      });
+
+      if (!project) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Project not found",
+        });
+      }
+
+      await prisma.project.delete({
+        where: {
+          id: input.id,
+          userId: ctx.auth.userId,
+        },
+      });
+
+      return { success: true };
     }),
 });
