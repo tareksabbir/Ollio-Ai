@@ -59,7 +59,7 @@ const ProjectsList = () => {
   return (
     <>
       <section className="w-full bg-white dark:bg-sidebar rounded-xl p-8 border flex flex-col gap-y-6 sm:gap-y-4 mb-50">
-        <h2 className="text-xl font-semibold">
+        <h2 className="text-xl font-semibold text-center">
           Hi, {user?.firstName} Your Recent Works!
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
