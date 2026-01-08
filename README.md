@@ -144,8 +144,9 @@ The Ollio AI platform is built on a **layered, service-oriented architecture** w
 
 ### Detailed Architectural
 
-The application follows a microservices-inspired monolithic architecture where concerns are cleanly separated into layers, but all run within the same deployment for simplicity and reduced latency.
+The application follows a **microservices-inspired monolithic architecture** where concerns are cleanly separated into layers, but all run within the same deployment for simplicity and reduced latency.
 
+```
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                              USER BROWSER                                    │
 │  ┌────────────────────────────────────────────────────────────────────────┐ │
@@ -305,10 +306,12 @@ The application follows a microservices-inspired monolithic architecture where c
 │  │  └─ Automatic destruction after use                                  │ │
 │  └────────────────────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ### Complete Flow Visualization
-
+```
 [USER ACTION]
     │
     ├─→ Phase 1: Browser (0-50ms)
@@ -356,9 +359,11 @@ The application follows a microservices-inspired monolithic architecture where c
         └─ Load preview iframe
 
 [RESULT DISPLAYED]
+```
 
 ### Multi-Layer Security Architecture
 
+```
 ┌─────────────────────────────────────────────────────────────┐
 │  LAYER 1: Edge Middleware (src/proxy.ts)                    │
 │  • Runs on Cloudflare Edge                                  │
@@ -386,12 +391,8 @@ The application follows a microservices-inspired monolithic architecture where c
 │  • No network access to internal systems                    │
 │  • Automatic cleanup after execution                        │
 └─────---------------------------------------------------------
+```
 
-# Missing Sections for Ollio AI README
-
-Here are the remaining sections for your comprehensive README:
-
----
 
 ## 🚀 Setup & Installation
 
