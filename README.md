@@ -46,96 +46,15 @@ Ollio AI is a sophisticated full-stack web application that enables users to gen
 
 ## High-Level Architecture Overview
 
+### Agent Network Flow For UI Generation Architecture 
+
+![ Agent Network Flow](./public/agent-network-flow.png)
+
 ### System Architecture Diagram (Conceptual)
 
 The Ollio AI platform is built on a **layered, service-oriented architecture** with clear separation of concerns:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     PRESENTATION LAYER                          │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐                 │
-│  │  Browser   │  │   Mobile   │  │  Desktop   │                 │
-│  │   (Web)    │  │    App     │  │    App     │                 │
-│  └─────┬──────┘  └─────┬──────┘  └─────┬──────┘                 │
-│        │                │                │                       │
-│        └────────────────┴────────────────┘                       │
-│                         │                                        │
-└─────────────────────────┼────────────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    APPLICATION LAYER                            │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │              Next.js Application Server                  │   │
-│  │  ┌────────────────┐        ┌──────────────────┐          │   │
-│  │  │ React Server   │        │ React Client     │          │   │
-│  │  │ Components     │        │ Components       │          │   │
-│  │  │ (SSR/RSC)      │        │ (Interactive UI) │          │   │
-│  │  └────────┬───────┘        └────────┬─────────┘          │   │
-│  │           │                         │                    │   │
-│  │           └─────────┬───────────────┘                    │   │
-│  │                     │                                     │  │
-│  │           ┌─────────▼─────────┐                           │  │
-│  │           │   tRPC API Layer  │                           │  │
-│  │           │  (Type-Safe RPC)  │                           │  │
-│  │           └─────────┬─────────┘                           │  │
-│  └─────────────────────┼─────────────────────────────────────┘  │
-└─────────────────────────┼────────────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     BUSINESS LOGIC LAYER                        │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │              Feature Modules (src/modules)                │  │
-│  │                                                            │  │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌─────────┐  │  │
-│  │  │ Projects │  │ Messages │  │Fragments │  │  Usage  │  │  │
-│  │  │  Module  │  │  Module  │  │  Module  │  │  Module │  │  │
-│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬────┘  │  │
-│  │       │             │              │             │        │  │
-│  │       └─────────────┴──────────────┴─────────────┘        │  │
-│  │                            │                               │  │
-│  │                    ┌───────▼────────┐                     │  │
-│  │                    │ Prisma ORM     │                     │  │
-│  │                    └───────┬────────┘                     │  │
-│  └────────────────────────────┼──────────────────────────────┘  │
-└─────────────────────────┬─────┼────────────────────────────────┘
-                          │     │
-                    ┌─────┘     └─────┐
-                    ▼                   ▼
-┌──────────────────────────┐  ┌─────────────────────────────────┐
-│    DATA LAYER            │  │   ASYNC PROCESSING LAYER        │
-│  ┌──────────────────┐    │  │  ┌────────────────────────────┐ │
-│  │   PostgreSQL     │    │  │  │    Inngest Platform        │ │
-│  │    Database      │    │  │  │                            │ │
-│  │                  │    │  │  │  ┌──────────────────────┐  │ │
-│  │ ┌──────────────┐ │    │  │  │  │ UI Generation Agent │  │ │
-│  │ │   Projects   │ │    │  │  │  │   (Background Job)  │  │ │
-│  │ ├──────────────┤ │    │  │  │  └──────────┬───────────┘  │ │
-│  │ │   Messages   │ │    │  │  │             │              │ │
-│  │ ├──────────────┤ │    │  │  │             ▼              │ │
-│  │ │   Fragments  │ │◄───┼──┼──┼─────┐  ┌──────────────┐   │ │
-│  │ ├──────────────┤ │    │  │  │     └──┤ E2B Sandbox  │   │ │
-│  │ │     Users    │ │    │  │  │        │  (Isolated   │   │ │
-│  │ ├──────────────┤ │    │  │  │        │ Environment) │   │ │
-│  │ │    Usage     │ │    │  │  │        └──────┬───────┘   │ │
-│  │ └──────────────┘ │    │  │  │               │           │ │
-│  └──────────────────┘    │  │  │               ▼           │ │
-└──────────────────────────┘  │  │        ┌──────────────┐   │ │
-                              │  │        │  GPT-4 API   │   │ │
-                              │  │        │ (AI Model)   │   │ │
-                              │  │        └──────────────┘   │ │
-                              │  └────────────────────────────┘ │
-                              └─────────────────────────────────┘
-                              
-┌─────────────────────────────────────────────────────────────────┐
-│                  EXTERNAL SERVICES LAYER                        │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
-│  │    Clerk     │  │     E2B      │  │   OpenAI     │         │
-│  │(Auth Service)│  │  (Sandbox)   │  │  (AI Model)  │         │
-│  └──────────────┘  └──────────────┘  └──────────────┘         │
-└─────────────────────────────────────────────────────────────────┘
-```
+![System Architecture Diagram](./public/system-architecture.png)
 
 ### Architectural Principles
 
@@ -154,6 +73,11 @@ The Ollio AI platform is built on a **layered, service-oriented architecture** w
 ### Detailed Architectural
 
 The application follows a **microservices-inspired monolithic architecture** where concerns are cleanly separated into layers, but all run within the same deployment for simplicity and reduced latency.
+
+![Detailed Architectural](./public/detailed.png)
+
+
+#### explaination :
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -831,6 +755,8 @@ ollio-ai/
 ### Complete Request Lifecycle: From User Prompt to Generated UI
 
 This section traces the exact journey of a user's request through every layer of the system, from the moment they type a prompt to when they see the generated code.
+
+![Data Flow & System Architecture](./public/dataflow.png)
 
 #### Phase 1: Synchronous API Request (100-300ms)
 
