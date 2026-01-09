@@ -1738,3 +1738,48 @@ The modular, feature-based code organization makes the codebase maintainable and
 The event-driven architecture and durable execution model provided by Inngest make the system resilient to failures and easy to reason about. The sandbox-based approach to code execution ensures user-generated content can never compromise system security.
 
 This architecture serves as a solid foundation for building AI-powered applications that are reliable, performant, and secure.
+
+Perfect. README-r **Conclusion** er por niche এই অংশটা যোগ করো। এটা clean, professional, and GitHub-standard markdown—কোনো fluff নেই।
+
+---
+
+## 👤 Author
+
+**Md. Tarek Rahman**
+
+Full-Stack Software Engineer | Frontend-Focused | AI-Driven Product Builder
+
+I enjoy building scalable, secure, and developer-friendly systems with modern web technologies. Passionate about clean architecture, performance, and thoughtful user experience.
+
+---
+
+## 🔗 Links & Contact
+
+* 🌐 **Portfolio:**
+  [https://md-tarek.vercel.app/](https://md-tarek.vercel.app/)
+
+* 💻 **GitHub:**
+  [https://github.com/tareksabbir](https://github.com/tareksabbir)
+
+* 🔗 **LinkedIn:**
+  [https://www.linkedin.com/in/md-tarek/](https://www.linkedin.com/in/md-tarek/)
+
+* 📄 **Resume:**
+  [https://drive.google.com/file/d/1AMkgEfhZl_3EPHEwZStAfKlAMcPKqERq/view?usp=sharing](https://drive.google.com/file/d/1AMkgEfhZl_3EPHEwZStAfKlAMcPKqERq/view?usp=sharing)
+
+* 📧 **Email:**
+  `tareksabbir4599@gmail.com` 
+
+---
+
+## 🤝 Open to Collaboration
+
+If you’re interested in collaborating, discussing architecture, or exploring opportunities around **AI-powered products**, **modern frontend systems**, or **full-stack engineering**, feel free to reach out.
+
+---
+
+### 🔚 Final Note
+
+This project reflects my approach to building **production-grade AI systems** with a strong emphasis on **clarity, safety, and scalability**.
+
+---
