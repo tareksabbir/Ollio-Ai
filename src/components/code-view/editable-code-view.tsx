@@ -2,7 +2,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useMemo } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { html } from "@codemirror/lang-html";
@@ -34,6 +34,7 @@ export const EditableCodeView = ({
 }: Props) => {
   const { theme, resolvedTheme } = useTheme();
   const isDark = (resolvedTheme || theme) === "dark";
+  const editorRef = useRef<any>(null);
 
   // থিম অবজেক্ট ম্যাপ করা হচ্ছে
   const getTheme = () => {
@@ -75,6 +76,10 @@ export const EditableCodeView = ({
       EditorView.theme({
         "&": {
           backgroundColor: "transparent !important",
+          height: "100%",
+        },
+        ".cm-content": {
+          minHeight: "100%",
         },
         ".cm-gutters": {
           backgroundColor: "transparent !important",
@@ -82,20 +87,34 @@ export const EditableCodeView = ({
         },
         ".cm-scroller": {
           backgroundColor: "transparent !important",
+          overflow: "auto",
         },
       }),
     ];
   }, [lang]);
 
+  // Editor focus করার জন্য helper function
+  useEffect(() => {
+    if (editorRef.current && !readOnly) {
+      const view = editorRef.current.view;
+      if (view && code === "") {
+        // যদি code empty হয়, তাহলে editor কে focus করি
+        view.focus();
+      }
+    }
+  }, [code, readOnly]);
+
   return (
     <div className="h-full w-full overflow-auto">
       <CodeMirror
+        ref={editorRef}
         value={code}
         height="100%"
         extensions={extensions}
         theme={getTheme()}
         onChange={(value) => {
           if (onChange) {
+            // Empty string এর জন্যও onChange call করি
             onChange(value);
           }
         }}
@@ -127,6 +146,7 @@ export const EditableCodeView = ({
           fontSize: "14px",
           fontFamily: "'JetBrains Mono', 'Fira Code', Consolas, monospace",
           background: "transparent",
+          height: "100%",
         }}
       />
     </div>

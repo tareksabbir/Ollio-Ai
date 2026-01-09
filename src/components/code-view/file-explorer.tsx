@@ -51,7 +51,6 @@ const FileExplorer = ({
   onSave,
   allowEdit = true,
 }: FileExplorerProps) => {
-  // useTheme হুক ব্যবহার করে বর্তমান থিম ডিটেক্ট করা হচ্ছে
   const { theme, resolvedTheme } = useTheme();
   const isDark = (resolvedTheme || theme) === "dark";
 
@@ -64,7 +63,12 @@ const FileExplorer = ({
     return fileKeys.length > 0 ? fileKeys[0] : null;
   });
 
+  // Theme state with localStorage persistence
   const [codeTheme, setCodeTheme] = useState<CodeTheme>(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('code-theme') as CodeTheme;
+      if (savedTheme) return savedTheme;
+    }
     return isDark ? "vscodeDark" : "vscodeLight";
   });
 
@@ -107,24 +111,6 @@ const FileExplorer = ({
       return () => clearTimeout(timer);
     }
   }, [copied]);
-
-  // যখন সিস্টেম থিম পরিবর্তন হয়, তখন কোড থিমও অটোমেটিক পরিবর্তন করার জন্য (অপশনাল)
-  useEffect(() => {
-    if (codeTheme === "githubLight" && isDark) {
-      setCodeTheme("githubDark");
-    } else if (codeTheme === "githubDark" && !isDark) {
-      setCodeTheme("githubLight");
-    } else if (codeTheme === "vscodeLight" && isDark) {
-      setCodeTheme("vscodeDark");
-    } else if (codeTheme === "vscodeDark" && !isDark) {
-      setCodeTheme("vscodeLight");
-    } else if (
-      (codeTheme === "tokyoNight" || codeTheme === "dracula") &&
-      !isDark
-    ) {
-      setCodeTheme("vscodeLight");
-    }
-  }, [isDark, codeTheme]);
 
   const treeData = useMemo(() => {
     return convertFilesToTreeItems(editedFiles);
@@ -200,6 +186,14 @@ const FileExplorer = ({
     setIsEditing((prev) => !prev);
   }, [isEditing, hasUnsavedChanges, files]);
 
+  // Theme change handler with localStorage
+  const handleThemeChange = useCallback((newTheme: CodeTheme) => {
+    setCodeTheme(newTheme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('code-theme', newTheme);
+    }
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "s") {
@@ -244,7 +238,7 @@ const FileExplorer = ({
         minSize={50}
         className="h-full overflow-hidden"
       >
-        {selectedFile && editedFiles[selectedFile] ? (
+        {selectedFile && editedFiles[selectedFile] !== undefined ? (
           <div className="h-full w-full flex flex-col overflow-hidden">
             <div className="border-b bg-sidebar px-4 py-2 flex justify-between items-center gap-x-2 shrink-0">
               <FileBreadcrumb filePath={selectedFile} />
@@ -254,14 +248,12 @@ const FileExplorer = ({
                     • Unsaved changes
                   </span>
                 )}
-                {/* এখানে isDark ডায়নামিকালি পাস করা হচ্ছে */}
                
-                  <CodeThemeSelector
-                    currentTheme={codeTheme}
-                    onThemeChange={setCodeTheme}
-                    isDark={isDark}
-                  />
-               
+                <CodeThemeSelector
+                  currentTheme={codeTheme}
+                  onThemeChange={handleThemeChange}
+                  isDark={isDark}
+                />
 
                 {allowEdit && (
                   <Hint
