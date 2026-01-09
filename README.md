@@ -33,7 +33,16 @@ Ollio AI is a sophisticated full-stack web application that enables users to gen
 
 ---
 
-## Screenshot
+## Screenshots
+
+### 🏠 Home
+![Home Screenshot](./public/home.png)
+
+### 💻 Code
+![Code Screenshot](./public/code.png)
+
+### 🚀 Demo
+![Demo Screenshot](./public/demo.png)
 
 ## High-Level Architecture Overview
 
