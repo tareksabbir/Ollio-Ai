@@ -7,11 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "setup": "tsx scripts/setup.ts",
-    "setup:template": "bash scripts/create-base-template.sh",
-    "cleanup:builds": "rm -rf builds/*",
-    "prisma:migrate": "npx prisma migrate dev",
-    "prisma:generate": "npx prisma generate"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.5",
@@ -85,6 +81,7 @@
     "react-resizable-panels": "^3.0.6",
     "react-textarea-autosize": "^8.5.9",
     "recharts": "^2.15.4",
+    "serialize-error-cjs": "^0.2.0",
     "server-only": "^0.0.1",
     "sonner": "^2.0.7",
     "superjson": "^2.2.6",
