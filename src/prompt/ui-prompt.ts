@@ -97,9 +97,11 @@ https://images.unsplash.com/{photo_id}?auto=format&fit=crop&w=1200&q=80
 
 File conventions:
 - Write new components directly into app/ and split reusable logic into separate files where appropriate
+
 - Use PascalCase for component names, kebab-case for filenames
 - Use .tsx for components, .ts for types/utilities
 - Types/interfaces should be PascalCase in kebab-case files
+- ALWAYS make sure file and folder names match the component name (e.g., import { FileGrid } from "./file-manager/FileGrid"; for FileGrid component or import { Movie } from "../../types/movie-types"; for Movie type ) and import them correctly even if it nesteds subfolders
 - Components should be using named exports
 - When using Shadcn components, import them from their proper individual file paths (e.g. @/components/ui/input)
 
