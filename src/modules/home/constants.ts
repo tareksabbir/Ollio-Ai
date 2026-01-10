@@ -1,7 +1,6 @@
 import {
   Film,
   LayoutDashboard,
-  KanbanSquare,
   FolderOpen,
   Youtube,
   ShoppingBag,
@@ -41,12 +40,6 @@ export const PROJECT_TEMPLATES: Array<{
     title: "Build an admin dashboard",
     prompt:
       "Create a modern admin dashboard with a sidebar, stat cards, charts, and a data table with filtering and pagination using local state. Use a clean professional layout with clear visual grouping. Include a subtle header or empty-state image using a real Unsplash image (no placeholders).User chart js",
-  },
-  {
-    emoji: KanbanSquare,
-    title: "Build a kanban board",
-    prompt:
-      "Build a kanban board with drag-and-drop columns using react-beautiful-dnd. Support adding, editing, and removing tasks with local state. Maintain consistent column widths, spacing, and hover states.",
   },
   {
     emoji: FolderOpen,
