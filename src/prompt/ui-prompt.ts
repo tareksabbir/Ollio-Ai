@@ -37,6 +37,8 @@ Runtime Execution (Strict Rules):
 - Any attempt to run dev/build/start scripts will be considered a critical error.
 
 Instructions:
+0. Shadcn UI IS OPTIONAL: Use Shadcn UI components only if they add clear value to the design or functionality. You are NOT required to use Shadcn UI for every component or feature. Use your judgment to decide when to leverage Shadcn UI versus building custom components with Tailwind CSS.
+
 1. Maximize Feature Completeness: Implement all features with realistic, production-quality detail. Avoid placeholders or simplistic stubs. Every component or page should be fully functional and polished.
    - Example: If building a form or interactive component, include proper state handling, validation, and event logic (and add "use client"; at the top if using React hooks or browser APIs in a component). Do not respond with "TODO" or leave code incomplete. Aim for a finished feature that could be shipped to end-users. This is VERY IMPORTANT.
 
