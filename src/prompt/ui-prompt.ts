@@ -7,11 +7,12 @@ Environment:
 - Read files via readFiles
 - Do not modify package.json or lock files directly — install packages using the terminal only
 - Main file: app/page.tsx
-- All Shadcn components are pre-installed and imported from "@/components/ui/* you can also use tailwind css shadcn is optional"
+- All Shadcn components are pre-installed and imported from "@/components/ui/*"
 - Tailwind CSS and PostCSS are preconfigured
 - layout.tsx is already defined and wraps all routes — do not include <html>, <body>, or top-level layout
 - You MUST NOT create or modify any .css, .scss, or .sass files — styling must be done strictly using Tailwind CSS classes
-- Important: The @ symbol is an alias used only for imports (e.g. "@/components/ui/button")
+- MOST IMPORTANT: The @ symbol is an alias used only for imports in code files. When reading files using readFiles, you MUST convert "@/components/..." into "/home/user/components/..." to access the correct file paths.
+File System Rules: 
 - When using readFiles or accessing the file system, you MUST use the actual path (e.g. "/home/user/components/ui/button.tsx")
 - You are already inside /home/user.
 - All CREATE OR UPDATE file paths must be relative (e.g., "app/page.tsx", "lib/utils.ts").
@@ -43,7 +44,7 @@ Instructions:
 
 Shadcn UI dependencies — including radix-ui, lucide-react, class-variance-authority, and tailwind-merge — are already installed and must NOT be installed again. Tailwind CSS and its plugins are also preconfigured. Everything else requires explicit installation.
 
-3. if you use Shadcn? Correct Shadcn UI Usage (No API Guesses): When using Shadcn UI components, strictly adhere to their actual API – do not guess props or variant names. If you're uncertain about how a Shadcn component works, inspect its source file under "@/components/ui/" using the readFiles tool or refer to official documentation. Use only the props and variants that are defined by the component.
+3. Correct Shadcn UI Usage (No API Guesses): When using Shadcn UI components, strictly adhere to their actual API – do not guess props or variant names. If you're uncertain about how a Shadcn component works, inspect its source file under "@/components/ui/" using the readFiles tool or refer to official documentation. Use only the props and variants that are defined by the component.
    - For example, a Button component likely supports a variant prop with specific options (e.g. "default", "outline", "secondary", "destructive", "ghost"). Do not invent new variants or props that aren’t defined – if a “primary” variant is not in the code, don't use variant="primary". Ensure required props are provided appropriately, and follow expected usage patterns (e.g. wrapping Dialog with DialogTrigger and DialogContent).
    - Always import Shadcn components correctly from the "@/components/ui" directory. For instance:
      import { Button } from "@/components/ui/button";
@@ -82,6 +83,7 @@ Additional Guidelines:
 - Functional clones must include realistic features and interactivity (e.g. drag-and-drop, add/edit/delete, toggle states, localStorage if helpful)
 - Prefer minimal, working features over static or hardcoded content
 - Reuse and structure components modularly — split large screens into smaller files (e.g., Column.tsx, TaskCard.tsx, etc.) and import them
+- Do not use local or external image URLs — instead rely on emojis and divs with proper aspect ratios (aspect-video, aspect-square, etc.) and color placeholders (e.g. bg-gray-200)
 
 Image Rules (VERY IMPORTANT — NO EXCEPTIONS):
 - ALWAYS use real, publicly accessible images
@@ -97,11 +99,9 @@ https://images.unsplash.com/{photo_id}?auto=format&fit=crop&w=1200&q=80
 
 File conventions:
 - Write new components directly into app/ and split reusable logic into separate files where appropriate
-
 - Use PascalCase for component names, kebab-case for filenames
 - Use .tsx for components, .ts for types/utilities
 - Types/interfaces should be PascalCase in kebab-case files
-- ALWAYS make sure file and folder names match the component name (e.g., import { FileGrid } from "./file-manager/FileGrid"; for FileGrid component or import { Movie } from "../../types/movie-types"; for Movie type ) and import them correctly even if it nesteds subfolders
 - Components should be using named exports
 - When using Shadcn components, import them from their proper individual file paths (e.g. @/components/ui/input)
 
