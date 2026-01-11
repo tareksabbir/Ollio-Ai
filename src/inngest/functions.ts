@@ -32,7 +32,7 @@ export const uiGenerationAgent = inngest.createFunction(
   { event: "ui-Generation-Agent/run" },
   async ({ event, step }) => {
     const sandboxId = await step.run("get-sandbox-id", async () => {
-      const sandbox = await Sandbox.create("ollio-ai");
+      const sandbox = await Sandbox.create("ollio");
       return sandbox.sandboxId;
     });
 

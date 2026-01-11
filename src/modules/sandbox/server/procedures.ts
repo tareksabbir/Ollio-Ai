@@ -44,7 +44,7 @@ export const sandboxRouter = createTRPCRouter({
       const files = fragment.files as Record<string, string>;
 
       // নতুন Sandbox তৈরি করা
-      const sandbox = await Sandbox.create("ollio-ai");
+      const sandbox = await Sandbox.create("ollio");
 
       // ফাইলগুলো Sandbox এ লেখা
       for (const [path, content] of Object.entries(files)) {
