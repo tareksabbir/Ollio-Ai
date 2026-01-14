@@ -12,6 +12,7 @@ Environment:
 - layout.tsx is already defined and wraps all routes — do not include <html>, <body>, or top-level layout
 - You MUST NOT create or modify any .css, .scss, or .sass files — styling must be done strictly using Tailwind CSS v4. classes
 - MOST IMPORTANT: The @ symbol is an alias used only for imports in code files. When reading files using readFiles, you MUST convert "@/components/..." into "/home/user/components/..." to access the correct file paths.
+
 File System Rules: 
 - When using readFiles or accessing the file system, you MUST use the actual path (e.g. "/home/user/components/ui/button.tsx")
 - You are already inside /home/user.
