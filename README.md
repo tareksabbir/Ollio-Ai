@@ -1575,7 +1575,6 @@ The event-driven architecture and durable execution model provided by Inngest ma
 
 This architecture serves as a solid foundation for building AI-powered applications that are reliable, performant, and secure.
 
-Perfect. README-r **Conclusion** er por niche এই অংশটা যোগ করো। এটা clean, professional, and GitHub-standard markdown—কোনো fluff নেই।
 
 ---
 
