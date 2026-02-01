@@ -11,7 +11,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-
 }
 
 model Project {
@@ -75,4 +74,107 @@ model HtmlCode {
 
 
 
+// Add to your schema.prisma
 
+model PromptTemplate {
+  id          String   @id @default(uuid())
+  name        String   @unique // "ui-generation", "response-generation", "fragment-title"
+  version     Int      @default(1)
+  content     String   @db.Text
+  isActive    Boolean  @default(true)
+  
+  // Configuration
+  metadata    Json?    // { temperature: 0.1, model: "gpt-4", maxTokens: 4000 }
+  
+  // Analytics
+  usageCount  Int      @default(0)
+  successRate Float?
+  avgLatency  Float?   // milliseconds
+  
+  // Metadata
+  description String?
+  category    String?  // "system", "response", "title"
+  tags        String[] // ["production", "v2", "optimized"]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String?  // userId who created/updated
+  
+  // Relations
+  versions    PromptVersion[]
+  experiments PromptExperiment[]
+  
+  @@index([name, isActive])
+  @@index([category])
+}
+
+model PromptVersion {
+  id         String   @id @default(uuid())
+  templateId String
+  template   PromptTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  
+  version    Int
+  content    String   @db.Text
+  metadata   Json?
+  
+  // Change tracking
+  changeLog  String?  @db.Text // What was changed
+  createdBy  String?
+  createdAt  DateTime @default(now())
+  
+  @@unique([templateId, version])
+  @@index([templateId, createdAt])
+}
+
+model PromptExperiment {
+  id          String   @id @default(uuid())
+  templateId  String
+  template    PromptTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  
+  name        String   // "A/B Test v1 vs v2"
+  variant     String   // "control", "variant-a", "variant-b"
+  content     String   @db.Text
+  
+  // Experiment config
+  trafficPercent Float @default(0) // 0-100
+  isActive    Boolean  @default(false)
+  
+  // Results
+  usageCount  Int      @default(0)
+  successRate Float?
+  avgLatency  Float?
+  
+  startDate   DateTime @default(now())
+  endDate     DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([templateId, isActive])
+  @@index([variant])
+}
+
+model PromptLog {
+  id          String   @id @default(uuid())
+  templateId  String
+  
+  // Request info
+  promptName  String
+  version     Int
+  variant     String?  // For A/B testing
+  
+  // Performance
+  latency     Int      // milliseconds
+  success     Boolean
+  error       String?  @db.Text
+  
+  // Context
+  projectId   String?
+  userId      String?
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([templateId, createdAt])
+  @@index([promptName, success])
+  @@index([projectId])
+}
