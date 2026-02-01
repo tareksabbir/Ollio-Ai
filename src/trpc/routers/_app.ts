@@ -5,6 +5,7 @@ import { messagesRouter } from "@/modules/messages/server/procedures";
 import { fragmentsRouter } from "@/modules/fragments/server/procedures";
 import { sandboxRouter } from "@/modules/sandbox/server/procedures";
 import { htmlCodeRouter } from "@/modules/html-code/server/procedure";
+import { promptsRouter } from "@/modules/prompts/server/procedures";
 
 export const appRouter = createTRPCRouter({
   usage: usageRouter,
@@ -13,6 +14,7 @@ export const appRouter = createTRPCRouter({
   fragments: fragmentsRouter,
   sandbox: sandboxRouter,
   htmlCode: htmlCodeRouter,
+  prompts: promptsRouter,
 });
 
 // export type definition of API
