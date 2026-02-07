@@ -2,7 +2,6 @@
 // import { inngest } from "@/inngest/client";
 // import prisma from "@/lib/db";
 // import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-// import { generateSlug } from "random-word-slugs";
 // import { TRPCError } from "@trpc/server";
 // import { consumeCredits } from "@/lib/usage";
 
@@ -16,22 +15,34 @@
 //       })
 //     )
 //     .query(async ({ input, ctx }) => {
+//       // ✅ Cache এ রাখার জন্য consistent query
 //       const existingProjects = await prisma.project.findUnique({
 //         where: {
 //           id: input.id,
 //           userId: ctx.auth.userId,
 //         },
+//         // ✅ Select specific fields - unnecessary data load কম হবে
+//         select: {
+//           id: true,
+//           name: true,
+//           userId: true,
+//           createdAt: true,
+//           updatedAt: true,
+//         },
 //       });
+      
 //       if (!existingProjects) {
 //         throw new TRPCError({
 //           code: "NOT_FOUND",
 //           message: "Project not found",
 //         });
 //       }
+      
 //       return existingProjects;
 //     }),
 
 //   getMany: protectedProcedure.query(async ({ ctx }) => {
+//     // ✅ Optimized query with selective includes
 //     const projects = await prisma.project.findMany({
 //       where: {
 //         userId: ctx.auth.userId,
@@ -39,18 +50,27 @@
 //       include: {
 //         messages: {
 //           include: {
-//             fragment: true,
+//             fragment: {
+//               // ✅ Fragment থেকে শুধু প্রয়োজনীয় fields
+//               select: {
+//                 id: true,
+//                 title: true,
+//               },
+//             },
 //           },
 //           orderBy: {
 //             createdAt: 'desc',
 //           },
-//           take: 1,
+//           take: 1, // শুধু সর্বশেষ message
 //         },
 //       },
 //       orderBy: {
 //         updatedAt: "desc",
 //       },
+//       // ✅ Limit results - pagination করলে আরো ভালো হবে
+//       take: 50, // Maximum 50 projects show করবে
 //     });
+    
 //     return projects;
 //   }),
 
@@ -79,12 +99,11 @@
 //           });
 //         }
 //       }
+      
 //       const createdProject = await prisma.project.create({
 //         data: {
 //           userId: ctx.auth.userId,
-//           name: generateSlug(2, {
-//             format: "kebab",
-//           }),
+//           name: "Untitled",
 //           messages: {
 //             create: {
 //               content: input.value,
@@ -93,12 +112,21 @@
 //             },
 //           },
 //         },
+//         // ✅ Return করার সময় selective data
+//         select: {
+//           id: true,
+//           name: true,
+//           userId: true,
+//           createdAt: true,
+//           updatedAt: true,
+//         },
 //       });
 
 //       await inngest.send({
 //         name: "ui-Generation-Agent/run",
 //         data: { value: input.value, projectId: createdProject.id },
 //       });
+      
 //       return createdProject;
 //     }),
 
@@ -111,10 +139,14 @@
 //       })
 //     )
 //     .mutation(async ({ input, ctx }) => {
+//       // ✅ Check existence first
 //       const project = await prisma.project.findUnique({
 //         where: {
 //           id: input.id,
 //           userId: ctx.auth.userId,
+//         },
+//         select: {
+//           id: true, // শুধু id check করলেই হবে
 //         },
 //       });
 
@@ -125,6 +157,7 @@
 //         });
 //       }
 
+//       // ✅ Delete operation
 //       await prisma.project.delete({
 //         where: {
 //           id: input.id,
@@ -132,7 +165,55 @@
 //         },
 //       });
 
-//       return { success: true };
+//       return { success: true, deletedId: input.id };
+//     }),
+  
+//   // ✅ BONUS: Pagination support
+//   getManyPaginated: protectedProcedure
+//     .input(
+//       z.object({
+//         limit: z.number().min(1).max(100).default(20),
+//         cursor: z.string().optional(),
+//       })
+//     )
+//     .query(async ({ ctx, input }) => {
+//       const projects = await prisma.project.findMany({
+//         where: {
+//           userId: ctx.auth.userId,
+//         },
+//         include: {
+//           messages: {
+//             include: {
+//               fragment: {
+//                 select: {
+//                   id: true,
+//                   title: true,
+//                 },
+//               },
+//             },
+//             orderBy: {
+//               createdAt: 'desc',
+//             },
+//             take: 1,
+//           },
+//         },
+//         orderBy: {
+//           updatedAt: "desc",
+//         },
+//         take: input.limit + 1, // +1 for next cursor
+//         cursor: input.cursor ? { id: input.cursor } : undefined,
+//       });
+
+//       let nextCursor: string | undefined = undefined;
+//       if (projects.length > input.limit) {
+//         const nextItem = projects.pop();
+//         nextCursor = nextItem?.id;
+//       }
+
+//       return {
+//         projects,
+//         nextCursor,
+//       };
 //     }),
 // });
 
@@ -154,13 +235,11 @@ export const projectsRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
-      // ✅ Cache এ রাখার জন্য consistent query
       const existingProjects = await prisma.project.findUnique({
         where: {
           id: input.id,
           userId: ctx.auth.userId,
         },
-        // ✅ Select specific fields - unnecessary data load কম হবে
         select: {
           id: true,
           name: true,
@@ -181,7 +260,6 @@ export const projectsRouter = createTRPCRouter({
     }),
 
   getMany: protectedProcedure.query(async ({ ctx }) => {
-    // ✅ Optimized query with selective includes
     const projects = await prisma.project.findMany({
       where: {
         userId: ctx.auth.userId,
@@ -190,7 +268,6 @@ export const projectsRouter = createTRPCRouter({
         messages: {
           include: {
             fragment: {
-              // ✅ Fragment থেকে শুধু প্রয়োজনীয় fields
               select: {
                 id: true,
                 title: true,
@@ -200,19 +277,19 @@ export const projectsRouter = createTRPCRouter({
           orderBy: {
             createdAt: 'desc',
           },
-          take: 1, // শুধু সর্বশেষ message
+          take: 1,
         },
       },
       orderBy: {
         updatedAt: "desc",
       },
-      // ✅ Limit results - pagination করলে আরো ভালো হবে
-      take: 50, // Maximum 50 projects show করবে
+      take: 50,
     });
     
     return projects;
   }),
 
+  // ✅ এখানে change করুন
   create: protectedProcedure
     .input(
       z.object({
@@ -220,6 +297,7 @@ export const projectsRouter = createTRPCRouter({
           .string()
           .min(1, { message: "Prompt is required" })
           .max(10000, { message: "Prompt is too long" }),
+        model: z.string().default("gpt-5.1"), // ✅ Model input যোগ করুন
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -251,7 +329,6 @@ export const projectsRouter = createTRPCRouter({
             },
           },
         },
-        // ✅ Return করার সময় selective data
         select: {
           id: true,
           name: true,
@@ -261,9 +338,14 @@ export const projectsRouter = createTRPCRouter({
         },
       });
 
+      // ✅ Model pass করুন inngest event এ
       await inngest.send({
         name: "ui-Generation-Agent/run",
-        data: { value: input.value, projectId: createdProject.id },
+        data: { 
+          value: input.value, 
+          projectId: createdProject.id,
+          model: input.model, // ✅ এটা যোগ করুন
+        },
       });
       
       return createdProject;
@@ -278,14 +360,13 @@ export const projectsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      // ✅ Check existence first
       const project = await prisma.project.findUnique({
         where: {
           id: input.id,
           userId: ctx.auth.userId,
         },
         select: {
-          id: true, // শুধু id check করলেই হবে
+          id: true,
         },
       });
 
@@ -296,7 +377,6 @@ export const projectsRouter = createTRPCRouter({
         });
       }
 
-      // ✅ Delete operation
       await prisma.project.delete({
         where: {
           id: input.id,
@@ -307,7 +387,6 @@ export const projectsRouter = createTRPCRouter({
       return { success: true, deletedId: input.id };
     }),
   
-  // ✅ BONUS: Pagination support
   getManyPaginated: protectedProcedure
     .input(
       z.object({
@@ -339,7 +418,7 @@ export const projectsRouter = createTRPCRouter({
         orderBy: {
           updatedAt: "desc",
         },
-        take: input.limit + 1, // +1 for next cursor
+        take: input.limit + 1,
         cursor: input.cursor ? { id: input.cursor } : undefined,
       });
 

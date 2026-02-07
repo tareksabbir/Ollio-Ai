@@ -42,7 +42,7 @@ export const uiGenerationAgent = inngest.createFunction(
       if (!event.data?.value || !event.data?.projectId) {
         throw new Error("Missing required data: value or projectId");
       }
-
+      const selectedModel = event.data?.model || "gpt-5.1";
       console.log(
         "🚀 Starting UI Generation Agent for project:",
         event.data.projectId,
@@ -309,7 +309,7 @@ export const uiGenerationAgent = inngest.createFunction(
         description: "An Expert coding agent for incremental UI development",
         system: prompts.system + incrementalContext,
         model: openai({
-          model: "gpt-5.1",
+          model: selectedModel,
           defaultParameters: { temperature: 0.1 },
         }),
         tools: [
