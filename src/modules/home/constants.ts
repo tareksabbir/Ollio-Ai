@@ -13,7 +13,6 @@ import {
   Gamepad2,
   BookOpen,
   Briefcase,
-  Dumbbell,
   Palette,
   Calendar,
   GraduationCap,
@@ -33,13 +32,13 @@ export const PROJECT_TEMPLATES: Array<{
     emoji: Film,
     title: "Build a Netflix clone",
     prompt:
-      "Build a Netflix-style homepage with a large hero banner and multiple movie rows. Use dark mode with a gradient overlay on the hero. Use real Unsplash movie-related images via direct movie images.unsplash.com URLs (no placeholders). Include responsive cards, hover effects, and a modal for viewing movie details using mock data and local state.",
+      "Build a Netflix-style homepage with a hero banner (use a nice, dark-mode compatible gradient here), movie sections, responsive cards, and a modal for viewing details using mock data and local state. Use dark mode.",
   },
   {
     emoji: LayoutDashboard,
     title: "Build an admin dashboard",
     prompt:
-      "Create a modern admin dashboard with a sidebar, stat cards, charts, and a data table with filtering and pagination using local state. Use a clean professional layout with clear visual grouping. Include a subtle header or empty-state image using a real Unsplash image (no placeholders).User chart js",
+      "Create an admin dashboard with a sidebar, stat cards, a chart placeholder, and a basic table with filter and pagination using local state. Use clear visual grouping and balance in your design for a modern, professional look.",
   },
   {
     emoji: FolderOpen,
@@ -51,13 +50,13 @@ export const PROJECT_TEMPLATES: Array<{
     emoji: Youtube,
     title: "Build a YouTube clone",
     prompt:
-      "Build a YouTube-style homepage with a category sidebar, video grid, and preview modal. Use real Unsplash images for video thumbnails using direct image URLs. Use clean alignment, consistent aspect ratios, and local state for interactions. Avoid placeholders.",
+      "Build a YouTube-style homepage with mock video thumbnails, a category sidebar, and a modal preview with title and description using local state. Ensure clean alignment and a well-organized grid layout.",
   },
   {
     emoji: ShoppingBag,
     title: "Build a store page",
     prompt:
-      "Build an Amazon-style e-commerce store with category filters, a product grid, and a local cart system. Use real Unsplash product images with consistent sizing. Focus on clear typography, spacing, pricing visibility, and strong button states. No placeholder images.",
+      "Build a store page with category filters, a product grid, and local cart logic to add and remove items. Focus on clear typography, spacing, and button states for a great e-commerce UI.",
   },
   {
     emoji: Home,
@@ -75,7 +74,7 @@ export const PROJECT_TEMPLATES: Array<{
     emoji: MessageSquare,
     title: "Build a chat app",
     prompt:
-      "Build a Facebook Messenger-style chat app with a conversation sidebar, chat view, and message input. Use real Unsplash profile images for avatars. Include timestamps, message grouping, and smooth animations. Use local state for message history.",
+      "Build a chat app with a conversation sidebar, chat view, and message input. Use real Unsplash profile images for avatars. Include timestamps, message grouping, and smooth animations. Use local state for message history.",
   },
   {
     emoji: FileText,
@@ -112,12 +111,6 @@ export const PROJECT_TEMPLATES: Array<{
     title: "Build a job board",
     prompt:
       "Build a job board with job cards, filter sidebar, and job detail modals. Use real Unsplash office or workplace images subtly in headers or empty states. Focus on professional design and easy-to-scan listings. Use local state for saved jobs.",
-  },
-  {
-    emoji: Dumbbell,
-    title: "Build a fitness tracker",
-    prompt:
-      "Build a fitness tracker with workout cards, progress charts, and a calendar view. Use real Unsplash fitness-related images. Use local state for tracking workouts. Focus on motivating visuals and clear progress indicators.",
   },
   {
     emoji: Palette,
