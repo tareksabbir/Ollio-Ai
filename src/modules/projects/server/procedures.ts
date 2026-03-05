@@ -30,14 +30,14 @@
 //           updatedAt: true,
 //         },
 //       });
-      
+
 //       if (!existingProjects) {
 //         throw new TRPCError({
 //           code: "NOT_FOUND",
 //           message: "Project not found",
 //         });
 //       }
-      
+
 //       return existingProjects;
 //     }),
 
@@ -70,7 +70,7 @@
 //       // ✅ Limit results - pagination করলে আরো ভালো হবে
 //       take: 50, // Maximum 50 projects show করবে
 //     });
-    
+
 //     return projects;
 //   }),
 
@@ -99,7 +99,7 @@
 //           });
 //         }
 //       }
-      
+
 //       const createdProject = await prisma.project.create({
 //         data: {
 //           userId: ctx.auth.userId,
@@ -126,7 +126,7 @@
 //         name: "ui-Generation-Agent/run",
 //         data: { value: input.value, projectId: createdProject.id },
 //       });
-      
+
 //       return createdProject;
 //     }),
 
@@ -167,7 +167,7 @@
 
 //       return { success: true, deletedId: input.id };
 //     }),
-  
+
 //   // ✅ BONUS: Pagination support
 //   getManyPaginated: protectedProcedure
 //     .input(
@@ -217,7 +217,6 @@
 //     }),
 // });
 
-
 import z from "zod";
 import { inngest } from "@/inngest/client";
 import prisma from "@/lib/db";
@@ -232,7 +231,7 @@ export const projectsRouter = createTRPCRouter({
         id: z.string().min(1, {
           message: "Project ID is required",
         }),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const existingProjects = await prisma.project.findUnique({
@@ -248,14 +247,14 @@ export const projectsRouter = createTRPCRouter({
           updatedAt: true,
         },
       });
-      
+
       if (!existingProjects) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Project not found",
         });
       }
-      
+
       return existingProjects;
     }),
 
@@ -275,7 +274,7 @@ export const projectsRouter = createTRPCRouter({
             },
           },
           orderBy: {
-            createdAt: 'desc',
+            createdAt: "desc",
           },
           take: 1,
         },
@@ -285,7 +284,7 @@ export const projectsRouter = createTRPCRouter({
       },
       take: 50,
     });
-    
+
     return projects;
   }),
 
@@ -297,8 +296,8 @@ export const projectsRouter = createTRPCRouter({
           .string()
           .min(1, { message: "Prompt is required" })
           .max(10000, { message: "Prompt is too long" }),
-        model: z.string().default("gpt-5.1"), // ✅ Model input যোগ করুন
-      })
+        model: z.string().default("stepfun/step-3.5-flash:free"), // ✅ Model input যোগ করুন
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       try {
@@ -316,7 +315,7 @@ export const projectsRouter = createTRPCRouter({
           });
         }
       }
-      
+
       const createdProject = await prisma.project.create({
         data: {
           userId: ctx.auth.userId,
@@ -341,13 +340,13 @@ export const projectsRouter = createTRPCRouter({
       // ✅ Model pass করুন inngest event এ
       await inngest.send({
         name: "ui-Generation-Agent/run",
-        data: { 
-          value: input.value, 
+        data: {
+          value: input.value,
           projectId: createdProject.id,
           model: input.model, // ✅ এটা যোগ করুন
         },
       });
-      
+
       return createdProject;
     }),
 
@@ -357,7 +356,7 @@ export const projectsRouter = createTRPCRouter({
         id: z.string().min(1, {
           message: "Project ID is required",
         }),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const project = await prisma.project.findUnique({
@@ -386,13 +385,13 @@ export const projectsRouter = createTRPCRouter({
 
       return { success: true, deletedId: input.id };
     }),
-  
+
   getManyPaginated: protectedProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).default(20),
         cursor: z.string().optional(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const projects = await prisma.project.findMany({
@@ -410,7 +409,7 @@ export const projectsRouter = createTRPCRouter({
               },
             },
             orderBy: {
-              createdAt: 'desc',
+              createdAt: "desc",
             },
             take: 1,
           },

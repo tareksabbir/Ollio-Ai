@@ -184,8 +184,6 @@
 
 // export default ProjectForm;
 
-
-
 "use client";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
@@ -212,23 +210,12 @@ const formSchema = z.object({
 
 // ✅ Available models
 const AVAILABLE_MODELS = [
-  { value: "gpt-5.1", label: "GPT-5.1 (Default)" },
-  { value: "gpt-5", label: "GPT-5" },
-  { value: "gpt-5-mini", label: "GPT-5 Mini" },
-  { value: "gpt-5-nano", label: "GPT-5 Nano" },
-  { value: "gpt-4.1", label: "GPT-4.1" },
-  { value: "gpt-4.1-mini", label: "GPT-4.1 Mini" },
-  { value: "gpt-4.5-preview", label: "GPT-4.5 Preview" },
-  { value: "gpt-4o", label: "GPT-4o" },
-  { value: "chatgpt-4o-latest", label: "ChatGPT-4o Latest" },
-  { value: "gpt-4o-mini", label: "GPT-4o Mini" },
-  { value: "gpt-4", label: "GPT-4" },
-  { value: "gpt-4-turbo", label: "GPT-4 Turbo" },
-  { value: "gpt-3.5-turbo", label: "GPT-3.5 Turbo" },
-  { value: "o1", label: "O1" },
-  { value: "o1-preview", label: "O1 Preview" },
-  { value: "o1-mini", label: "O1 Mini" },
-  { value: "o3-mini", label: "O3 Mini" },
+  { value: "stepfun/step-3.5-flash:free", label: "step-3.5-flash" },
+  { value: "openai/gpt-oss-120b:free", label: "gpt-oss-120b" },
+  { value: "qwen/qwen3-coder:free", label: "qwen3-coder" },
+  { value: "z-ai/glm-4.5-air:free", label: "glm-4.5-air" },
+  { value: "arcee-ai/trinity-large-preview:free", label: "arcee-trinity" },
+  { value: "nvidia/nemotron-3-nano-30b-a3b:free", label: "nvidia-nemotron" },
 ] as const;
 
 const ProjectForm = () => {
@@ -242,13 +229,15 @@ const ProjectForm = () => {
   const INITIAL_LIMIT = 8;
 
   // ✅ Model state
-  const [selectedModel, setSelectedModel] = useState("gpt-5.1");
+  const [selectedModel, setSelectedModel] = useState(
+    "stepfun/step-3.5-flash:free",
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       value: "",
-      model: "gpt-5.1",
+      model: "stepfun/step-3.5-flash:free",
     },
   });
 
@@ -269,7 +258,7 @@ const ProjectForm = () => {
 
         toast.error(error.message);
       },
-    })
+    }),
   );
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -301,14 +290,12 @@ const ProjectForm = () => {
   return (
     <Form {...form}>
       <section className="space-y-6">
-      
-
         {/* ✅ Main Form */}
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className={cn(
             "relative border p-4 pt-1 rounded-xl bg-sidebar dark:bg-sidebar transition-all",
-            isFocused && "shadow-xs"
+            isFocused && "shadow-xs",
           )}
         >
           <FormField
@@ -344,7 +331,7 @@ const ProjectForm = () => {
               disabled={isButtonDisabled}
               className={cn(
                 "size-8 rounded-full",
-                isButtonDisabled && "bg-muted-foreground"
+                isButtonDisabled && "bg-muted-foreground",
               )}
             >
               {isPending ? (
@@ -355,7 +342,7 @@ const ProjectForm = () => {
             </Button>
           </div>
         </form>
-          {/* ✅ Model Selector */}
+        {/* ✅ Model Selector */}
         <div className="flex items-center gap-3 justify-center px-1">
           <label className="text-sm font-medium text-muted-foreground">
             AI Model:

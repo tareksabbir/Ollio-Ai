@@ -1,13 +1,12 @@
-import React, { useEffect, useRef } from 'react';
-import { DevicePreviewButtons } from './device-preview-buttons';
-import { SizeControls } from './size-controls';
-import { CustomSizeInput } from './custom-size-Input';
-import { ResizeHandles } from './resize-handles';
-import { Project } from '@/lib/view-project';
+import React, { useEffect, useRef } from "react";
+import { DevicePreviewButtons } from "./device-preview-buttons";
+import { SizeControls } from "./size-controls";
+import { CustomSizeInput } from "./custom-size-Input";
+import { ResizeHandles } from "./resize-handles";
+import { Project } from "@/lib/view-project";
 
-
-type PreviewMode = 'desktop' | 'tablet' | 'mobile';
-type ResizeHandle = 'left' | 'right' | 'top' | 'bottom' | 'corner';
+type PreviewMode = "desktop" | "tablet" | "mobile";
+type ResizeHandle = "left" | "right" | "top" | "bottom" | "corner";
 
 interface Preset {
   name: string;
@@ -67,58 +66,59 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
     if (!iframeRef.current || !htmlContent) return;
 
     const iframe = iframeRef.current;
-    
+
     const handleIframeLoad = () => {
       try {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+        const iframeDoc =
+          iframe.contentDocument || iframe.contentWindow?.document;
         const iframeWindow = iframe.contentWindow;
-        
+
         if (!iframeDoc || !iframeWindow) return;
 
         // Prevent navigation in iframe
         const originalPushState = iframeWindow.history.pushState;
         const originalReplaceState = iframeWindow.history.replaceState;
-        
-        iframeWindow.history.pushState = function(...args) {
-          console.log('Prevented pushState in iframe');
+
+        iframeWindow.history.pushState = function (...args) {
+          console.log("Prevented pushState in iframe");
           return originalPushState.apply(this, args);
         };
-        
-        iframeWindow.history.replaceState = function(...args) {
-          console.log('Prevented replaceState in iframe');
+
+        iframeWindow.history.replaceState = function (...args) {
+          console.log("Prevented replaceState in iframe");
           return originalReplaceState.apply(this, args);
         };
 
         // Find all links in the iframe
-        const links = iframeDoc.querySelectorAll('a');
-        
+        const links = iframeDoc.querySelectorAll("a");
+
         links.forEach((link) => {
           // Prevent default navigation
-          link.addEventListener('click', (e) => {
+          link.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            
-            const href = link.getAttribute('href');
-            if (href && href !== '#' && !href.startsWith('javascript:')) {
+
+            const href = link.getAttribute("href");
+            if (href && href !== "#" && !href.startsWith("javascript:")) {
               // Open in new tab instead of navigating within iframe
-              window.open(href, '_blank', 'noopener,noreferrer');
+              window.open(href, "_blank", "noopener,noreferrer");
             }
           });
 
           // Also set target to _blank as fallback
-          link.setAttribute('target', '_blank');
-          link.setAttribute('rel', 'noopener noreferrer');
+          link.setAttribute("target", "_blank");
+          link.setAttribute("rel", "noopener noreferrer");
         });
       } catch (error) {
         // Cross-origin restrictions might prevent access
-        console.warn('Cannot access iframe content:', error);
+        console.warn("Cannot access iframe content:", error);
       }
     };
 
-    iframe.addEventListener('load', handleIframeLoad);
-    
+    iframe.addEventListener("load", handleIframeLoad);
+
     return () => {
-      iframe.removeEventListener('load', handleIframeLoad);
+      iframe.removeEventListener("load", handleIframeLoad);
     };
   }, [htmlContent]);
 
@@ -127,26 +127,26 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
     if (!isOpen) return;
 
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         e.stopPropagation();
         onClose();
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    
+    document.addEventListener("keydown", handleEscape);
+
     return () => {
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen, onClose]);
 
   if (!isOpen || !project) return null;
 
   const previewDimensions = {
-    desktop: { width: '100%', height: '100%' },
-    tablet: { width: '768px', height: '1024px' },
-    mobile: { width: '375px', height: '667px' },
+    desktop: { width: "100%", height: "100%" },
+    tablet: { width: "768px", height: "1024px" },
+    mobile: { width: "375px", height: "667px" },
   };
 
   return (
@@ -180,7 +180,7 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
               onModeChange={onPreviewModeChange}
             />
 
-            {previewMode === 'desktop' && (
+            {previewMode === "desktop" && (
               <SizeControls
                 width={customWidth}
                 height={customHeight}
@@ -217,7 +217,7 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
           </div>
         </div>
 
-        {showSizeInput && previewMode === 'desktop' && (
+        {showSizeInput && previewMode === "desktop" && (
           <CustomSizeInput
             tempWidth={tempWidth}
             tempHeight={tempHeight}
@@ -240,19 +240,19 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
                 className="bg-background shadow-2xl transition-all duration-300 overflow-hidden relative"
                 style={{
                   width:
-                    previewMode === 'desktop'
+                    previewMode === "desktop"
                       ? `${customWidth}px`
                       : previewDimensions[previewMode].width,
                   height:
-                    previewMode === 'desktop'
+                    previewMode === "desktop"
                       ? `${customHeight}px`
                       : previewDimensions[previewMode].height,
-                  maxWidth: '100%',
+                  maxWidth: "100%",
                   border:
-                    previewMode !== 'desktop'
-                      ? '8px solid hsl(var(--border))'
-                      : '1px solid hsl(var(--border))',
-                  borderRadius: previewMode !== 'desktop' ? '24px' : '8px',
+                    previewMode !== "desktop"
+                      ? "8px solid hsl(var(--border))"
+                      : "1px solid hsl(var(--border))",
+                  borderRadius: previewMode !== "desktop" ? "24px" : "8px",
                 }}
               >
                 <iframe
@@ -263,7 +263,7 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
                   sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox"
                 />
 
-                {previewMode === 'desktop' && (
+                {previewMode === "desktop" && (
                   <ResizeHandles onResize={onResize} />
                 )}
               </div>

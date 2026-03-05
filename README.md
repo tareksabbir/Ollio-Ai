@@ -738,8 +738,8 @@ This is the heart of the AI generation process. The agent enters a loop that con
 
 Thought Generation:
 - The agent receives the user's prompt and its system instructions
-- It calls the GPT-4 API, sending the system prompt, the user's goal, the tool definitions, and the conversation history (currently empty)
-- GPT-4 processes this and returns a JSON response with two fields: `thought` (a natural language explanation of what it plans to do) and `action` (a structured command to execute)
+- It calls the StepFun API, sending the system prompt, the user's goal, the tool definitions, and the conversation history (currently empty)
+- StepFun processes this and returns a JSON response with two fields: `thought` (a natural language explanation of what it plans to do) and `action` (a structured command to execute)
 - Example thought: "I need to create a React component for a pricing card. I'll start by creating a new file for this component with a basic structure."
 - Example action: `{ "tool": "writeFile", "args": ["src/components/PricingCard.tsx", "import React from 'react';\n\nexport const PricingCard = () => { return <div>Pricing</div>; };"] }`
 

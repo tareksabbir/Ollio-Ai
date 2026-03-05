@@ -1,11 +1,15 @@
 // scripts/seed-prompts.ts
 import prisma from "../src/lib/db";
-import { PROMPT, RESPONSE_PROMPT, FRAGMENT_TITLE_PROMPT } from "../src/prompt/ui-prompt";
+import {
+  PROMPT,
+  RESPONSE_PROMPT,
+  FRAGMENT_TITLE_PROMPT,
+} from "../src/prompt/ui-prompt";
 
 async function main() {
   try {
     console.log("🔍 Checking database connection...");
-    
+
     await prisma.$connect();
     console.log("✅ Database connected successfully!");
 
@@ -25,7 +29,7 @@ async function main() {
         category: "system",
         tags: ["production", "ui", "generation"],
         metadata: {
-          model: "gpt-4.1",
+          model: "stepfun/step-3.5-flash:free",
           temperature: 0.1,
           maxTokens: 4000,
         },
@@ -47,11 +51,13 @@ async function main() {
         category: "response",
         tags: ["production", "response"],
         metadata: {
-          model: "gpt-3.5-turbo",
+          model: "stepfun/step-3.5-flash:free",
         },
       },
     });
-    console.log(`✅ Created/Updated: ${responsePrompt.name} (v${responsePrompt.version})`);
+    console.log(
+      `✅ Created/Updated: ${responsePrompt.name} (v${responsePrompt.version})`,
+    );
 
     // Fragment Title Prompt
     const titlePrompt = await prisma.promptTemplate.upsert({
@@ -67,14 +73,16 @@ async function main() {
         category: "response",
         tags: ["production", "title"],
         metadata: {
-          model: "gpt-3.5-turbo",
+          model: "stepfun/step-3.5-flash:free",
         },
       },
     });
-    console.log(`✅ Created/Updated: ${titlePrompt.name} (v${titlePrompt.version})`);
+    console.log(
+      `✅ Created/Updated: ${titlePrompt.name} (v${titlePrompt.version})`,
+    );
 
     console.log("\n🎉 All prompts seeded successfully!");
-    
+
     const allPrompts = await prisma.promptTemplate.findMany({
       select: {
         name: true,
@@ -83,18 +91,17 @@ async function main() {
         usageCount: true,
       },
     });
-    
+
     console.log("\n📊 Current Prompts:");
     console.table(allPrompts);
-
   } catch (error) {
     console.error("\n❌ Error seeding prompts:");
-    
+
     if (error instanceof Error) {
       console.error(error.message);
       console.error(error.stack);
     }
-    
+
     throw error;
   }
 }

@@ -84,7 +84,7 @@ model PromptTemplate {
   isActive    Boolean  @default(true)
   
   // Configuration
-  metadata    Json?    // { temperature: 0.1, model: "gpt-4", maxTokens: 4000 }
+  metadata    Json?    // { temperature: 0.1, model: "stepfun/step-3.5-flash:free", maxTokens: 4000 }
   
   // Analytics
   usageCount  Int      @default(0)
