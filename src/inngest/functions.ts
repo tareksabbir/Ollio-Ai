@@ -674,7 +674,7 @@ ${Object.keys(existingFiles)
         //   defaultParameters: { temperature: 0.1 },
         // }),
         model: openai({
-          model: "stepfun/step-3.5-flash:free", // OpenRouter model string
+          model: selectedModel, // OpenRouter model string
           apiKey: process.env.OPENROUTER_API_KEY,
           baseUrl: "https://openrouter.ai/api/v1",
           defaultParameters: { temperature: 0.1 },
