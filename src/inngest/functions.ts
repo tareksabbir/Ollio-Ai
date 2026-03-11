@@ -59,64 +59,9 @@ async function detectErrorsInSandbox(
   try {
     const sandbox = await getSandBox(sandboxId);
 
-    // ✅ Check 1: Dev server runtime errors (quick check - 10 seconds only)
-    console.log("🔍 Checking dev server for runtime errors...");
-    try {
-      const devResult = await sandbox.commands.run(
-        "cd /home/project && timeout 10s npm run dev 2>&1 || true",
-      );
-
-      const devOutput = devResult.stdout + devResult.stderr;
-
-      // Critical error patterns that break the app
-      const criticalPatterns = [
-        {
-          pattern: /cannot find module|module not found/i,
-          message: "Missing module/dependency",
-          suggestion: "Install missing package",
-        },
-        {
-          pattern: /is not defined|reference error/i,
-          message: "Undefined variable or missing import",
-          suggestion: "Check imports and add 'use client' if using hooks",
-        },
-        {
-          pattern: /hydration failed|hydration error/i,
-          message: "Hydration mismatch detected",
-          suggestion: "Add 'use client' or wrap dynamic content in useEffect",
-        },
-        {
-          pattern: /unexpected token|syntax error/i,
-          message: "Syntax error in code",
-          suggestion: "Check JSX syntax and brackets",
-        },
-        {
-          pattern: /failed to compile/i,
-          message: "Compilation failed",
-          suggestion: "Check file syntax and imports",
-        },
-      ];
-
-      for (const { pattern, message, suggestion } of criticalPatterns) {
-        if (pattern.test(devOutput)) {
-          // Get specific error lines
-          const errorLines = devOutput
-            .split("\n")
-            .filter((line) => pattern.test(line))
-            .slice(0, 2); // Only first 2 occurrences
-
-          for (const errorLine of errorLines) {
-            detectedErrors.push({
-              type: "runtime",
-              message: `${message}: ${errorLine.trim().slice(0, 150)}`,
-              suggestion,
-            });
-          }
-        }
-      }
-    } catch (err) {
-      console.log("⚠️ Dev server check completed with timeout (expected)");
-    }
+    // We intentionally removed the 10-second Next.js dev server timeout here.
+    // It slowed down the generation pipeline and didn't catch many errors since Next.js compiles on-demand.
+    // Static file analysis (Check 2 below) is much faster and catches the most common agent mistakes.
 
     // ✅ Check 2: Static file analysis (fast, no sandbox commands needed)
     console.log("📄 Analyzing files for common React/Next.js issues...");
@@ -199,6 +144,20 @@ async function detectErrorsInSandbox(
           message: "Dynamic content detected - may cause hydration mismatch",
           suggestion:
             "Add 'use client' OR wrap in useEffect OR add suppressHydrationWarning",
+        });
+      }
+
+      // Issue 4b: typeof window branching causes hydration mismatch
+      const hasWindowBranch =
+        content.includes("typeof window") ||
+        content.includes("typeof document");
+
+      if (hasWindowBranch && !hasUseEffectWrapper) {
+        issues.push({
+          message:
+            "Server/client branch using typeof window/document - causes hydration mismatch",
+          suggestion:
+            "Move the check inside useEffect or useState initializer instead of using conditional rendering",
         });
       }
 
@@ -294,7 +253,8 @@ async function autoFixErrors(
         error.message.includes("hooks") ||
         error.message.includes("Event handlers") ||
         error.message.includes("Browser APIs") ||
-        error.message.includes("Dynamic content"))
+        error.message.includes("Dynamic content") ||
+        error.message.includes("hydration mismatch"))
     ) {
       const content = fixedFiles[error.file];
 
@@ -371,7 +331,7 @@ async function autoFixErrors(
 
           try {
             await sandbox.commands.run(
-              `cd /home/project && npm install ${moduleName} --legacy-peer-deps`,
+              `cd /home/user && npm install ${moduleName} --legacy-peer-deps`,
             );
             fixCount++;
             console.log(`  ✅ Installed ${moduleName}`);
@@ -613,8 +573,25 @@ Current state: All files restored to sandbox and ready for modification.`,
       );
 
       // ✅ STEP 6: Create incremental context
-      const incrementalContext = !isFirstGeneration
-        ? `
+
+      // Load package.json dependencies to inject into context so the agent doesn't hallucinate packages
+      let packageContext = "";
+      try {
+        const pkgContent = await step.run("read-package-json", async () => {
+          const sandbox = await getSandBox(sandboxId);
+          return await sandbox.files.read("package.json");
+        });
+        const parsedPkg = JSON.parse(pkgContent);
+        const deps = Object.keys(parsedPkg.dependencies || {}).join(", ");
+        const devDeps = Object.keys(parsedPkg.devDependencies || {}).join(", ");
+        packageContext = `\nPre-installed Dependencies (DO NOT reinstall these — they are ALREADY available, just import and use them):\nDependencies: ${deps}\nDevDependencies: ${devDeps}\n\n🚨 ONLY use the terminal to install packages that are NOT in the lists above. If a package is listed, just import it.\n`;
+      } catch (e) {
+        console.log("⚠️ Could not read package.json for context injection.");
+      }
+
+      const incrementalContext =
+        (!isFirstGeneration
+          ? `
 
 INCREMENTAL DEVELOPMENT MODE - CRITICAL CONTEXT
 
@@ -655,14 +632,26 @@ EXAMPLES:
    → Add theme classes
    → Keep all other code unchanged
 
-EXISTING FILES IN THIS PROJECT:
+EXISTING PROJECT FILES (Grouped by Type):
 ${Object.keys(existingFiles)
-  .map((f) => `  • ${f}`)
-  .join("\n")}
+  .sort()
+  .map((f) => {
+    const isComponent = f.includes("components/");
+    const isPage = f.includes("app/");
+    const type = isComponent
+      ? "🧩 Component"
+      : isPage
+        ? "📄 Page/Route"
+        : "⚙️ Config/Util";
+    return "  • [" + type + "] " + f;
+  })
+  .join("\\n")}
 
-⚠️ REMEMBER: Files are already in the sandbox. Read first, modify precisely!
+⚠️ REMEMBER: 
+1. These files are already in the sandbox. Read them first!
+2. All Shadcn components and common libraries are ALREADY PRE-INSTALLED. DO NOT run npx shadcn add or npm install for them.
 `
-        : "";
+          : "") + packageContext;
 
       // ✅ STEP 7: Create agent with proper tools
       const codeAgent = createAgent<AgentState>({
@@ -680,6 +669,38 @@ ${Object.keys(existingFiles)
           defaultParameters: { temperature: 0.1 },
         }),
         tools: [
+          // Delete file tool
+          createTool({
+            name: "deleteFile",
+            description:
+              "Delete a file from the sandbox if you created it by mistake or no longer need it.",
+            parameters: z.object({
+              path: z
+                .string()
+                .describe("File path to delete (e.g., app/mistake.tsx)"),
+            }),
+            handler: async ({ path }, { step, network }) => {
+              return await step?.run("deleteFile", async () => {
+                try {
+                  const sandbox = await getSandBox(sandboxId);
+                  await sandbox.commands.run(`rm -f "/home/user/${path}"`);
+
+                  // Update state
+                  if (
+                    network.state.data.files &&
+                    network.state.data.files[path]
+                  ) {
+                    delete network.state.data.files[path];
+                  }
+
+                  return `✅ Successfully deleted ${path}`;
+                } catch (error) {
+                  return `❌ Failed to delete ${path}: ${error}`;
+                }
+              });
+            },
+          }),
+
           // Terminal tool
           createTool({
             name: "terminal",
@@ -869,7 +890,92 @@ ${Object.keys(existingFiles)
         router: async ({ network }) => {
           const taskSummary = network.state.data.summary;
           if (taskSummary) {
-            console.log("✅ Task completed, stopping network");
+            console.log(
+              "✅ Agent submitted summary, checking Next.js dev server for errors...",
+            );
+            try {
+              const sandbox = await getSandBox(sandboxId);
+
+              // ✅ Use `next build` to catch real errors (compilation, runtime, missing imports, bad JSX)
+              // http.get only sees SSR HTML and cannot catch client-side JS errors
+              console.log(
+                "🔨 Running next build to validate generated code...",
+              );
+              const buildResult = await sandbox.commands.run(
+                "cd /home/user && npx next build --no-lint 2>&1 | tail -80",
+              );
+
+              const buildOutput = (
+                buildResult.stdout ||
+                buildResult.stderr ||
+                ""
+              ).trim();
+
+              // Check if build failed
+              const hasBuildError =
+                buildResult.exitCode !== 0 ||
+                buildOutput.includes("Build error") ||
+                buildOutput.includes("Failed to compile") ||
+                buildOutput.includes("Type error") ||
+                buildOutput.includes("Module not found") ||
+                buildOutput.includes("SyntaxError") ||
+                buildOutput.includes("Cannot find module") ||
+                buildOutput.includes("is not assignable to") ||
+                buildOutput.includes("Unexpected token") ||
+                buildOutput.includes("Export default doesn't exist");
+
+              if (hasBuildError) {
+                // Extract meaningful error from build output (last 1500 chars usually has the error)
+                const errorOutput = buildOutput.substring(
+                  Math.max(0, buildOutput.length - 1500),
+                );
+                console.log(
+                  "❌ Next.js build error detected! Requesting agent to fix.",
+                  errorOutput.substring(0, 200),
+                );
+
+                network.state.messages.push({
+                  type: "text",
+                  role: "user" as const,
+                  content: `🚨 CRITICAL: Next.js build failed. You MUST fix this error before completing the task.
+
+BUILD ERROR OUTPUT:
+\`\`\`text
+${errorOutput}
+\`\`\`
+
+FIX INSTRUCTIONS (follow these steps exactly):
+
+1. READ the file(s) mentioned in the error using readFiles()
+2. ANALYZE the specific error:
+   - "'use client' directive" or hooks error → Add 'use client' as the FIRST LINE of the file
+   - "Module not found" or "Cannot find module" → Check the import path. Use "@/components/ui/..." for Shadcn, "@/lib/utils" for cn(). Do NOT install pre-installed packages.
+   - "is not defined" or "is not a function" → Add the missing import statement
+   - "Type error" or "is not assignable" → Fix the TypeScript type (check prop types, add proper types)
+   - "Unexpected token" or "SyntaxError" → Check for unclosed JSX tags, missing brackets, or malformed code
+   - "Export default doesn't exist" → Ensure the component has a proper default export
+3. FIX the specific issue using createOrUpdateFiles(). Do NOT rewrite the whole file — make the minimal targeted fix.
+4. After fixing, output <task_summary> ONLY when confident the fix is correct.
+
+⚠️ DO NOT rewrite the entire file from scratch. Only fix the specific error.`,
+                });
+
+                // Clear the summary to loop back the agent
+                network.state.data.summary = "";
+                return codeAgent;
+              }
+
+              console.log(
+                "✅ Next.js build succeeded - no compilation errors!",
+              );
+            } catch (err) {
+              console.log(
+                "⚠️ Build validation encountered an error, proceeding anyway:",
+                err,
+              );
+            }
+
+            console.log("✅ Task genuinely completed, stopping network");
             return;
           }
           return codeAgent;
@@ -948,9 +1054,9 @@ ${Object.keys(existingFiles)
       );
 
       // ✅ STEP 12: Check for critical errors
-      const isError =
-        !result.state.data.summary ||
-        Object.keys(fixedFiles || {}).length === 0;
+      // ✅ Only treat as error if NO files were generated at all
+      // Missing summary alone shouldn't discard files the agent produced
+      const isError = Object.keys(fixedFiles || {}).length === 0;
 
       if (isError) {
         console.warn("⚠️ Generation completed with errors or no files");
@@ -1002,14 +1108,16 @@ ${Object.keys(existingFiles)
         }),
       });
 
-      const { output: fragmentTitleOutput } = await fragmentTitleGenerator.run(
-        result.state.data.summary || "UI Fragment",
-      );
+      const summaryFallback =
+        result.state.data.summary || "UI generation completed";
+
+      const { output: fragmentTitleOutput } =
+        await fragmentTitleGenerator.run(summaryFallback);
 
       const responseContext =
         detectedErrors.length > 0
-          ? `${result.state.data.summary}\n\n${errorSummary}`
-          : result.state.data.summary || "Task completed successfully";
+          ? `${summaryFallback}\n\n${errorSummary}`
+          : summaryFallback;
 
       const { output: responseOutput } =
         await responseGenerator.run(responseContext);
@@ -1089,28 +1197,3 @@ ${Object.keys(existingFiles)
     }
   },
 );
-
-// // 1. User: "Create a counter with increment/decrement"
-// //    ↓
-// // 2. Agent generates all code
-// //    ↓
-// // 3. Get sandbox URL
-// //    ↓
-// // 4. ✅ FINAL ERROR CHECK (10 seconds)
-// //    ├─ Dev server check (10s)
-// //    │  └─ Finds: "useState is not defined"
-// //    │
-// //    └─ File analysis (<1s)
-// //       └─ Finds: "Missing 'use client' in app/page.tsx"
-// //    ↓
-// // 5. 🔧 AUTO-FIX
-// //    └─ Adds 'use client' to app/page.tsx
-// //    ↓
-// // 6. 🔍 RE-CHECK (10s)
-// //    └─ ✅ No errors!
-// //    ↓
-// // 7. 💾 Save fixed files to database
-// //    ↓
-// // 8. ✅ Return URL to user
-
-// // Total time: ~20 seconds (vs 45-55 seconds with build)

@@ -212,7 +212,7 @@ const formSchema = z.object({
 const AVAILABLE_MODELS = [
   { value: "stepfun/step-3.5-flash:free", label: "step-3.5-flash" },
   // { value: "openai/gpt-oss-120b:free", label: "gpt-oss-120b" },
-  // { value: "qwen/qwen3-coder:free", label: "qwen3-coder" },
+  // { value: "qwen/qwen3-4b:free", label: "qwen3-4b" },
   // { value: "z-ai/glm-4.5-air:free", label: "glm-4.5-air" },
   { value: "arcee-ai/trinity-large-preview:free", label: "arcee-trinity" },
   // { value: "nvidia/nemotron-3-nano-30b-a3b:free", label: "nvidia-nemotron" },
